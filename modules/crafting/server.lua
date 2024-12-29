@@ -123,10 +123,27 @@ lib.callback.register('ox_inventory:craftItem', function(source, id, index, reci
 				(table.type(recipe.count) == 'array' and math.random(recipe.count[1], recipe.count[2])) or 1
 			local newWeight = left.weight + (craftedItem.weight + (recipe.metadata?.weight or 0)) * craftCount
 			---@todo new iterator or something to accept a map
+			-- First subtract weight of ingredients that will be removed
+			for name, needs in pairs(recipe.ingredients) do
+				if needs > 0 then
+					local item = Items(name)
+					if item then
+						newWeight -= (item.weight * needs)
+					end
+				end
+			end
+
+			-- Add weight of crafted item
+			newWeight += (craftedItem.weight + (recipe.metadata?.weight or 0)) * craftCount
+
+			if newWeight > left.maxWeight then return false, 'cannot_carry' end
+
 			local items = Inventory.Search(left, 'slots', tbl) or {}
 			table.wipe(tbl)
 
 			for name, needs in pairs(recipe.ingredients) do
+				if needs == 0 then break end
+
 				local slots = items[name] or items
 
 				if #slots == 0 then return end
@@ -157,13 +174,10 @@ lib.callback.register('ox_inventory:craftItem', function(source, id, index, reci
 							end
 						end
 					elseif needs <= slot.count then
-						local itemWeight = slot.weight / slot.count
-						newWeight = (newWeight - slot.weight) + (slot.count - needs) * itemWeight
 						tbl[slot.slot] = needs
 						break
 					else
 						tbl[slot.slot] = slot.count
-						newWeight -= slot.weight
 						needs -= slot.count
 					end
 
@@ -171,10 +185,6 @@ lib.callback.register('ox_inventory:craftItem', function(source, id, index, reci
 					-- Player does not have enough items (ui should prevent crafting if lacking items, so this shouldn't trigger)
 					if needs > 0 and i == #slots then return end
 				end
-			end
-
-			if newWeight > left.maxWeight then
-				return false, 'cannot_carry'
 			end
 
 			if not TriggerEventHooks('craftItem', {
