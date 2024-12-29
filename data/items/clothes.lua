@@ -97,6 +97,13 @@ return {
         stack = false
     },
 
+    ['clothes_masks'] = {
+        label = 'Masque',
+        description = 'Un vêtement cool',
+        weight = 0,
+        stack = false
+    },
+
     ['clothes_outfits'] = {
         label = 'Tenue',
         description = 'Une tenue cool',

@@ -1,102 +1,410 @@
 local clothing = {}
 
-local Inventory
+local QBox = exports.qbx_core
+local BlAppearance = exports.bl_appearance
 
-CreateThread(function()
-    Inventory = require 'modules.inventory.server'
-end)
+local sharedClothing = shared.clothing
+local sharedClothingSlots = sharedClothing.slots
 
-local slotItems = shared.clothing.slots
+local function countItems(items)
+    if type(items) ~= 'table' then
+        error('Invalid items parameter: expected table, got ' .. type(items))
+        return 0
+    end
+    local count = 0
+    for _ in pairs(items) do
+        count = count + 1
+    end
+    return count
+end
+
+local function getSexFromModel(model)
+    local sex = 'female'
+    if model == GetHashKey('mp_m_freemode_01') then
+        sex = 'male'
+    end
+    return sex
+end
+
+local function validateClothingData(data, sex, itemType)
+    if not data then
+        error('No clothing data provided')
+        return false
+    end
+
+    if not sex then
+        error('No sex specified for clothing validation')
+        return false
+    end
+
+    if not itemType then
+        error('No item type specified for clothing validation')
+        return false
+    end
+
+    if not sharedClothing[sex] then
+        error('Invalid sex specified: ' .. tostring(sex))
+        return false
+    end
+
+    return true
+end
+
+local function processClothingItems(inv, clothes, sex, itemSet, itemType)
+    if not validateClothingData(itemSet, sex, itemType) then
+        return false
+    end
+
+    local success, result = pcall(function()
+        for key, data in pairs(itemSet) do
+            local slotKey = 'clothes_' .. key
+            if sharedClothingSlots[slotKey] then
+                local baseClothing = sharedClothing[sex][key]
+                if not baseClothing then
+                    error('No base clothing found for key: ' .. key)
+                    return false
+                end
+
+                if data.value ~= baseClothing.drawable then
+                    data.type = itemType
+                    inv.AddItem(clothes, slotKey, 1, data, sharedClothingSlots[slotKey])
+                end
+            end
+        end
+        return true
+    end)
+
+    if not success then
+        error('Failed to process clothing items: ' .. tostring(result))
+        return false
+    end
+
+    return true
+end
 
 function clothing.getClothesInv(src, identifier)
-    return Inventory('clothes_' .. identifier, src, true) --[[@as OxInventory]]
+    if not src or not identifier then
+        error('Invalid parameters for getClothesInv')
+        return nil
+    end
+
+    local success, result = pcall(function()
+        return require('modules.inventory.server')('clothes_' .. identifier, src, true)
+    end)
+
+    if not success then
+        error('Failed to get clothes inventory: ' .. tostring(result))
+        return nil
+    end
+
+    return result
 end
 
 RegisterNetEvent('ox_inventory:syncPlayerClothes', function()
     local src = source
 
-    local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
-
-    local citizenid = player.PlayerData.citizenid
-    local clothes = clothing.getClothesInv(src, citizenid)
-    if not clothes then return end
-
-    local sex, props, head, drawables = lib.callback.await('ox_inventory:clothes:appearance', src)
-    if not sex or not props or not head or not drawables then return end
-    Inventory.Clear(clothes, 'clothes_outfits')
-
-    exports.bl_appearance:SavePlayerClothes(citizenid, {
-        headOverlay = head,
-        drawables = drawables,
-        props = props,
-    })
-
-    for key, data in pairs(props) do
-        if slotItems['clothes_' .. key] then
-            if data.value ~= shared.clothing[sex][key].drawable then
-                data.type = 'prop'
-                data.image = ('clothes/%s/%s_%s_%s'):format(sex, sex, data.index, data.value) .. (data.texture ~= 0 and ('_%s'):format(data.texture) or '')
-                Inventory.AddItem(clothes, 'clothes_' .. key, 1, data, slotItems['clothes_' .. key])
-            end
+    local success, result = pcall(function()
+        local player = QBox:GetPlayer(src)
+        if not player then
+            error('Player not found')
+            return false
         end
-    end
 
-    for key, data in pairs(drawables) do
-        if slotItems['clothes_' .. key] then
-            if data.value ~= shared.clothing[sex][key].drawable then
-                data.type = 'component'
-                data.image = ('clothes/%s/%s_%s_%s'):format(sex, sex, data.index, data.value) .. (data.texture ~= 0 and ('_%s'):format(data.texture) or '')
-                Inventory.AddItem(clothes, 'clothes_' .. key, 1, data, slotItems['clothes_' .. key])
-            end
+        local citizenid = player.PlayerData.citizenid
+        local clothes = clothing.getClothesInv(src, citizenid)
+        if not clothes then
+            error('Failed to get clothes inventory')
+            return false
         end
-    end
 
-    for i = 1, 16 do
-        clothes:syncSlotsWithClients({
-            slots = { item = { slot = i } },
-            inventory = clothes.id,
-        }, true)
+        local appearance = exports.bl_appearance:GetPlayerAppearance(citizenid)
+        if not appearance then
+            error('Invalid appearance data received')
+            return false
+        end
+
+        local sex = getSexFromModel(appearance.model)
+        if not sex then
+            error('Failed to get sex from model')
+            return false
+        end
+
+        local Inventory = require('modules.inventory.server')
+        Inventory.Clear(clothes, 'clothes_outfits')
+
+        if not processClothingItems(Inventory, clothes, sex, appearance.props, 'prop') then
+            error('Failed to process prop items')
+            return false
+        end
+
+        if not processClothingItems(Inventory, clothes, sex, appearance.drawables, 'component') then
+            error('Failed to process drawable items')
+            return false
+        end
+
+        for i = 1, 16 do
+            clothes:syncSlotsWithClients({
+                slots = { item = { slot = i } },
+                inventory = clothes.id,
+            }, true)
+        end
+
+        return true
+    end)
+
+    if not success then
+        error('Failed to sync player clothes: ' .. tostring(result))
     end
 end)
 
----@param source number
 lib.callback.register('ox_inventory:getInventoryClothes', function(source)
-    local src = source
+    local success, result = pcall(function()
+        local player = QBox:GetPlayer(source)
+        if not player then
+            error('Player not found')
+            return false
+        end
 
-    local player = exports.qbx_core:GetPlayer(src)
-    if not player then return end
+        local clothes = clothing.getClothesInv(source, player.PlayerData.citizenid)
+        if not clothes then
+            error('Failed to get clothes inventory')
+            return false
+        end
 
-    local citizenid = player.PlayerData.citizenid
-    local clothes = clothing.getClothesInv(src, citizenid)
+        return {
+            id = clothes.id,
+            label = clothes.label,
+            type = clothes.type,
+            slots = clothes.slots,
+            weight = 0,
+            maxWeight = 10000,
+            items = clothes.items or {}
+        }
+    end)
 
-    return clothes and {
-        id = clothes.id,
-        label = clothes.label,
-        type = clothes.type,
-        slots = clothes.slots,
-        weight = 0,
-        maxWeight = 10000,
-        items = clothes.items or {}
-    } or false
+    if not success then
+        error('Failed to get inventory clothes: ' .. tostring(result))
+        return false
+    end
+
+    return result
 end)
 
 function clothing.addClothing(payload)
-    if not payload.source then return false end
-    return lib.callback.await('ox_inventory:addClothing', payload.source, payload.fromSlot.metadata)
+    local success, result = pcall(function()
+        if not payload.source then
+            error('No source provided in payload')
+            return false
+        end
+
+        local player = QBox:GetPlayer(payload.source)
+        if not player then
+            error('Player not found')
+            return false
+        end
+
+        if not payload.fromSlot.metadata then
+            error('No metadata in payload slot')
+            return false
+        end
+
+        local newAppearance = lib.callback.await('ox_inventory:addClothing', payload.source, payload.fromSlot.metadata)
+        if not newAppearance then
+            error('Failed to get new appearance')
+            return false
+        end
+
+        BlAppearance:SavePlayerAppearance(player.PlayerData.citizenid, newAppearance)
+        return true
+    end)
+
+    if not success then
+        error('Failed to add clothing: ' .. tostring(result))
+        return false
+    end
+
+    return result
 end
 
 function clothing.removeClothing(payload)
-    if not payload.source then return false end
-    return lib.callback.await('ox_inventory:removeClothing', payload.source, payload.fromSlot.metadata)
+    local success, result = pcall(function()
+        if not payload.source then
+            error('No source provided in payload')
+            return false
+        end
+
+        local player = QBox:GetPlayer(payload.source)
+        if not player then
+            error('Player not found')
+            return false
+        end
+
+        if not payload.fromSlot.metadata then
+            error('No metadata in payload slot')
+            return false
+        end
+
+        local newAppearance = lib.callback.await('ox_inventory:removeClothing', payload.source, payload.fromSlot
+        .metadata)
+        if not newAppearance then
+            error('Failed to get new appearance')
+            return false
+        end
+
+        BlAppearance:SavePlayerAppearance(player.PlayerData.citizenid, newAppearance)
+        return true
+    end)
+
+    if not success then
+        error('Failed to remove clothing: ' .. tostring(result))
+        return false
+    end
+
+    return result
 end
 
 function clothing.addOutfit(payload)
-    return true
+    local success, result = pcall(function()
+        local restrictedProps = { 'mouth', 'lhand', 'rhand' }
+        local restrictedDrawables = { 'hair', 'face' }
+
+        for _, prop in ipairs(restrictedProps) do
+            payload.fromSlot.metadata.outfit.props[prop] = nil
+        end
+
+        for _, drawable in ipairs(restrictedDrawables) do
+            payload.fromSlot.metadata.outfit.drawables[drawable] = nil
+        end
+
+        local player = QBox:GetPlayer(payload.source)
+        if not player then
+            error('Player not found')
+            return false
+        end
+
+        local Inventory = require('modules.inventory.server')
+        local citizenid = player.PlayerData.citizenid
+        local clothes = clothing.getClothesInv(payload.source, citizenid)
+        local inv = Inventory(payload.source, payload.source, true)
+
+        local clothesItemCount = countItems(clothes.items)
+        if clothesItemCount > 0 then
+            if (countItems(inv.items) + clothesItemCount) >= shared.playerslots then
+                lib.notify(payload.source, {
+                    type = 'error',
+                    title = 'Inventaire',
+                    description = 'Vous n\'avez pas assez de place dans votre inventaire.',
+                })
+                return false
+            end
+
+            for _, item in pairs(clothes.items) do
+                Inventory.RemoveItem(clothes, item.slot, 1)
+                Inventory.AddItem(inv, item.name, 1, item.metadata)
+            end
+        end
+
+        for i = 1, 16 do
+            clothes:syncSlotsWithClients({
+                slots = { item = { slot = i } },
+                inventory = clothes.id,
+            }, true)
+        end
+
+        local newAppearance = lib.callback.await('ox_inventory:addOutfit', payload.source, payload.fromSlot.metadata.outfit)
+        if not newAppearance then
+            error('Failed to get new appearance')
+            return false
+        end
+
+        BlAppearance:SavePlayerAppearance(citizenid, newAppearance)
+        return true
+    end)
+
+    if not success then
+        error('Failed to add outfit: ' .. tostring(result))
+        return false
+    end
+
+    return result
 end
 
 function clothing.removeOutfit(payload)
-    return true
+    local success, result = pcall(function()
+        if not payload.source then
+            error('No source provided in payload')
+            return false
+        end
+
+        local player = QBox:GetPlayer(payload.source)
+        if not player then
+            error('Player not found')
+            return false
+        end
+
+        local restrictedProps = { 'mouth', 'lhand', 'rhand' }
+        local restrictedDrawables = { 'hair', 'face' }
+
+        for _, prop in ipairs(restrictedProps) do
+            payload.fromSlot.metadata.outfit.props[prop] = nil
+        end
+
+        for _, drawable in ipairs(restrictedDrawables) do
+            payload.fromSlot.metadata.outfit.drawables[drawable] = nil
+        end
+
+        local citizenid = player.PlayerData.citizenid
+        local clothes = clothing.getClothesInv(payload.source, citizenid)
+        if not clothes then
+            error('Failed to get clothes inventory')
+            return false
+        end
+
+        local newAppearance = lib.callback.await('ox_inventory:removeOutfit', payload.source, payload.fromSlot.metadata.outfit)
+        if not newAppearance then
+            error('Failed to get new appearance')
+            return false
+        end
+
+        CreateThread(function ()
+            Wait(500)
+
+            ---@return boolean
+            ---@return table
+            local success, result = pcall(function()
+                return require('modules.inventory.server')
+            end)
+
+            if not success then
+                error('Failed to get inventory: ' .. tostring(result))
+                return nil
+            end
+
+            result.SetMetadata(payload.fromInventory, payload.fromSlot.slot, {
+                outfit = {
+                    newAppearance.drawables,
+                    newAppearance.props,
+                }
+            })
+        end)
+
+        for i = 1, 16 do
+            clothes:syncSlotsWithClients({
+                slots = { item = { slot = i } },
+                inventory = clothes.id,
+            }, true)
+        end
+
+        BlAppearance:SavePlayerAppearance(citizenid, newAppearance)
+        return true
+    end)
+
+    if not success then
+        error('Failed to remove outfit: ' .. tostring(result))
+        return false
+    end
+
+    return result
 end
 
 return clothing

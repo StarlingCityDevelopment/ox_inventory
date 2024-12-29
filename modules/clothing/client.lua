@@ -1,108 +1,240 @@
 local function isMaleOrFemale()
     local skin = exports.bl_appearance:GetPedSkin(cache.ped)
+    if not skin then
+        error('Failed to get ped skin')
+        return nil
+    end
     return (skin.model == "mp_f_freemode_01") and "female" or "male"
 end
 
-function client.syncClothes()
-    local outfit = exports.bl_appearance:GetPedAppearance(cache.ped)
-    if client.getPed() ~= 0 then
-        exports.bl_appearance:SetPedAppearance(client.getPed(), outfit)
-    end
-    TriggerServerEvent('ox_inventory:syncPlayerClothes')
+local function playChangeClothesAnimation()
+    CreateThread(function()
+        local dict = 'clothingshirt'
+        local clip = 'try_shirt_positive_d'
+        lib.requestAnimDict(dict)
+        TaskPlayAnim(cache.ped, dict, clip, 3.0, 3.0, 2000, 51, 0, false, false, false)
+        RemoveAnimDict(dict)
+    end)
 end
 
-lib.callback.register('ox_inventory:clothes:appearance', function()
-    local sex = isMaleOrFemale()
-    local props = exports.bl_appearance:GetPedProps(cache.ped)
-    local head = exports.bl_appearance:GetPedHeadOverlay(cache.ped)
-    local drawables = exports.bl_appearance:GetDrawables(cache.ped)
-    if not props or not head or not drawables then return false end
-    return sex, props, head, drawables
-end)
+local function showProgressBar(duration, label)
+    return lib.progressBar({
+        duration = duration or 2000,
+        label = label or 'Changement de tenue...',
+        useWhileDead = false,
+        canCancel = true,
+        disable = {
+            car = true,
+            move = true,
+            combat = true
+        }
+    })
+end
 
-lib.callback.register('ox_inventory:addClothing', function(data)
-    if not data then return false end
-    if data.type == 'component' then
-        exports.bl_appearance:SetPedDrawable(cache.ped, data)
-    elseif data.type == 'prop' then
-        exports.bl_appearance:SetPedProp(cache.ped, data)
-    end
-    client.syncClothes()
-    return true
-end)
+-- Enhanced appearance synchronization
+local function safeSync()
+    local targetPed = client.getPed()
 
-lib.callback.register('ox_inventory:removeClothing', function(data)
-    if not data then return false end
-
-    local sex = isMaleOrFemale()
-    local component = shared.clothing[sex][data.id]
-
-    if data.type == 'component' then
-        exports.bl_appearance:SetPedDrawable(cache.ped, {
-            index = data.index,
-            value = component.drawable,
-            id = data.id,
-            texture = component.texture
-        })
-    elseif data.type == 'prop' then
-        exports.bl_appearance:SetPedProp(cache.ped, {
-            index = data.index,
-            value = component.drawable,
-            id = data.id,
-            texture = component.texture
-        })
-    end
-
-    client.syncClothes()
-    return true
-end)
-
-lib.callback.register('ox_inventory:addOutfit', function(data)
-    if not data then
+    if targetPed == 0 then
+        error('Invalid target ped')
         return false
     end
 
-    for _, value in ipairs(data) do
-        if value.type == 'component' then
-            exports.bl_appearance:setPedComponent(cache.ped, {
-                component_id = value.component,
-                drawable = value.drawable,
-                texture = value.texture
-            })
-        elseif value.type == 'prop' then
-            exports.bl_appearance:setPedProp(cache.ped, {
-                prop_id = value.prop,
-                drawable = value.drawable,
-                texture = value.texture
-            })
+    local success, result = pcall(function()
+        local outfit = exports.bl_appearance:GetPedAppearance(cache.ped)
+        if not outfit then
+            error('Failed to get ped appearance')
+            return false
         end
-    end
+        exports.bl_appearance:SetPedAppearance(targetPed, outfit)
+        TriggerServerEvent('ox_inventory:syncPlayerClothes')
+        return true
+    end)
 
-    client.syncClothes()
+    if not success then
+        error('Failed to sync appearance: ' .. tostring(result))
+        return false
+    end
 
     return true
-end)
+end
 
-lib.callback.register('ox_inventory:removeOutfit', function()
-    local sex = isMaleOrFemale()
+local function processComponents(components, isProp)
+    if not components then return false end
 
-    for component, value in ipairs(shared.clothing.no_clothing[sex]) do
-        exports.bl_appearance:setPedComponent(cache.ped, {
-            component_id = component,
-            drawable = value.drawable,
-            texture = value.texture
-        })
+    local success, result = pcall(function()
+        for _, value in pairs(components) do
+            if not value.id then
+                error('Invalid component data: missing ID')
+                return false
+            end
+
+            local sex = isMaleOrFemale()
+            if not sex then return false end
+
+            local component = shared.clothing[sex][value.id]
+            if not component then
+                error('Component not found for ID: ' .. value.id)
+                return false
+            end
+
+            if isProp then
+                exports.bl_appearance:SetPedProp(cache.ped, {
+                    index = value.index,
+                    value = component.drawable,
+                    id = value.id,
+                    texture = component.texture
+                })
+            else
+                exports.bl_appearance:SetPedDrawable(cache.ped, {
+                    index = value.index,
+                    value = component.drawable,
+                    id = value.id,
+                    texture = component.texture
+                })
+            end
+        end
+        return true
+    end)
+
+    if not success then
+        error('Failed to process components: ' .. tostring(result))
+        return false
     end
-
-    for prop, value in ipairs(shared.clothing.no_props[sex]) do
-        exports.bl_appearance:setPedProp(cache.ped, {
-            prop_id = prop,
-            drawable = value.drawable,
-            texture = value.texture
-        })
-    end
-
-    client.syncClothes()
 
     return true
-end)
+end
+
+local function handleOutfit(data, action)
+    if not data then
+        error('No outfit data provided')
+        return false
+    end
+
+    TriggerEvent('ox_inventory:closeInventory')
+
+    playChangeClothesAnimation()
+    local progressSuccess = showProgressBar()
+
+    if not progressSuccess then
+        error('Progress cancelled by user')
+        return false
+    end
+
+    local success, result = pcall(function()
+        if action == "remove" then
+            if not processComponents(data.drawables, false) then return false end
+            if not processComponents(data.props, true) then return false end
+        elseif action == "add" then
+            exports.bl_appearance:SetPedClothes(cache.ped, data)
+        else
+            error('Invalid action type: ' .. tostring(action))
+            return false
+        end
+
+        if not safeSync() then return false end
+        return exports.bl_appearance:GetPedAppearance(cache.ped)
+    end)
+
+    if not success then
+        error('Failed to handle outfit: ' .. tostring(result))
+        return false
+    end
+
+    return result
+end
+
+local callbackHandlers = {
+    ['ox_inventory:addClothing'] = function(data)
+        if not data then
+            error('No clothing data provided')
+            return false
+        end
+
+        playChangeClothesAnimation()
+        local progressSuccess = showProgressBar(1000, 'Ajout du vêtement...')
+
+        if not progressSuccess then return false end
+
+        local success, result = pcall(function()
+            if data.type == 'component' then
+                exports.bl_appearance:SetPedDrawable(cache.ped, data)
+            elseif data.type == 'prop' then
+                exports.bl_appearance:SetPedProp(cache.ped, data)
+            else
+                error('Invalid clothing type: ' .. tostring(data.type))
+                return false
+            end
+
+            if not safeSync() then return false end
+            return exports.bl_appearance:GetPedAppearance(cache.ped)
+        end)
+
+        if not success then
+            error('Failed to add clothing: ' .. tostring(result))
+            return false
+        end
+
+        return result
+    end,
+    ['ox_inventory:removeClothing'] = function(data)
+        if not data then
+            error('No clothing data provided')
+            return false
+        end
+
+        playChangeClothesAnimation()
+        local progressSuccess = showProgressBar(1000, 'Retrait du vêtement...')
+
+        if not progressSuccess then return false end
+
+        local success, result = pcall(function()
+            local sex = isMaleOrFemale()
+            if not sex then return false end
+
+            local component = shared.clothing[sex][data.id]
+            if not component then
+                error('Component not found for ID: ' .. data.id)
+                return false
+            end
+
+            local componentData = {
+                index = data.index,
+                value = component.drawable,
+                id = data.id,
+                texture = component.texture
+            }
+
+            if data.type == 'component' then
+                exports.bl_appearance:SetPedDrawable(cache.ped, componentData)
+            elseif data.type == 'prop' then
+                exports.bl_appearance:SetPedProp(cache.ped, componentData)
+            else
+                error('Invalid clothing type: ' .. tostring(data.type))
+                return false
+            end
+
+            if not safeSync() then return false end
+            return exports.bl_appearance:GetPedAppearance(cache.ped)
+        end)
+
+        if not success then
+            error('Failed to remove clothing: ' .. tostring(result))
+            return false
+        end
+
+        return result
+    end,
+    ['ox_inventory:addOutfit'] = function(data)
+        return handleOutfit(data, "add")
+    end,
+    ['ox_inventory:removeOutfit'] = function(data)
+        return handleOutfit(data, "remove")
+    end
+}
+
+for eventName, handler in pairs(callbackHandlers) do
+    lib.callback.register(eventName, handler)
+end
+
+client.safeSync = safeSync
