@@ -1,4 +1,5 @@
 import { createSlice, current, isFulfilled, isPending, isRejected, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector } from 'reselect';
 import type { RootState } from '.';
 import {
   moveSlotsReducer,
@@ -110,5 +111,14 @@ export const selectClothesInventory = (state: RootState) => state.inventory.clot
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
 export const selectItemAmount = (state: RootState) => state.inventory.itemAmount;
 export const selectIsBusy = (state: RootState) => state.inventory.isBusy;
+
+export const selectInventoryItems = createSelector(
+  [selectLeftInventory, selectClothesInventory, selectRightInventory],
+  (leftInventory, clothesInventory, rightInventory) => ({
+    leftItems: leftInventory.items,
+    clothesItems: clothesInventory.items,
+    rightItems: rightInventory.items,
+  })
+);
 
 export default inventorySlice.reducer;

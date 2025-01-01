@@ -56,6 +56,9 @@ importers:
       redux:
         specifier: ^4.2.1
         version: 4.2.1
+      reselect:
+        specifier: ^5.1.1
+        version: 5.1.1
       sass:
         specifier: ^1.83.0
         version: 1.83.0
@@ -918,6 +921,9 @@ packages:
 
   reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
+
+  reselect@5.1.1:
+    resolution: {integrity: sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==}
 
   rollup@3.29.5:
     resolution: {integrity: sha512-GVsDdsbJzzy4S/v3dqWPJ7EfvZJfCHiDqe80IyrF59LYuP+e6U1LJoUqeuqRbwAWoMNoXivMNeNAOf5E22VA1w==}
@@ -1928,6 +1934,8 @@ snapshots:
       unified: 10.1.2
 
   reselect@4.1.8: {}
+
+  reselect@5.1.1: {}
 
   rollup@3.29.5:
     optionalDependencies:

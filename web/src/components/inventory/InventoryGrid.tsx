@@ -22,6 +22,10 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   });
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
 
+  const itemsToDisplay = useMemo(() => {
+    return inventory.items.slice(inventory.type === 'player' ? 5 : 0, (page + 1) * PAGE_SIZE);
+  }, [inventory.items, inventory.type, page]);
+
   useEffect(() => {
     if (entry && entry.isIntersecting) setPage((prev) => prev + 1);
   }, [entry]);
@@ -50,7 +54,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
         </>
         <div className="inventory-grid-container" ref={containerRef}>
           <>
-            {inventory.items.slice(inventory.type === 'player' ? 5 : 0, (page + 1) * PAGE_SIZE).map((item, index) => (
+            {itemsToDisplay.map((item, index) => (
               <InventorySlot
                 key={`${inventory.type}-${inventory.id}-${item.slot}`}
                 item={item}

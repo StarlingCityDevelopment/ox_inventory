@@ -100,14 +100,14 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
 
   const connectRef = (element: HTMLDivElement) => drag(drop(element));
 
-  const handleContext = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleContext = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (inventoryType !== 'player' || !isSlotWithItem(item)) return;
 
     dispatch(openContextMenu({ item, coords: { x: event.clientX, y: event.clientY } }));
-  };
+  }, [dispatch, inventoryType, item]);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     dispatch(closeTooltip());
     if (timerRef.current) clearTimeout(timerRef.current);
     if (event.ctrlKey && isSlotWithItem(item) && inventoryType !== 'shop' && inventoryType !== 'crafting') {
@@ -115,7 +115,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     } else if (event.altKey && isSlotWithItem(item) && inventoryType === 'player') {
       onUse(item);
     }
-  };
+  }, [dispatch, item, inventoryType]);
 
   const refs = useMergeRefs([connectRef, ref]);
 
