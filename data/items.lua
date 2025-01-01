@@ -10,6 +10,7 @@ local files = {
     'radio',
     'restaurants',
     'robberies',
+    'racing',
 }
 
 for _, file in ipairs(files) do
