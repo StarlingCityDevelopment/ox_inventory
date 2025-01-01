@@ -173,23 +173,14 @@ function client.openInventory(inv, data)
 
 			if inv ~= 'drop' and inv ~= 'container' then
 				if (data?.id or data) == currentInventory?.id then
-					-- Triggering exports.ox_inventory:openInventory('stash', 'mystash') twice in rapid succession is weird behaviour
-					return warn(("script tried to open inventory, but it is already open\n%s"):format(Citizen
-					.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString())))
+					return warn(("script tried to open inventory, but it is already open\n%s"):format(Citizen.InvokeNative(`FORMAT_STACK_TRACE` & 0xFFFFFFFF, nil, 0, Citizen.ResultAsString())))
 				else
 					return client.closeInventory()
 				end
 			end
 		end
 	elseif IsNuiFocused() then
-		-- If triggering from another nui, may need to wait for focus to end.
-		Wait(100)
-
-		-- People still complain about this being an "error" and ask "how fix" despite being a warning
-		-- for people with above room-temperature iqs to look into resource conflicts on their own.
-		-- if IsNuiFocused() then
-		-- 	warn('other scripts have nui focus and may cause issues (e.g. disable focus, prevent input, overlap inventory window)')
-		-- end
+		Wait(250)
 	end
 
 	if inv == 'dumpster' and cache.vehicle then
@@ -985,6 +976,7 @@ exports('closeInventory', client.closeInventory)
 ---@param weight number
 local function updateInventory(data, weight)
 	local changes = {}
+
 	---@type table<string, number>
 	local itemCount = {}
 
@@ -1052,8 +1044,7 @@ local function updateInventory(data, weight)
 		end
 	end
 
-	client.syncClothes()
-
+    client.safeSync()
 	client.setPlayerData('inventory', PlayerData.inventory)
 	TriggerEvent('ox_inventory:updateInventory', changes)
 end
@@ -1331,6 +1322,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 
 	client.setPlayerData('inventory', inventory)
 	client.setPlayerData('weight', weight)
+    client.safeSync()
 	currentWeapon = nil
 	Weapon.ClearAll()
 

@@ -31,7 +31,6 @@ local function showProgressBar(duration, label)
     })
 end
 
--- Enhanced appearance synchronization
 local function safeSync()
     local targetPed = client.getPed()
 
