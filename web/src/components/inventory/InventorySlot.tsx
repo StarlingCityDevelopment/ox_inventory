@@ -44,13 +44,13 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       item: () =>
         isSlotWithItem(item, inventoryType !== InventoryType.SHOP)
           ? {
-            inventory: inventoryType,
-            item: {
-              name: item.name,
-              slot: item.slot,
-            },
-            image: item?.name && `url(${getItemUrl(item) || 'none'}`,
-          }
+              inventory: inventoryType,
+              item: {
+                name: item.name,
+                slot: item.slot,
+              },
+              image: item?.name && `url(${getItemUrl(item) || 'none'}`,
+            }
           : null,
       canDrag,
     }),
@@ -133,7 +133,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         opacity: isDragging ? 0.4 : 1.0,
         backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
         animation: isOver ? 'tilt-shaking 0.75s infinite' : '',
-        display: ((inventoryType === 'crafting' || inventoryType == 'shop') && !isSlotWithItem(item)) ? 'none' : 'block',
+        display: (inventoryType === 'crafting' || inventoryType == 'shop') && !isSlotWithItem(item) ? 'none' : 'block',
       }}
     >
       {isSlotWithItem(item) && (
@@ -153,18 +153,21 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           }}
         >
           <div
-            className={'item-slot-header-wrapper'}
+            className={
+              inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'
+            }
           >
+            {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
             <div className="item-slot-info-wrapper">
               <p>
                 {item.weight > 0
                   ? item.weight >= 1000
                     ? `${(item.weight / 1000).toLocaleString('en-us', {
-                      minimumFractionDigits: 2,
-                    })}kg `
+                        minimumFractionDigits: 2,
+                      })}kg `
                     : `${item.weight.toLocaleString('en-us', {
-                      minimumFractionDigits: 0,
-                    })}g `
+                        minimumFractionDigits: 0,
+                      })}g `
                   : ''}
               </p>
               <p>{item.count ? item.count.toLocaleString('en-us') + `x` : ''}</p>

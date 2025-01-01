@@ -19,14 +19,14 @@ debugData([
       leftInventory: {
         id: 'test',
         type: 'player',
-        slots: 50,
+        slots: 500,
         label: 'Bob Smith',
         weight: 3000,
         maxWeight: 5000,
         items: [
           {
             slot: 1,
-            name: 'iron',
+            name: 'lockpick',
             weight: 3000,
             metadata: {
               description: `name: Svetozar Miletic  \n Gender: Male`,
@@ -37,12 +37,28 @@ debugData([
             },
             count: 5,
           },
-          { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
+          {
+            slot: 2,
+            name: 'ammo-9',
+            weight: 0,
+            count: 1, metadata: {
+              durability: 75
+            }
+          },
+          {
+            slot: 3,
+            name: 'card_bank',
+            weight: 100,
+            count: 12, metadata: {
+              label: 'Credit Card',
+              type: 'Special'
+            }
+          },
           {
             slot: 4,
             name: 'water',
             weight: 100,
-            count: 20,
+            count: 1,
             metadata: { description: 'Generic item description' },
           },
           { slot: 5, name: 'water', weight: 100, count: 1 },
@@ -69,7 +85,7 @@ debugData([
       },
       rightInventory: {
         id: 'shop',
-        type: 'crafting',
+        type: 'shop',
         slots: 5000,
         label: 'Bob Smith',
         weight: 3000,

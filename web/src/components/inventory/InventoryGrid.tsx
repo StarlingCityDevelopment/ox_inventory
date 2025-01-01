@@ -6,7 +6,7 @@ import { getTotalWeight } from '../../helpers';
 import { useAppSelector } from '../../store';
 import { useIntersection } from '../../hooks/useIntersection';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 50;
 
 const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const weight = useMemo(
@@ -15,14 +15,15 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   );
 
   const [page, setPage] = useState(0);
-  const containerRef = useRef(null);
-  const { ref, entry } = useIntersection({ threshold: 0.5 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { ref: sentinelRef, entry } = useIntersection({
+    root: containerRef.current,
+    threshold: 0.1,
+  });
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
 
   useEffect(() => {
-    if (entry && entry.isIntersecting) {
-      setPage((prev) => ++prev);
-    }
+    if (entry && entry.isIntersecting) setPage((prev) => prev + 1);
   }, [entry]);
 
   return (
@@ -49,19 +50,34 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
         </>
         <div className="inventory-grid-container" ref={containerRef}>
           <>
-            {inventory.items.slice(inventory.type == 'player' ? 5 : 0, (page + 1) * PAGE_SIZE).map((item, index) => (
+            {inventory.items.slice(inventory.type === 'player' ? 5 : 0, (page + 1) * PAGE_SIZE).map((item, index) => (
               <InventorySlot
                 key={`${inventory.type}-${inventory.id}-${item.slot}`}
                 item={item}
-                ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
+                ref={index === (page + 1) * PAGE_SIZE - 1 ? sentinelRef : null}
                 inventoryType={inventory.type}
                 inventoryGroups={inventory.groups}
                 inventoryId={inventory.id}
               />
             ))}
+            <div ref={sentinelRef} style={{ height: '1px' }} />
           </>
         </div>
       </div>
+      {inventory.type === 'player' && <div className="inventory-fast-grid">
+        <>
+          {inventory.items.slice(0, 5).map((item, index) => (
+            <InventorySlot
+              key={`${inventory.type}-${inventory.id}-${item.slot}`}
+              item={item}
+              ref={null}
+              inventoryType={inventory.type}
+              inventoryGroups={inventory.groups}
+              inventoryId={inventory.id}
+            />
+          ))}
+        </>
+      </div>}
     </>
   );
 };

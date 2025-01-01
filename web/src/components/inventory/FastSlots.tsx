@@ -5,8 +5,6 @@ import { useAppSelector } from '../../store';
 import { selectLeftInventory } from '../../store/inventory';
 import { useIntersection } from '../../hooks/useIntersection';
 
-const PAGE_SIZE = 5;
-
 const FastGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const [page, setPage] = useState(0);
   const containerRef = useRef(null);

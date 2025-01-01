@@ -49,7 +49,6 @@ const Inventory: React.FC = () => {
           <LeftInventory />
           <ClothesInventory />
           <RightInventory />
-          <FastSlots />
           <InventoryControl />
           <Tooltip />
           <InventoryContext />
