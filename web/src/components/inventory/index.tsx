@@ -30,9 +30,11 @@ const Inventory: React.FC = () => {
 
   useNuiEvent<{
     leftInventory?: InventoryProps;
+    clothesInventory?: InventoryProps;
     rightInventory?: InventoryProps;
   }>('setupInventory', (data) => {
     dispatch(setupInventory(data));
+    if (data.clothesInventory && !data.leftInventory && !data.rightInventory) return;
     !inventoryVisible && setInventoryVisible(true);
   });
 

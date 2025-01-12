@@ -355,7 +355,7 @@ button:active {
   image-rendering: -webkit-optimize-contrast;
   position: relative;
   background-size: 6vh;
-  color: $textColor;
+  color: white;
   border-color: rgba(33, 33, 33, 0.741);
   border-width: 2px;
 }
@@ -409,7 +409,7 @@ button:active {
 }
 
 .item-slot-info-wrapper {
-  display: none;
+  display: flex;
   flex-direction: row;
   align-self: flex-end;
   padding: 3px;

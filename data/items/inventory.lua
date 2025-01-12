@@ -7,6 +7,12 @@ return {
         label = 'Argent sale',
     },
 
+    ['skateboard'] = {
+        label = 'Skateboard',
+        weight = 750,
+        stack = false,
+    },
+
     ['newspaper'] = {
         label = 'Journal',
         weight = 10,
