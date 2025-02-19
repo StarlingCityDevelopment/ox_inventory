@@ -19,6 +19,21 @@ return {
         stack = false,
     },
 
+    ['cigarette'] = {
+        label = 'Paquet de Cigarette',
+        weight = 10,
+        stack = false,
+    },
+
+    ['document'] = {
+        label = 'Document',
+        weight = 10,
+        stack = false,
+        client = {
+            export = 'k5_documents.show',
+        }
+    },
+
     ["phone"] = {
         label = "Téléphone",
         weight = 190,
