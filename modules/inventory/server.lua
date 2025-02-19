@@ -216,6 +216,8 @@ end
 
 setmetatable(Inventory, {
 	__call = function(self, inv, player, ignoreSecurityChecks)
+        if Inventory.Lock then return false end
+
 		if not inv then
 			return self
 		elseif type(inv) == 'table' then
@@ -616,30 +618,30 @@ end
 function Inventory.Remove(inv)
 	inv = Inventory(inv) --[[@as OxInventory]]
 
-	if inv then
-		if inv.type == 'drop' then
-			TriggerClientEvent('ox_inventory:removeDrop', -1, inv.id)
-			Inventory.Drops[inv.id] = nil
-		elseif inv.player then
-			activeIdentifiers[inv.owner] = nil
-		end
+	if not inv then return end
 
-        for playerId in pairs(inv.openedBy) do
-            if inv.id ~= playerId then
-                local target = Inventories[playerId]
+    if inv.type == 'drop' then
+        TriggerClientEvent('ox_inventory:removeDrop', -1, inv.id)
+        Inventory.Drops[inv.id] = nil
+    elseif inv.player then
+        activeIdentifiers[inv.owner] = nil
+    end
 
-                if target then
-                    target:closeInventory()
-                end
+    for playerId in pairs(inv.openedBy) do
+        if inv.id ~= playerId then
+            local target = Inventories[playerId]
+
+            if target then
+                target:closeInventory()
             end
         end
+    end
 
-        if not inv.datastore and inv.changed then
-            Inventory.Save(inv)
-        end
+    if not inv.datastore and inv.changed then
+        Inventory.Save(inv)
+    end
 
-		Inventories[inv.id] = nil
-	end
+    Inventories[inv.id] = nil
 end
 
 exports('RemoveInventory', Inventory.Remove)
@@ -1514,7 +1516,7 @@ AddEventHandler('ox_inventory:customDrop', CustomDrop)
 exports('CustomDrop', CustomDrop)
 
 exports('CreateDropFromPlayer', function(playerId)
-	local playerInventory = Inventories[playerId]
+	local playerInventory = Inventory(playerId)
 
 	if not playerInventory or not next(playerInventory.items) then return end
 
@@ -2055,7 +2057,7 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 end)
 
 function Inventory.Confiscate(source)
-	local inv = Inventories[source]
+	local inv = Inventory(source)
 
 	if inv?.player then
 		db.saveStash(inv.owner, inv.owner, json.encode(minimal(inv)))
@@ -2071,7 +2073,7 @@ end
 exports('ConfiscateInventory', Inventory.Confiscate)
 
 function Inventory.Return(source)
-	local inv = Inventories[source]
+	local inv = Inventory(source)
 
 	if not inv?.player then return end
 
@@ -2500,8 +2502,8 @@ RegisterServerEvent('ox_inventory:closeInventory', function()
 end)
 
 local function giveItem(playerId, slot, target, count)
-	local fromInventory = Inventories[playerId]
-	local toInventory = Inventories[target]
+	local fromInventory = Inventory(playerId)
+	local toInventory = Inventory(target)
 
 	if count <= 0 then count = 1 end
 
@@ -2583,7 +2585,7 @@ RegisterServerEvent('ox_inventory:renameItem', function(data, input)
 end)
 
 local function updateWeapon(source, action, value, slot, specialAmmo)
-	local inventory = Inventories[source]
+	local inventory = Inventory(source)
 
 	if not inventory then return end
 
