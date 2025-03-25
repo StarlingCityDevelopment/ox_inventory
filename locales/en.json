@@ -89,5 +89,19 @@
   "crafting_bench": "Crafting Bench",
   "open_crafting_bench": "Open Crafting Bench",
   "not_enough_durability": "%s does not have enough durability",
-  "storage": "Storage"
+  "storage": "Storage",
+  "adding_clothing": "Adding clothing...",
+  "removing_clothing": "Removing clothing...",
+  "adding_outfit": "Adding outfit...",
+  "removing_outfit": "Removing outfit...",
+  "changing_outfit": "Changing outfit...",
+  "inventory_full": "You don't have enough space in your inventory.",
+  "sync_failed": "Failed to synchronize clothing with server.",
+  "invalid_component": "Invalid component data.",
+  "component_not_found": "Component not found.",
+  "invalid_clothing_type": "Invalid clothing type.",
+  "invalid_action": "Invalid action type.",
+  "process_failed": "Failed to process clothing items.",
+  "appearance_failed": "Failed to get appearance data.",
+  "save_failed": "Failed to save appearance data."
 }

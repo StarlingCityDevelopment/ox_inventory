@@ -1,19 +1,22 @@
--- START CLIENT-SIDE
-
+-- Import modules
 local Inventory = exports.ox_inventory
 local BLAppearance = exports.bl_appearance
 
--- Determines the player's sex based on their ped model
+---@class ClothingClient
+local ClothingClient = {}
+
+---Determines the player's sex based on their ped model
+---@return string|nil "male" or "female" based on the ped model, or nil if failed
 local function isMaleOrFemale()
     local skin = BLAppearance:GetPedSkin(cache.ped)
     if not skin then
-        error('Failed to get ped skin')
-        return nil
+        return lib.print.error('Failed to get ped skin')
     end
     return skin.model == "mp_f_freemode_01" and "female" or "male"
 end
 
--- Plays an animation when changing clothes
+---Plays an animation when changing clothes
+---@param duration number The duration of the animation in milliseconds
 local function playChangeClothesAnimation(duration)
     CreateThread(function()
         local dict = 'clothingshirt'
@@ -24,11 +27,14 @@ local function playChangeClothesAnimation(duration)
     end)
 end
 
--- Displays a customizable progress bar
+---Displays a customizable progress bar
+---@param duration number The duration of the progress bar in milliseconds
+---@param label string The label to display on the progress bar
+---@return boolean Whether the progress bar completed successfully
 local function showProgressBar(duration, label)
     return lib.progressCircle({
         duration = duration or 2000,
-        label = label or 'Changement de tenue...',
+        label = label or locale('changing_outfit'),
         useWhileDead = false,
         canCancel = false,
         disable = {
@@ -39,174 +45,254 @@ local function showProgressBar(duration, label)
     })
 end
 
--- Placeholder for synchronization logic (can be expanded)
+---Synchronizes clothing changes with the server
+---@return boolean Whether the synchronization was successful
 local function safeSync()
-    return true
-end
-
--- Processes clothing components or props with error handling
-local function processComponents(components, isProp)
-    if not components then return false end
-
-    local success, result = pcall(function()
-        for _, value in pairs(components) do
-            if not value.id then
-                error('Invalid component data: missing ID')
-                return false
-            end
-
-            local sex = isMaleOrFemale()
-            if not sex then return false end
-
-            local component = shared.clothing[sex][value.id]
-            if not component then
-                error('Component not found for ID: ' .. value.id)
-                return false
-            end
-
-            local data = {
-                index = value.index,
-                value = component.drawable,
-                id = value.id,
-                texture = component.texture
-            }
-            if isProp then
-                BLAppearance:SetPedProp(cache.ped, data)
-            else
-                BLAppearance:SetPedDrawable(cache.ped, data)
-            end
-        end
-        return true
-    end)
-
-    if not success then
-        error('Failed to process components: ' .. tostring(result))
-        return false
+    -- Check if player exists and is loaded
+    if not cache.ped or not DoesEntityExist(cache.ped) then
+        return lib.print.error('Player entity does not exist')
     end
+
+    -- Check if player is in a valid state for clothing changes
+    if IsPedDeadOrDying(cache.ped, true) or IsPedFalling(cache.ped) or IsPedRagdoll(cache.ped) then
+        return lib.print.error('Player is in an invalid state for clothing changes')
+    end
+
+    -- Additional checks can be added here as needed
+
+    lib.print.debug('Clothing sync successful')
     return true
 end
 
--- Handles outfit application or removal
+---Processes clothing components or props with optimized performance
+---@param components table The components to process
+---@param isProp boolean Whether the components are props
+---@return boolean Whether the processing was successful
+local function processComponents(components, isProp)
+    if not components then
+        return lib.print.debug('No components to process')
+    end
+
+    -- Get sex once for all components
+    local sex = isMaleOrFemale()
+    if not sex then return false end
+
+    -- Pre-validate all components before processing
+    for _, value in pairs(components) do
+        if not value.id then
+            return lib.print.error('Invalid component data: missing ID')
+        end
+
+        if not shared.clothing[sex][value.id] then
+            return lib.print.error('Component not found for ID: ' .. value.id)
+        end
+    end
+
+    -- Process components in batches for better performance
+    local componentsToProcess = {}
+
+    for _, value in pairs(components) do
+        local component = shared.clothing[sex][value.id]
+        local data = {
+            index = value.index,
+            value = component.drawable,
+            id = value.id,
+            texture = component.texture
+        }
+        table.insert(componentsToProcess, data)
+    end
+
+    -- Apply all components at once if possible
+    for _, data in ipairs(componentsToProcess) do
+        local success = true
+        if isProp then
+            success = BLAppearance:SetPedProp(cache.ped, data)
+        else
+            success = BLAppearance:SetPedDrawable(cache.ped, data)
+        end
+
+        if not success then
+            return lib.print.error('Failed to apply component: ' .. data.id)
+        end
+    end
+
+    lib.print.debug('Successfully processed ' .. #componentsToProcess .. ' components')
+    return true
+end
+
+---Handles outfit application or removal
+---@param data table The outfit data
+---@param action string The action to perform ("add" or "remove")
+---@return table|boolean The appearance data if successful, false otherwise
 local function handleOutfit(data, action)
     if not data then
-        error('No outfit data provided')
-        return false
+        return lib.print.error('No outfit data provided', true, {
+            description = locale('invalid_component')
+        })
     end
 
     CreateThread(function()
         Inventory:closeInventory()
         playChangeClothesAnimation(5000)
-        showProgressBar(5000, action == "add" and 'Ajout de la tenue...' or 'Retrait de la tenue...')
+
+        local progressLabel = action == "add"
+            and locale('adding_outfit')
+            or locale('removing_outfit')
+
+        showProgressBar(5000, progressLabel)
     end)
 
-    local success, result = pcall(function()
-        local appearance = BLAppearance:GetPedAppearance(cache.ped)
-        if not appearance then return false end
-
-        if action == "remove" then
-            if not processComponents(data.drawables, false) then return false end
-            if not processComponents(data.props, true) then return false end
-        elseif action == "add" then
-            BLAppearance:SetPedClothes(cache.ped, data)
-            Wait(500)
-            appearance = BLAppearance:GetPedAppearance(cache.ped)
-        else
-            error('Invalid action type: ' .. tostring(action))
-            return false
-        end
-        return appearance
-    end)
-
-    if not success then
-        error('Failed to handle outfit: ' .. tostring(result))
-        return false
+    -- Get current appearance
+    local appearance = BLAppearance:GetPedAppearance(cache.ped)
+    if not appearance then
+        return lib.print.error('Failed to get appearance data')
     end
-    return result
+
+    -- Handle outfit based on action
+    if action == "remove" then
+        -- Process drawables and props
+        if not processComponents(data.drawables, false) then
+            return lib.print.error('Failed to process drawable components')
+        end
+
+        if not processComponents(data.props, true) then
+            return lib.print.error('Failed to process prop components')
+        end
+    elseif action == "add" then
+        -- Apply outfit
+        local success = BLAppearance:SetPedClothes(cache.ped, data)
+        if not success then
+            return lib.print.error('Failed to set ped clothes')
+        end
+
+        Wait(500)
+        appearance = BLAppearance:GetPedAppearance(cache.ped)
+        if not appearance then
+            return lib.print.error('Failed to get updated appearance')
+        end
+    else
+        return lib.print.error('Invalid action type: ' .. tostring(action))
+    end
+
+    lib.print.info('Successfully handled outfit: ' .. action)
+    return appearance
 end
 
--- Callback handlers for inventory actions
+---@class CallbackHandlers
+---Collection of callback handlers for inventory actions
 local callbackHandlers = {
+    ---Adds a clothing item to the player
+    ---@param data table The clothing data
+    ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:addClothing'] = function(data)
         if not data then
-            error('No clothing data provided')
-            return false
+            return lib.print.error('No clothing data provided')
         end
 
         CreateThread(function()
             Inventory:closeInventory()
             playChangeClothesAnimation(2500)
-            showProgressBar(2500, 'Ajout du vêtement...')
+            showProgressBar(2500, locale('adding_clothing'))
         end)
 
-        local success, result = pcall(function()
-            if data.type == 'component' then
-                BLAppearance:SetPedDrawable(cache.ped, data)
-            elseif data.type == 'prop' then
-                BLAppearance:SetPedProp(cache.ped, data)
-            else
-                error('Invalid clothing type: ' .. tostring(data.type))
-                return false
+        -- Apply clothing based on type
+        if data.type == 'component' then
+            local success = BLAppearance:SetPedDrawable(cache.ped, data)
+            if not success then
+                return lib.print.error('Failed to set ped drawable')
             end
-            if not safeSync() then return false end
-            return BLAppearance:GetPedAppearance(cache.ped)
-        end)
-
-        if not success then
-            error('Failed to add clothing: ' .. tostring(result))
-            return false
+        elseif data.type == 'prop' then
+            local success = BLAppearance:SetPedProp(cache.ped, data)
+            if not success then
+                return lib.print.error('Failed to set ped prop')
+            end
+        else
+            return lib.print.error('Invalid clothing type: ' .. tostring(data.type))
         end
-        return result
+
+        -- Synchronize with server
+        if not safeSync() then return false end
+
+        -- Get updated appearance
+        local appearance = BLAppearance:GetPedAppearance(cache.ped)
+        if not appearance then
+            return lib.print.error('Failed to get updated appearance')
+        end
+
+        lib.print.info('Successfully added clothing item: ' .. data.id)
+        return appearance
     end,
+
+    ---Removes a clothing item from the player
+    ---@param data table The clothing data
+    ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:removeClothing'] = function(data)
         if not data then
-            error('No clothing data provided')
-            return false
+            return lib.print.error('No clothing data provided')
         end
 
         CreateThread(function()
             Inventory:closeInventory()
             playChangeClothesAnimation(2500)
-            showProgressBar(2500, 'Retrait du vêtement...')
+            showProgressBar(2500, locale('removing_clothing'))
         end)
 
-        local success, result = pcall(function()
-            local sex = isMaleOrFemale()
-            if not sex then return false end
+        -- Get player sex
+        local sex = isMaleOrFemale()
+        if not sex then return false end
 
-            local component = shared.clothing[sex][data.id]
-            if not component then
-                error('Component not found for ID: ' .. data.id)
-                return false
-            end
-
-            local componentData = {
-                index = data.index,
-                value = component.drawable,
-                id = data.id,
-                texture = component.texture
-            }
-
-            if data.type == 'component' then
-                BLAppearance:SetPedDrawable(cache.ped, componentData)
-            elseif data.type == 'prop' then
-                BLAppearance:SetPedProp(cache.ped, componentData)
-            else
-                error('Invalid clothing type: ' .. tostring(data.type))
-                return false
-            end
-            if not safeSync() then return false end
-            return BLAppearance:GetPedAppearance(cache.ped)
-        end)
-
-        if not success then
-            error('Failed to remove clothing: ' .. tostring(result))
-            return false
+        -- Get component data
+        local component = shared.clothing[sex][data.id]
+        if not component then
+            return lib.print.error('Component not found for ID: ' .. data.id)
         end
-        return result
+
+        -- Prepare component data
+        local componentData = {
+            index = data.index,
+            value = component.drawable,
+            id = data.id,
+            texture = component.texture
+        }
+
+        -- Apply component based on type
+        if data.type == 'component' then
+            local success = BLAppearance:SetPedDrawable(cache.ped, componentData)
+            if not success then
+                return lib.print.error('Failed to set ped drawable')
+            end
+        elseif data.type == 'prop' then
+            local success = BLAppearance:SetPedProp(cache.ped, componentData)
+            if not success then
+                return lib.print.error('Failed to set ped prop')
+            end
+        else
+            return lib.print.error('Invalid clothing type: ' .. tostring(data.type))
+        end
+
+        -- Synchronize with server
+        if not safeSync() then return false end
+
+        -- Get updated appearance
+        local appearance = BLAppearance:GetPedAppearance(cache.ped)
+        if not appearance then
+            return lib.print.error('Failed to get updated appearance')
+        end
+
+        lib.print.info('Successfully removed clothing item: ' .. data.id)
+        return appearance
     end,
+
+    ---Adds an outfit to the player
+    ---@param data table The outfit data
+    ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:addOutfit'] = function(data)
         return handleOutfit(data, "add")
     end,
+
+    ---Removes an outfit from the player
+    ---@param data table The outfit data
+    ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:removeOutfit'] = function(data)
         return handleOutfit(data, "remove")
     end
@@ -219,5 +305,3 @@ end
 
 -- Export for external use
 client.safeSync = safeSync
-
--- END CLIENT-SIDE

@@ -88,5 +88,19 @@
   "crafting_item": "Fabrication %s",
   "crafting_bench": "Table de fabrication",
   "open_crafting_bench": "Ouvrir la table de fabrication",
-  "not_enough_durability": "%s n'a pas assez de durabilité"
+  "not_enough_durability": "%s n'a pas assez de durabilité",
+  "adding_clothing": "Ajout du vêtement...",
+  "removing_clothing": "Retrait du vêtement...",
+  "adding_outfit": "Ajout de la tenue...",
+  "removing_outfit": "Retrait de la tenue...",
+  "changing_outfit": "Changement de tenue...",
+  "inventory_full": "Vous n'avez pas assez de place dans votre inventaire.",
+  "sync_failed": "Échec de la synchronisation des vêtements avec le serveur.",
+  "invalid_component": "Données de composant invalides.",
+  "component_not_found": "Composant introuvable.",
+  "invalid_clothing_type": "Type de vêtement invalide.",
+  "invalid_action": "Type d'action invalide.",
+  "process_failed": "Échec du traitement des vêtements.",
+  "appearance_failed": "Échec de l'obtention des données d'apparence.",
+  "save_failed": "Échec de la sauvegarde des données d'apparence."
 }
