@@ -35,14 +35,14 @@ return {
     },
 
     ['clothes_shirts'] = {
-        label = 'T-Shirt',
+        label = 'Chemise',
         description = 'Un vêtement cool',
         weight = 0,
         stack = false
     },
 
     ['clothes_vest'] = {
-        label = 'Gilet par balle',
+        label = 'Gilet pare-balle',
         description = 'Un vêtement cool',
         weight = 0,
         stack = false
@@ -56,7 +56,7 @@ return {
     },
 
     ['clothes_neck'] = {
-        label = 'Chaine',
+        label = 'Chaîne',
         description = 'Un vêtement cool',
         weight = 0,
         stack = false
@@ -77,7 +77,7 @@ return {
     },
 
     ['clothes_earrings'] = {
-        label = 'boucle d\'oreille',
+        label = 'Boucles d\'Oreille',
         description = 'Un vêtement cool',
         weight = 0,
         stack = false
@@ -92,6 +92,13 @@ return {
 
     ['clothes_bracelets'] = {
         label = 'Bracelet',
+        description = 'Un vêtement cool',
+        weight = 0,
+        stack = false
+    },
+
+    ['clothes_masks'] = {
+        label = 'Masque',
         description = 'Un vêtement cool',
         weight = 0,
         stack = false

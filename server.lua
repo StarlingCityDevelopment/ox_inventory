@@ -1,6 +1,5 @@
 if not lib then return end
 
-require 'modules.clothing.hook'
 require 'modules.bridge.server'
 require 'modules.crafting.server'
 require 'modules.shops.server'
@@ -12,9 +11,11 @@ end
 
 local TriggerEventHooks = require 'modules.hooks.server'
 local db = require 'modules.mysql.server'
-local clothing = require 'modules.clothing.server'
 local Items = require 'modules.items.server'
 local Inventory = require 'modules.inventory.server'
+
+local clothing = require 'modules.clothing.server'
+require 'modules.clothing.hook'
 
 ---@param player table
 ---@param data table?

@@ -7,29 +7,41 @@ return {
         label = 'Argent sale',
     },
 
-    ['clothes_masks'] = {
-        label = 'Masque',
-        description = 'Un vêtement cool',
-        weight = 0,
-        stack = false
+    ['skateboard'] = {
+        label = 'Skateboard',
+        weight = 750,
+        stack = false,
     },
 
-    ['tosti'] = {
-        label = 'Tosti',
-        description = 'Un bon sandwich américain',
-        weight = 250,
-        stack = true
+    ['newspaper'] = {
+        label = 'Journal',
+        weight = 10,
+        stack = false,
     },
 
-    ['water_bottle'] = {
-        label = 'Bouteille d\'eau',
-        description = 'De l\'eau bien fraîche',
-        weight = 500,
-        stack = true
+    ['cigarette'] = {
+        label = 'Paquet de Cigarette',
+        weight = 10,
+        stack = false,
     },
+
+    ['document'] = {
+        label = 'Document',
+        weight = 10,
+        stack = false,
+        client = {
+            export = 'starling_documents.show',
+        }
+    },
+
+    ['mastercard'] = {
+		label = 'Carte de crédit',
+		stack = false,
+		weight = 10,
+	},
 
     ["phone"] = {
-        label = "Phone",
+        label = "Téléphone",
         weight = 190,
         stack = false,
         consume = 0,
