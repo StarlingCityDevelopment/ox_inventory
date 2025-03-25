@@ -121,7 +121,7 @@ function clothing.getClothesInv(src, identifier, forceRefresh)
 
     -- Return from cache if available and not forcing refresh
     if not forceRefresh and clothesInventoryCache[cacheKey] then
-        Logger.debug('Retrieved clothes inventory from cache for: ' .. cacheKey)
+        lib.print.debug('Retrieved clothes inventory from cache for: ' .. cacheKey)
         return clothesInventoryCache[cacheKey]
     end
 
@@ -139,7 +139,7 @@ function clothing.getClothesInv(src, identifier, forceRefresh)
     -- Set up cache invalidation after 5 minutes
     SetTimeout(300000, function()
         clothesInventoryCache[cacheKey] = nil
-        Logger.debug('Invalidated clothes inventory cache for: ' .. cacheKey)
+        lib.print.debug('Invalidated clothes inventory cache for: ' .. cacheKey)
     end)
 
     return result
@@ -166,7 +166,7 @@ local function syncPlayerClothes(src, appearance)
         -- Check cache first
         if appearanceCache[citizenid] then
             appearance = appearanceCache[citizenid]
-            Logger.debug('Using cached appearance for player: ' .. citizenid)
+            lib.print.debug('Using cached appearance for player: ' .. citizenid)
         else
             appearance = exports.bl_appearance:GetPlayerAppearance(citizenid)
             if not appearance then
@@ -182,7 +182,7 @@ local function syncPlayerClothes(src, appearance)
             -- Set up cache invalidation after 5 minutes
             SetTimeout(300000, function()
                 appearanceCache[citizenid] = nil
-                Logger.debug('Invalidated appearance cache for: ' .. citizenid)
+                lib.print.debug('Invalidated appearance cache for: ' .. citizenid)
             end)
         end
     end
@@ -232,7 +232,7 @@ local function syncPlayerClothes(src, appearance)
         }, true)
     end
 
-    Logger.info('Successfully synced player clothes for: ' .. citizenid)
+    lib.print.info('Successfully synced player clothes for: ' .. citizenid)
     return true
 end
 
@@ -337,7 +337,7 @@ function clothing.removeClothing(payload)
     local appearance
     if appearanceCache[citizenid] then
         appearance = appearanceCache[citizenid]
-        Logger.debug('Using cached appearance for player: ' .. citizenid)
+        lib.print.debug('Using cached appearance for player: ' .. citizenid)
     else
         appearance = BlAppearance:GetPlayerAppearance(citizenid)
         if not appearance then
@@ -367,7 +367,7 @@ function clothing.removeClothing(payload)
             texture = shared.clothing[sex][data.id].texture,
             index = data.index
         }
-        Logger.debug('Removed component: ' .. data.id)
+        lib.print.debug('Removed component: ' .. data.id)
     elseif data.type == 'prop' then
         -- Reset to default prop
         appearance.props[data.id] = {
@@ -376,7 +376,7 @@ function clothing.removeClothing(payload)
             texture = shared.clothing[sex][data.id].texture,
             index = data.index
         }
-        Logger.debug('Removed prop: ' .. data.id)
+        lib.print.debug('Removed prop: ' .. data.id)
     else
         return lib.print.error('Invalid clothing type: ' .. tostring(data.type), true, {
             source = payload.source,
@@ -396,7 +396,7 @@ function clothing.removeClothing(payload)
     -- Update cache
     appearanceCache[citizenid] = appearance
 
-    Logger.info('Successfully removed clothing item for player: ' .. citizenid)
+    lib.print.info('Successfully removed clothing item for player: ' .. citizenid)
     return true
 end
 
