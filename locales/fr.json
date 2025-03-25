@@ -102,5 +102,6 @@
   "invalid_action": "Type d'action invalide.",
   "process_failed": "Échec du traitement des vêtements.",
   "appearance_failed": "Échec de l'obtention des données d'apparence.",
-  "save_failed": "Échec de la sauvegarde des données d'apparence."
+  "save_failed": "Échec de la sauvegarde des données d'apparence.",
+  "storage": "Stockage"
 }
