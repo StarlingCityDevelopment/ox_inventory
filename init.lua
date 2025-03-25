@@ -277,7 +277,7 @@ if not success then
     return spamError(msg)
 end
 
-if not LoadResourceFile(shared.resource, 'build/index.html') then
+if not LoadResourceFile(shared.resource, 'web/build/index.html') then
     return spamError('UI has not been built, refer to the documentation or download a release build.\n	^3https://overextended.dev/ox_inventory^0')
 end
 
