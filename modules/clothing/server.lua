@@ -37,16 +37,20 @@ end
 ---@return boolean Whether the data is valid
 local function validateClothingData(data, sex, itemType)
     if not data then
-        return lib.print.error('No clothing data provided')
+        lib.print.error('No clothing data provided')
+        return false
     end
     if not sex then
-        return lib.print.error('No sex specified for clothing validation')
+        lib.print.error('No sex specified for clothing validation')
+        return false
     end
     if not itemType then
-        return lib.print.error('No item type specified for clothing validation')
+        lib.print.error('No item type specified for clothing validation')
+        return false
     end
     if not sharedClothing[sex] then
-        return lib.print.error('Invalid sex specified: ' .. tostring(sex))
+        lib.print.error('Invalid sex specified: ' .. tostring(sex))
+        return false
     end
     return true
 end
@@ -64,7 +68,8 @@ local function processClothingItems(clothes, sex, itemSet, itemType)
     for key, _ in pairs(itemSet) do
         local slotKey = 'clothes_' .. key
         if sharedClothingSlots[slotKey] and not sharedClothing[sex][key] then
-            return lib.print.error('No base clothing found for key: ' .. key)
+            lib.print.error('No base clothing found for key: ' .. key)
+            return false
         end
     end
 
@@ -98,7 +103,8 @@ local function processClothingItems(clothes, sex, itemSet, itemType)
     end
 
     if not success then
-        return lib.print.error('Failed to process clothing items')
+        lib.print.error('Failed to process clothing items')
+        return false
     end
 
     return true
@@ -114,7 +120,8 @@ local clothesInventoryCache = {}
 ---@return table|nil The clothes inventory or nil if failed
 function clothing.getClothesInv(src, identifier, forceRefresh)
     if not src or not identifier then
-        return lib.print.error('Invalid parameters for getClothesInv')
+        lib.print.error('Invalid parameters for getClothesInv')
+        return false
     end
 
     local cacheKey = src .. '_' .. identifier
@@ -130,7 +137,8 @@ function clothing.getClothesInv(src, identifier, forceRefresh)
     end)
 
     if not success then
-        return lib.print.error('Failed to get clothes inventory: ' .. tostring(result))
+        lib.print.error('Failed to get clothes inventory: ' .. tostring(result))
+        return false
     end
 
     -- Cache the result
@@ -153,10 +161,7 @@ local function syncPlayerClothes(src, appearance)
     -- Get player data
     local player = QBox:GetPlayer(src)
     if not player then
-        return lib.print.error('Player not found', true, {
-            source = src,
-            description = locale('sync_failed')
-        })
+        lib.print.error('Player not found')
     end
 
     local citizenid = player.PlayerData.citizenid
@@ -170,10 +175,7 @@ local function syncPlayerClothes(src, appearance)
         else
             appearance = exports.bl_appearance:GetPlayerAppearance(citizenid)
             if not appearance then
-                return lib.print.error('Failed to get player appearance', true, {
-                    source = src,
-                    description = locale('appearance_failed')
-                })
+                lib.print.error('Failed to get player appearance')
             end
 
             -- Cache the appearance data
@@ -190,19 +192,13 @@ local function syncPlayerClothes(src, appearance)
     -- Get clothes inventory
     local clothes = clothing.getClothesInv(src, citizenid)
     if not clothes then
-        return lib.print.error('Failed to get clothes inventory', true, {
-            source = src,
-            description = locale('sync_failed')
-        })
+        lib.print.error('Failed to get clothes inventory')
     end
 
     -- Determine sex from model
     local sex = getSexFromModel(appearance.model)
     if not sex then
-        return lib.print.error('Failed to get sex from model', true, {
-            source = src,
-            description = locale('sync_failed')
-        })
+        lib.print.error('Failed to get sex from model')
     end
 
     -- Clear existing inventory
@@ -210,18 +206,12 @@ local function syncPlayerClothes(src, appearance)
 
     -- Process prop items
     if not processClothingItems(clothes, sex, appearance.props, 'prop') then
-        return lib.print.error('Failed to process prop items', true, {
-            source = src,
-            description = locale('process_failed')
-        })
+        lib.print.error('Failed to process prop items')
     end
 
     -- Process drawable items
     if not processClothingItems(clothes, sex, appearance.drawables, 'component') then
-        return lib.print.error('Failed to process drawable items', true, {
-            source = src,
-            description = locale('process_failed')
-        })
+        lib.print.error('Failed to process drawable items')
     end
 
     -- Sync slots with clients
@@ -307,60 +297,44 @@ end
 ---@param payload table The payload containing the clothing data
 ---@return boolean Whether the clothing was removed successfully
 function clothing.removeClothing(payload)
-    -- Validate payload
     if not payload.source then
-        return lib.print.error('No source provided in payload', true, {
-            description = locale('invalid_component')
-        })
+        lib.print.error('No source provided in payload')
+        return false
     end
 
-    -- Get player data
     local player = QBox:GetPlayer(payload.source)
     if not player then
-        return lib.print.error('Player not found', true, {
-            source = payload.source,
-            description = locale('sync_failed')
-        })
+        lib.print.error('Player not found')
+        return false
     end
 
-    -- Validate metadata
     if not payload.fromSlot.metadata then
-        return lib.print.error('No metadata in payload slot', true, {
-            source = payload.source,
-            description = locale('invalid_component')
-        })
+        lib.print.error('No metadata in payload slot')
+        return false
     end
 
+    local appearance
     local citizenid = player.PlayerData.citizenid
 
-    -- Get appearance data (check cache first)
-    local appearance
     if appearanceCache[citizenid] then
         appearance = appearanceCache[citizenid]
         lib.print.debug('Using cached appearance for player: ' .. citizenid)
     else
         appearance = BlAppearance:GetPlayerAppearance(citizenid)
         if not appearance then
-            return lib.print.error('Failed to get appearance data', true, {
-                source = payload.source,
-                description = locale('appearance_failed')
-            })
+            lib.print.error('Failed to get appearance data')
+            return false
         end
     end
 
-    -- Get sex from model
     local sex = getSexFromModel(appearance.model)
     if not sex then
-        return lib.print.error('Failed to determine sex from model', true, {
-            source = payload.source,
-            description = locale('sync_failed')
-        })
+        lib.print.error('Failed to determine sex from model')
+        return false
     end
 
-    -- Remove clothing data
     local data = payload.fromSlot.metadata
     if data.type == 'component' then
-        -- Reset to default clothing
         appearance.drawables[data.id] = {
             id = data.id,
             value = shared.clothing[sex][data.id].drawable,
@@ -369,7 +343,6 @@ function clothing.removeClothing(payload)
         }
         lib.print.debug('Removed component: ' .. data.id)
     elseif data.type == 'prop' then
-        -- Reset to default prop
         appearance.props[data.id] = {
             id = data.id,
             value = shared.clothing[sex][data.id].drawable,
@@ -378,29 +351,27 @@ function clothing.removeClothing(payload)
         }
         lib.print.debug('Removed prop: ' .. data.id)
     else
-        return lib.print.error('Invalid clothing type: ' .. tostring(data.type), true, {
-            source = payload.source,
-            description = locale('invalid_clothing_type')
-        })
+        lib.print.error('Invalid clothing type: ' .. tostring(data.type))
+        return false
     end
 
-    -- Save appearance
-    local success = BlAppearance:SetPlayerAppearance(citizenid, appearance)
+    local newAppearance = lib.callback.await('ox_inventory:removeClothing', payload.source, payload.fromSlot.metadata)
+    if not newAppearance then
+        error('Failed to get new appearance')
+        return false
+    end
+
+    local success = BlAppearance:SetPlayerAppearance(citizenid, newAppearance)
     if not success then
-        return lib.print.error('Failed to save appearance data', true, {
-            source = payload.source,
-            description = locale('save_failed')
-        })
+        lib.print.error('Failed to save new appearance data')
+        return false
     end
 
-    -- Update cache
-    appearanceCache[citizenid] = appearance
-
+    appearanceCache[citizenid] = newAppearance
     lib.print.info('Successfully removed clothing item for player: ' .. citizenid)
     return true
 end
 
--- Adds an outfit
 function clothing.addOutfit(payload)
     local success, result = pcall(function()
         local restrictedProps = { 'mouth', 'lhand', 'rhand' }
@@ -468,13 +439,13 @@ function clothing.addOutfit(payload)
     return result
 end
 
--- Removes an outfit
 function clothing.removeOutfit(payload)
     local success, result = pcall(function()
         if not payload.source then
             error('No source provided in payload')
             return false
         end
+
         local player = QBox:GetPlayer(payload.source)
         if not player then
             error('Player not found')
@@ -511,10 +482,9 @@ function clothing.removeOutfit(payload)
 
         CreateThread(function()
             Wait(500)
-            Inventory:SetMetadata(payload.toInventory,
-                (type(payload.toSlot) == 'table' and payload.toSlot.slot or payload.toSlot), {
-                    outfit = { drawables = newAppearance.drawables, props = newAppearance.props }
-                })
+            Inventory:SetMetadata(payload.toInventory, (type(payload.toSlot) == 'table' and payload.toSlot.slot or payload.toSlot), {
+                outfit = { drawables = newAppearance.drawables, props = newAppearance.props }
+            })
             Inventory:ClearInventory(clothes, 'clothes_outfits')
         end)
 
