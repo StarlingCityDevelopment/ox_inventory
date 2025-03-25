@@ -17,3 +17,6 @@
 
 npm-debug.log*
 .pnpm-debug.log
+
+# build
+/build
