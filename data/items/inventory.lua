@@ -22,7 +22,7 @@ return {
     ['cigarette'] = {
         label = 'Paquet de Cigarette',
         weight = 10,
-        stack = false,
+        stack = true,
     },
 
     ['document'] = {
@@ -53,6 +53,23 @@ return {
             add = function()
                 TriggerEvent("lb-phone:itemAdded")
             end
+        }
+    },
+    ["bread"] = {
+        label = "Pain",
+        weight = 250,
+        stack = true,
+        close = true,
+        consume = 1,
+        client = {
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'prop_cs_burger_01',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 2500
         }
     },
 }

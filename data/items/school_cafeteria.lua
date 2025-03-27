@@ -1,131 +1,179 @@
 return {
-    ['vodka'] = {
-        label = 'Vodka',
+    ['cafeteria_burger'] = {
+        label = 'Burger',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['rhum'] = {
-        label = 'Rhum',
+    ['cafeteria_fries'] = {
+        label = 'Frites',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['whiskey'] = {
-        label = 'Whiskey',
+    ['cafeteria_pasta'] = {
+        label = 'Pâtes Bolognaise',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['jäger'] = {
-        label = 'Jäger',
+    ['cafeteria_fish'] = {
+        label = 'Poisson',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['absinthe'] = {
-        label = 'Absinthe',
+    ['cafeteria_bean'] = {
+        label = 'Haricots',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['tequila'] = {
-        label = 'Tequila',
+    ['cafeteria_salad'] = {
+        label = 'Salade César',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['cognac'] = {
-        label = 'Cognac',
+    ['cafeteria_steack'] = {
+        label = 'Steack Hâché',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['beer'] = {
-        label = 'Bière',
+    ['cafeteria_melon'] = {
+        label = 'Melon',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['martini'] = {
-        label = 'Martini',
+    ['cafeteria_carrot'] = {
+        label = 'Carottes Râpées',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['champagne'] = {
-        label = 'Champagne',
+    ['cafeteria_celeri'] = {
+        label = 'Celeri',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['wine'] = {
-        label = 'Vin',
+    ['cafeteria_yaourt'] = {
+        label = 'Yaourt',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
 		}
     },
-	['gin'] = {
-        label = 'Gin',
+    ['cafeteria_cheese'] = {
+        label = 'Fromage',
         weight = 1000,
         stack = true,
         close = true,
         description = '',
+        consume = 1,
+		client = {
+			disable = {sprint = true},
+			usetime = 2500
+		}
+    },
+    ['cafeteria_compote'] = {
+        label = 'Compote',
+        weight = 1000,
+        stack = true,
+        close = true,
+        description = '',
+        consume = 1,
+		client = {
+			disable = {sprint = true},
+			usetime = 2500
+		}
+    },
+    ['cafeteria_fruitcocktail'] = {
+        label = 'Cocktail de Fruits',
+        weight = 1000,
+        stack = true,
+        close = true,
+        description = '',
+        consume = 1,
+		client = {
+			disable = {sprint = true},
+			usetime = 2500
+		}
+    },
+    ['cafeteria_ice'] = {
+        label = 'Glace',
+        weight = 1000,
+        stack = true,
+        close = true,
+        description = '',
+        consume = 1,
 		client = {
 			disable = {sprint = true},
 			usetime = 2500
