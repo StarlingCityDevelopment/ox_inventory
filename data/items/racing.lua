@@ -1,6 +1,6 @@
 return {
     ['racing_gps'] = { -- Make sure not already a medikit
-        label = 'GPS Racing',
+        label = 'GPS de Course',
         weight = 250,
         close = true,
     },

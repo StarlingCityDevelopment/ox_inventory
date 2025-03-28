@@ -6,16 +6,16 @@ local files = {
     'carkeys',
     'clothes',
     'drugs',
+    'distributor',
     'hotel',
     'inventory',
-    'mechanics',
     'mechanics',
     'police',
     'racing',
     'radio',
     'restaurants',
     'robberies',
-    'store',
+    'school_cafeteria',
     'tuners',
 }
 

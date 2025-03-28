@@ -25,7 +25,7 @@ return {
     },
 
     ['bobby_pin'] = {
-        label = 'Bobby Pin',
+        label = 'Pince à Cheveux',
         weight = 2,
         stack = true,
         close = true,

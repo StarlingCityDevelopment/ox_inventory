@@ -1,193 +1,197 @@
 return {
     ['trowel'] = {
-		label = 'Trowel',
-		description = "Perfect for your garden or for Coca plant",
-		weight = 250,
+		label = 'Truelle',
+		description = "Parfait pour votre jardin, ou votre plant de Coke",
+		weight = 300,
 		stack = true
 	},
 
 	['coke_leaf'] = {
-		label = 'Coca Leaf',
-		description = "Leaf from amazing plant",
+		label = 'Feuille de Coca',
+		description = "Feuille d'une super plante",
 		weight = 15,
 		stack = true
 	},
 
 	['coke_access'] = {
-		label = 'Access card',
-		description = "Access Card for Coke Lab",
+		label = 'Carte d\'Accès',
+		description = "Carte d\'accès pour le Labo de Coke",
 		weight = 50,
-		stack = true
+		stack = false
 	},
 
 	['coke_box'] = {
-		label = 'Box with Coke',
-		description = "Be careful not to spill it on the ground",
+		label = 'Boite de Coke',
+		description = "Fais attention à ne pas la renverser",
 		weight = 2000,
 		stack = true
 	},
 
 	['coke_raw'] = {
-		label = 'Raw Coke',
-		description = "Coke with some dirty particles",
+		label = 'Coke Brute',
+		description = "Coke non-purifiée",
 		weight = 50,
 		stack = true
 	},
 
 	['coke_pure'] = {
-		label = 'Pure Coke',
-		description = "Coke without any dirty particles",
+		label = 'Coke Pure',
+		description = "Coke purifiée, prête à la consommation",
 		weight = 70,
 		stack = true,
-		close = true
-	},
+		close = true,
+    },
 
 	['coke_figure'] = {
-		label = 'Action Figure',
-		description = "Action Figure of the cartoon superhero Impotent Rage",
+		label = 'Figurine',
+		description = "Figurine du superhero \"Impotent Rage\"",
 		weight = 150,
 		stack = true
 	},
 
 	['coke_figureempty'] = {
-		label = 'Action Figure',
-		description = "Action Figure of the cartoon superhero Impotent Rage",
-		weight = 150,
+		label = 'Figurine',
+		description = "Figurine du superhero \"Impotent Rage\"",
+		weight = 100,
 		stack = true
 	},
 
 	['coke_figurebroken'] = {
-		label = 'Pieces of Action Figure',
-		description = "You can throw this away or try to repair with glue",
+		label = 'Pièces de Figurine',
+		description = "Tu peux jeter ça maintenant... Ou essayer de la recoller...",
 		weight = 100,
 		stack = true
 	},
 
 	['meth_amoniak'] = {
-		label = 'Ammonia',
-		description = "Warning! Dangerous Chemicals!",
+		label = 'Ammoniac',
+		description = "Attention ! Produit Chimique Dangereux !",
 		weight = 1000,
 		stack = true
 	},
 
 	['meth_pipe'] = {
-		label = 'Meth Pipe',
-		description = "Enjoy your new crystal clear stuff!",
-		weight = 880,
-		stack = true
+		label = 'Pipe de Meth',
+		description = "Profite de ton cristal !",
+		weight = 500,
+		stack = true,
+		close = true,
 	},
 
 	['crack_pipe'] = {
-		label = 'Crack Pipe',
-		description = "Enjoy your Crack!",
-		weight = 550,
-		stack = true
+		label = 'Pipe de Crack',
+		description = "Profite de ton Crack!",
+		weight = 500,
+		stack = true,
+		close = true,
 	},
 
 	['meth_syringe'] = {
-		label = 'Syringe Meth',
-		description = "Enjoy your new crystal clear stuff!",
+		label = 'Seringue de Meth',
+		description = "Profite de ton crystal pur !",
 		weight = 300,
-		stack = true
+		stack = true,
+		close = true,
 	},
 
 	['heroin_syringe'] = {
-		label = 'Syringe Heroin',
-		description = "Enjoy your new crystal clear stuff!",
+		label = 'Seringue d\'Héroïne',
+		description = "Profite de ton héroïne pûre",
 		weight = 300,
-		stack = true
+		stack = true,
+		close = true,
 	},
 
 	['syringe'] = {
-		label = 'Syringe',
+		label = 'Seringue',
 		description = "Enjoy your new crystal clear stuff!",
 		weight = 300,
 		stack = true
 	},
 
 	['meth_sacid'] = {
-		label = 'Sodium Benzoate Canister',
-		description = "Warning! Dangerous Chemicals!",
-		weight = 5000,
+		label = 'Conteneur de Sodium de Benzoate',
+		description = "Attention ! Produit Chimique Dangereux !",
+		weight = 4000,
 		stack = true
 	},
 
 	['meth_emptysacid'] = {
-		label = 'Empty Canister',
-		description = "Material: Plastic, Good for Sodium Benzoate",
-		weight = 2000,
+		label = 'Conteneur Vide',
+		description = "Fait de plastique, idéal pour stocker du Sodium de Benzoate",
+		weight = 1000,
 		stack = true
 	},
 
 	['meth_access'] = {
-		label = 'Access card',
-		description = "Access Card for Meth Lab",
-		weight = 100,
-		stack = true,
+		label = 'Carte d\'Accès',
+		description = "Carte d\'accès pour le Labo de Coke",
+		weight = 50,
+		stack = false,
 		close = true
 	},
 
 	['meth_glass'] = {
-		label = 'Tray with meth',
-		description = "Needs to be smashed with hammer",
+		label = 'Bloc de Meth',
+		description = "Il faut le casser avec un marteau",
 		weight = 1000,
 		stack = true
 	},
 
 	['meth_sharp'] = {
-		label = 'Tray with smashed meth',
-		description = "Can be packed",
+		label = 'Meth en Poudre',
+		description = "Prêt à l'envoi",
 		weight = 1000,
 		stack = true
 	},
 
 	['meth_bag'] = {
-		label = 'Meth bag',
-		description = "Plastic bag with magic stuff!",
+		label = 'Sac de Meth',
+		description = "Sac en plastique avec des cristaux magiques !",
 		weight = 1000,
 		stack = true
 	},
 
 	['weed_package'] = {
-		label = 'Weed Bag',
-		description = "Plastic bag with magic stuff!",
+		label = 'Sac de Weed',
+		description = "Sac en plastique avec de l'herbe magique !",
 		weight = 500,
 		stack = true
 	},
 
 	['weed_access'] = {
-		label = 'Access card',
-		description = "Access Card for Weed Lab",
-		weight = 100,
+		label = 'Carte d\'Accès',
+		description = "Carte d\'accès pour le Labo de Coke",
+		weight = 50,
 		stack = true
 	},
 
 	['weed_bud'] = {
-		label = 'Weed Bud',
-		description = "Needs to be clean at the table",
+		label = 'Tête de Weed',
+		description = "Il faut la nettoyer",
 		weight = 40,
 		stack = true
 	},
 
 	['weed_blunt'] = {
 		label = 'Blunt',
-		description = "Enjoy your weed!",
+		description = "Laisse moi tirer sur ce putain de blunt !",
 		weight = 90,
 		stack = true,
 		close = true
 	},
 
 	['weed_wrap'] = {
-		label = 'Blunt wraps',
-		description = "Get Weed Bag and roll blunt!",
+		label = 'Feuille Blunt',
+		description = "Chope un sac de Weed et roule un blunt !",
 		weight = 75,
 		stack = true,
 		close = true
 	},
 
 	['weed_papers'] = {
-		label = 'Weed papers',
-		description = "Get Weed Bag and roll joint!",
+		label = 'Feuille à Rouler',
+		description = "Chope un sac de Weed et roule un joint !",
 		weight = 15,
 		stack = true,
 		close = true
@@ -195,36 +199,36 @@ return {
 
 	['weed_joint'] = {
 		label = 'Joint',
-		description = "Enjoy your weed!",
+		description = "Savoure ta weed !",
 		weight = 50,
 		stack = true,
 		close = true
 	},
 
 	['weed_budclean'] = {
-		label = 'Weed Bud',
-		description = "You can pack this at the table",
+		label = 'Tête de Weed Pure',
+		description = "Tu peux l'embaler",
 		weight = 35,
 		stack = true
 	},
 
 	['plastic_bag'] = {
-		label = 'Plastic bag',
-		description = "You can pack a lot of stuff here!",
+		label = 'Sac Plastique',
+		description = "Tu peux emballer un tas de trucs avec...",
 		weight = 8,
 		stack = true
 	},
 
 	['scissors'] = {
-		label = 'Scissors',
-		description = "To help you with collecting",
+		label = 'Ciseaux',
+		description = "Sert surtout à couper des feuilles, des petites branches, des bourgeons... Rien d'illégal bien sûr !",
 		weight = 40,
 		stack = true
 	},
 
 	['ecstasy1'] = {
 		label = 'Ecstasy',
-		description = "Explore a new universe!",
+		description = "Explore un nouvel univers !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -232,7 +236,7 @@ return {
 
 	['ecstasy2'] = {
 		label = 'Ecstasy',
-		description = "Explore a new universe!",
+		description = "Explore un nouvel univers !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -240,7 +244,7 @@ return {
 
 	['ecstasy3'] = {
 		label = 'Ecstasy',
-		description = "Explore a new universe!",
+		description = "Explore un nouvel univers !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -248,7 +252,7 @@ return {
 
 	['ecstasy4'] = {
 		label = 'Ecstasy',
-		description = "Explore a new universe!",
+		description = "Explore un nouvel univers !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -256,7 +260,7 @@ return {
 
 	['ecstasy5'] = {
 		label = 'Ecstasy',
-		description = "Explore a new universe!",
+		description = "Explore un nouvel univers !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -264,7 +268,7 @@ return {
 
 	['lsd1'] = {
 		label = 'LSD',
-		description = "Explore a new universe!",
+		description = "Ecoute les couleurs !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -272,7 +276,7 @@ return {
 
 	['lsd2'] = {
 		label = 'LSD',
-		description = "Explore a new universe!",
+		description = "Ecoute les couleurs !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -280,7 +284,7 @@ return {
 
 	['lsd3'] = {
 		label = 'LSD',
-		description = "Explore a new universe!",
+		description = "Ecoute les couleurs !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -288,7 +292,7 @@ return {
 
 	['lsd4'] = {
 		label = 'LSD',
-		description = "Explore a new universe!",
+		description = "Ecoute les couleurs !",
 		weight = 10,
 		stack = true,
 		close = true
@@ -296,15 +300,15 @@ return {
 
 	['lsd5'] = {
 		label = 'LSD',
-		description = "Explore a new universe!",
+		description = "Ecoute les couleurs !",
 		weight = 10,
 		stack = true,
 		close = true
 	},
 
 	['magicmushroom'] = {
-		label = 'Mushroom',
-		description = "Explore a new universe!",
+		label = 'Champignons',
+		description = "C'est pas pour cuisiner ça...",
 		weight = 30,
 		stack = true,
 		close = true
@@ -312,23 +316,23 @@ return {
 
 	['peyote'] = {
 		label = 'Peyote',
-		description = "Explore a new universe!",
+		description = "La drogue des cowboys !",
 		weight = 30,
 		stack = true,
 		close = true
 	},
 
 	['xanaxpack'] = {
-		label = 'Pack of Xanax',
-		description = "Needs to be open",
+		label = 'Boite de Xanax',
+		description = "Il faut l'ouvrir",
 		weight = 130,
 		stack = true,
 		close = true
 	},
 
 	['xanaxplate'] = {
-		label = 'Plate of Xanax',
-		description = "Needs to be open",
+		label = 'Plaquette de Xanax',
+		description = "Il faut aussi l'ouvrir",
 		weight = 30,
 		stack = true,
 		close = true
@@ -336,50 +340,50 @@ return {
 
 	['xanaxpill'] = {
 		label = 'Xanax pill',
-		description = "Explore a new universe!",
+		description = "Laisse tes problèmes s'évaporer...",
 		weight = 2,
 		stack = true,
 		close = true
 	},
 
     ['glue'] = {
-		label = 'Glue',
-		description = "Good for repairing things!",
+		label = 'Colle',
+		description = "Pour réparer des trucs !",
 		weight = 30,
 		stack = true
 	},
 
     ['hammer'] = {
-		label = 'Hammer',
-		description = "Good for smashing things!",
+		label = 'Marteau',
+		description = "Pour casser des trucs !",
 		weight = 500,
 		stack = true
 	},
 
 	['poppyplant'] = {
-		label = 'Poppy Plant',
-		description = "Very nice plant!",
+		label = 'Plante en pot',
+		description = "Très belle plante !",
 		weight = 30,
 		stack = true
 	},
 
 	['heroin'] = {
-		label = 'Heroin',
-		description = "Explore a new universe!",
+		label = 'Héroïne',
+		description = "Le plaisir au creux de tes orteils !",
 		weight = 30,
 		stack = true
 	},
 
 	['crack'] = {
 		label = 'Crack',
-		description = "Explore a new universe!",
+		description = "C'est le son de tes dents que j'entends ?",
 		weight = 30,
 		stack = true
 	},
 
 	['baking_soda'] = {
-		label = 'Baking Soda',
-		description = "Baking Bad!",
+		label = 'Soda de Cuisine',
+		description = "Baking Bad !",
 		weight = 30,
 		stack = true
 	},

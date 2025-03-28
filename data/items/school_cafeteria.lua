@@ -7,9 +7,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_res_fa_bread03',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        }
     },
     ['cafeteria_fries'] = {
         label = 'Frites',
@@ -19,9 +25,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'prop_food_chips',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_pasta'] = {
         label = 'Pâtes Bolognaise',
@@ -31,9 +43,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_fish'] = {
         label = 'Poisson',
@@ -43,9 +61,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_bean'] = {
         label = 'Haricots',
@@ -55,9 +79,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_salad'] = {
         label = 'Salade César',
@@ -67,9 +97,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_steack'] = {
         label = 'Steack Hâché',
@@ -79,9 +115,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_melon'] = {
         label = 'Melon',
@@ -91,9 +133,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'ex_mp_h_acc_fruitbowl_02',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_carrot'] = {
         label = 'Carottes Râpées',
@@ -103,9 +151,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_celeri'] = {
         label = 'Celeri',
@@ -115,9 +169,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_yaourt'] = {
         label = 'Yaourt',
@@ -127,9 +187,10 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            usetime = 5000
+        },
     },
     ['cafeteria_cheese'] = {
         label = 'Fromage',
@@ -139,9 +200,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'v_ret_fh_plate2',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_compote'] = {
         label = 'Compote',
@@ -151,9 +218,10 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            usetime = 5000
+        },
     },
     ['cafeteria_fruitcocktail'] = {
         label = 'Cocktail de Fruits',
@@ -163,9 +231,15 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            prop = {
+                model = 'xm3_int2_xm3_fruits_01',
+                pos = { x = 0.02, y = 0.02, z = -0.02},
+                rot = { x = 0.0, y = 0.0, z = 0.0}
+            },
+            usetime = 5000
+        },
     },
     ['cafeteria_ice'] = {
         label = 'Glace',
@@ -175,8 +249,9 @@ return {
         description = '',
         consume = 1,
 		client = {
-			disable = {sprint = true},
-			usetime = 2500
-		}
+            disable = {sprint = true},
+            anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
+            usetime = 5000
+        },
     },
 }

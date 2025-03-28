@@ -9,7 +9,7 @@ return {
     },
 
     ['jammer'] = {
-        label = 'Brouilleur radio',
+        label = 'Brouilleur Radio',
         weight = 10000,
         allowArmed = true,
         client = {
@@ -18,8 +18,8 @@ return {
     },
 
     ['radiocell'] = {
-        label = 'Cellules AAA',
-        weight = 1000,
+        label = 'Piles AAA',
+        weight = 200,
         stack = true,
         allowArmed = true,
         client = {
