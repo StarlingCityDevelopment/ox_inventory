@@ -72,7 +72,7 @@ return {
         },
     },
     ['cafeteria_bean'] = {
-        label = 'Haricots',
+        label = 'Haricots Verts',
         weight = 1000,
         stack = true,
         close = true,

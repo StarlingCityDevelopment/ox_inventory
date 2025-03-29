@@ -20,7 +20,7 @@ return {
     },
 
     ['cigarette'] = {
-        label = 'Paquet de Cigarette',
+        label = 'Cigarette',
         weight = 10,
         stack = true,
     },

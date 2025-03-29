@@ -44,7 +44,7 @@ return {
     ["spikestrip"] = {
         label = "Bande de clous",
         weight = 1500,
-        consume = 0,
+        consume = 1,
         client = {
             export = "cdx_police.deploySpikestrip",
         }
