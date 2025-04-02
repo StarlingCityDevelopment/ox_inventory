@@ -12,6 +12,8 @@ return {
         label = 'Brouilleur Radio',
         weight = 10000,
         allowArmed = true,
+        close = true,
+        consume = 0.1,
         client = {
             event = 'mm_radio:client:usejammer'
         }
@@ -21,7 +23,7 @@ return {
         label = 'Piles AAA',
         weight = 200,
         stack = true,
-        allowArmed = true,
+        consume = 2,
         client = {
             event = 'mm_radio:client:recharge'
         }

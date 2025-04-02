@@ -3,7 +3,8 @@ return {
 		label = 'Truelle',
 		description = "Parfait pour votre jardin, ou votre plant de Coke",
 		weight = 300,
-		stack = true
+		stack = true,
+		consume = 0.03
 	},
 
 	['coke_leaf'] = {
@@ -223,7 +224,8 @@ return {
 		label = 'Ciseaux',
 		description = "Sert surtout à couper des feuilles, des petites branches, des bourgeons... Rien d'illégal bien sûr !",
 		weight = 40,
-		stack = true
+		stack = true,
+		consume = 0.03
 	},
 
 	['ecstasy1'] = {
@@ -357,7 +359,8 @@ return {
 		label = 'Marteau',
 		description = "Pour casser des trucs !",
 		weight = 500,
-		stack = true
+		stack = true,
+		consume = 0.03
 	},
 
 	['poppyplant'] = {
