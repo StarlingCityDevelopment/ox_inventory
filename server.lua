@@ -292,6 +292,12 @@ end
 ---@param invType string
 ---@param data string|number|table
 lib.callback.register('ox_inventory:openInventory', function(source, invType, data)
+    if invType == 'player' and source ~= data then
+        local serverId = type(data) == 'table' and data.id or data
+
+        if source == serverId or type(serverId) ~= 'number' or not Player(serverId).state.canSteal then return end
+    end
+
 	return openInventory(source, invType, data)
 end)
 
