@@ -5,33 +5,34 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
+        client = {
             anim = { dict = 'amb@medic@standing@kneel@idle_a', clip = 'idle_a' },
             prop = {
                 model = 'm23_1_prop_m31_crate_medical',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
-			disable = {sprint = true, car = true, combat = true, },
-			usetime = 5000,
-		}
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 5000,
+        }
     },
+
     ['medbag'] = {
         label = 'Sac Medical',
         weight = 500,
         stack = true,
         close = true,
         consume = 1,
-		client = {
+        client = {
             anim = { dict = 'amb@medic@standing@kneel@idle_a', clip = 'idle_a' },
             prop = {
                 model = 'prop_ld_health_pack',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
-			disable = {sprint = true, car = true, combat = true, },
-			usetime = 4000,
-		}
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 4000,
+        }
     },
 
     ['tweezers'] = {
@@ -40,10 +41,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, car = true, combat = true, },
-			usetime = 2500,
-		}
+        client = {
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 2500,
+        }
     },
 
     ['suturekit'] = {
@@ -52,10 +53,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, car = true, combat = true, },
-			usetime = 3500,
-		}
+        client = {
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 3500,
+        }
     },
 
     ['icepack'] = {
@@ -64,10 +65,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, car = true, combat = true, },
-			usetime = 2000,
-		}
+        client = {
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 2000,
+        }
     },
 
     ['burncream'] = {
@@ -76,10 +77,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, car = true, combat = true, },
-			usetime = 3000,
-		}
+        client = {
+            disable = { sprint = true, car = true, combat = true, },
+            usetime = 3000,
+        }
     },
 
     ['defib'] = {
@@ -88,10 +89,10 @@ return {
         stack = false,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, car = true, combat = true},
-			usetime = 8000,
-		}
+        client = {
+            disable = { sprint = true, car = true, combat = true },
+            usetime = 8000,
+        }
     },
 
     ['sedative'] = {
@@ -100,10 +101,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-        	disable = {sprint = true},
-			usetime = 4000,
-		}
+        client = {
+            disable = { sprint = true },
+            usetime = 4000,
+        }
     },
 
     ['morphine30'] = {
@@ -112,10 +113,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-            disable = {sprint = true, combat = true},
-			usetime = 6000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 6000,
+        }
     },
 
     ['morphine15'] = {
@@ -124,10 +125,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 3000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 3000,
+        }
     },
 
     ['perc30'] = {
@@ -136,10 +137,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 6000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 6000,
+        }
     },
 
     ['perc10'] = {
@@ -148,10 +149,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 2000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 2000,
+        }
     },
 
     ['perc5'] = {
@@ -160,10 +161,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 1000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 1000,
+        }
     },
 
     ['vic10'] = {
@@ -172,10 +173,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 2000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 2000,
+        }
     },
 
     ['vic5'] = {
@@ -184,10 +185,10 @@ return {
         stack = true,
         close = true,
         consume = 1,
-		client = {
-			disable = {sprint = true, combat = true},
-			usetime = 1000,
-		}
+        client = {
+            disable = { sprint = true, combat = true },
+            usetime = 1000,
+        }
     },
 
     ['recoveredbullet'] = {

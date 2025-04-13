@@ -6,13 +6,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_res_fa_bread03',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         }
@@ -24,13 +24,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'prop_food_chips',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -42,13 +42,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -60,13 +60,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -78,13 +78,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -96,13 +96,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -114,13 +114,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -132,13 +132,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'ex_mp_h_acc_fruitbowl_02',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -150,13 +150,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -168,13 +168,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -186,8 +186,8 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             usetime = 5000
         },
@@ -199,13 +199,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_ret_fh_plate2',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -217,8 +217,8 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             usetime = 5000
         },
@@ -230,13 +230,13 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'xm3_int2_xm3_fruits_01',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 5000
         },
@@ -248,8 +248,8 @@ return {
         close = true,
         description = '',
         consume = 1,
-		client = {
-            disable = {sprint = true},
+        client = {
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             usetime = 5000
         },

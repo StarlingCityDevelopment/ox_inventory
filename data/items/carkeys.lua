@@ -10,7 +10,7 @@ return {
         label = "Outil de crochetage",
         description = 'Un outil pour ouvrir les portes',
         weight = 10,
-        consume = 1,        
+        consume = 1,
         stack = true
     },
 

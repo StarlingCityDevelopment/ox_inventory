@@ -24,7 +24,7 @@ return {
         weight = 10,
         stack = true,
         close = true,
-		consume = 1
+        consume = 1
     },
 
     ['document'] = {
@@ -37,10 +37,10 @@ return {
     },
 
     ['mastercard'] = {
-		label = 'Carte de crédit',
-		stack = false,
-		weight = 10,
-	},
+        label = 'Carte de crédit',
+        stack = false,
+        weight = 10,
+    },
 
     ["phone"] = {
         label = "Téléphone",
@@ -57,6 +57,7 @@ return {
             end
         }
     },
+
     ["bread"] = {
         label = "Pain",
         weight = 250,
@@ -64,12 +65,12 @@ return {
         close = true,
         consume = 1,
         client = {
-            disable = {sprint = true},
+            disable = { sprint = true },
             anim = { dict = 'mp_player_inteat@burger', clip = 'mp_player_int_eat_burger_fp' },
             prop = {
                 model = 'v_res_fa_bread03',
-                pos = { x = 0.02, y = 0.02, z = -0.02},
-                rot = { x = 0.0, y = 0.0, z = 0.0}
+                pos = { x = 0.02, y = 0.02, z = -0.02 },
+                rot = { x = 0.0, y = 0.0, z = 0.0 }
             },
             usetime = 2500
         }
