@@ -1,4 +1,9 @@
 return {
+    ['trap_phone'] = {
+        label = 'Trap Phone',
+        weight = 200,
+    },
+
     ['trowel'] = {
         label = 'Truelle',
         description = "Parfait pour votre jardin, ou votre plant de Coke",
