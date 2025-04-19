@@ -13,7 +13,7 @@ return {
         close = true,
     },
 
-    ['tracking_bracelet '] = {
+    ['tracking_bracelet'] = {
         label = 'Bracelet de surveillance',
         weight = 2,
         stack = true,
