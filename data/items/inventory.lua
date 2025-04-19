@@ -58,8 +58,8 @@ return {
         }
     },
 
-    ["bread"] = {
-        label = "Pain",
+    ["tosti"] = {
+        label = "Tosti",
         weight = 250,
         stack = true,
         close = true,
