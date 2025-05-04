@@ -160,13 +160,6 @@ local function handleOutfit(data, action)
             lib.print.error('Failed to process prop components')
             return false
         end
-
-        Wait(500)
-        appearance = BLAppearance:GetPedAppearance(cache.ped)
-        if not appearance then
-            lib.print.error('Failed to get updated appearance')
-            return false
-        end
     elseif action == "add" then
         BLAppearance:SetPedClothes(cache.ped, data)
         Wait(500)
@@ -305,6 +298,7 @@ local callbackHandlers = {
     ---@param data table The outfit data
     ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:addOutfit'] = function(data)
+        lib.print.info(data)
         return handleOutfit(data, "add")
     end,
 
@@ -312,6 +306,7 @@ local callbackHandlers = {
     ---@param data table The outfit data
     ---@return table|boolean The appearance data if successful, false otherwise
     ['ox_inventory:removeOutfit'] = function(data)
+        lib.print.info(data)
         return handleOutfit(data, "remove")
     end
 }
