@@ -1,260 +1,295 @@
 return {
-    -- Health Parts | T1GER Mechanic System
+    -- Pièces de carrosserie
 
-    ["radiator"] = {
-        label = "Radiateur",
-        weight = 5000,
+    ["t1ger_vehicledoor"] = {
+        label = "Porte de véhicule",
+        weight = 1800,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["fuel_pump"] = {
-        label = "Pompe à carburant",
-        weight = 1500,
+    ["t1ger_vehiclehood"] = {
+        label = "Capot de véhicule",
+        weight = 2200,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["brakes"] = {
-        label = "Freins",
-        weight = 3000,
+    ["t1ger_vehicletrunk"] = {
+        label = "Coffre de véhicule",
+        weight = 2000,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["drive_shaft"] = {
-        label = "Arbre de transmission",
-        weight = 7000,
+    ["t1ger_vehiclewheel"] = {
+        label = "Roue de véhicule",
+        weight = 1200,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["alternator"] = {
-        label = "Alternateur",
-        weight = 4000,
-        stack = true,
-        close = true,
-    },
-
-    ["clutch"] = {
-        label = "Embrayage",
-        weight = 3500,
-        stack = true,
-        close = true,
-    },
-
-    -- Service Parts | T1GER Mechanic System
-
-    ["oil_filter"] = {
-        label = "Huile et filtre",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["air_filter"] = {
-        label = "Filtre à air",
-        weight = 500,
-        stack = true,
-        close = true,
-    },
-
-    ["fuel_filter"] = {
-        label = "Filtre à carburant",
-        weight = 800,
-        stack = true,
-        close = true,
-    },
-
-    ["coolant"] = {
-        label = "Liquide de refroidissement",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["brake_fluid"] = {
-        label = "Liquide de frein",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["steering_fluid"] = {
-        label = "Liquide de direction assistée",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["transmission_fluid"] = {
-        label = "Liquide de transmission",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["spark_plugs"] = {
-        label = "Bougies d'allumage",
-        weight = 200,
-        stack = true,
-        close = true,
-    },
-
-    ["drive_belt"] = {
-        label = "Courroie d'entraînement",
-        weight = 500,
-        stack = true,
-        close = true,
-    },
-
-    ["flywheel"] = {
-        label = "Volant moteur",
-        weight = 6000,
-        stack = true,
-        close = true,
-    },
-
-    ["tires"] = {
-        label = "Pneus",
+    ["t1ger_vehiclewindow"] = {
+        label = "Vitre de véhicule",
         weight = 8000,
         stack = true,
-        close = true,
+        close = true
     },
 
-    -- Body Parts | T1GER Mechanic System
+    -- Pièces principales
 
-    ["part_door"] = {
-        label = "Porte",
-        weight = 20000,
+    ["t1ger_alternator"] = {
+        label = "Alternateur",
+        weight = 600,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["part_hood"] = {
-        label = "Capot",
-        weight = 15000,
+    ["t1ger_brakes"] = {
+        label = "Freins",
+        weight = 700,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["part_trunk"] = {
-        label = "Coffre",
-        weight = 15000,
+    ["t1ger_electricmotor"] = {
+        label = "Moteur électrique",
+        weight = 3500,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["part_wheel"] = {
-        label = "Roue",
-        weight = 10000,
+    ["t1ger_evbattery"] = {
+        label = "Batterie EV",
+        weight = 2500,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["part_window"] = {
-        label = "Fenêtre",
-        weight = 5000,
+    ["t1ger_fuelinjector"] = {
+        label = "Injecteur de carburant",
+        weight = 50,
         stack = true,
-        close = true,
+        close = true
     },
 
-    -- Kits | T1GER Mechanic System
-
-    ["repairkit"] = {
-        label = "Kit de réparation",
-        weight = 3000,
+    ["t1ger_powersteeringpump"] = {
+        label = "Pompe de direction assistée",
+        weight = 400,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["repairkit_adv"] = {
-        label = "Kit de réparation avancé",
-        weight = 5000,
+    ["t1ger_radiator"] = {
+        label = "Radiateur",
+        weight = 900,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["patchkit"] = {
-        label = "Kit de réparation de pneu",
-        weight = 2000,
+    ["t1ger_transmission"] = {
+        label = "Boîte de vitesses",
+        weight = 6000,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["carjack"] = {
-        label = "Cric",
-        weight = 7000,
+    -- Pièces d'entretien
+
+    ["t1ger_airfilter"] = {
+        label = "Filtre à air",
+        weight = 50,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["fuel_can"] = {
-        label = "Jerrican",
-        weight = 5000,
+    ["t1ger_batterycoolant"] = {
+        label = "Liquide de refroidissement batterie",
+        weight = 200,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["jump_starter"] = {
-        label = "Démarreur de secours",
-        weight = 4000,
+    ["t1ger_brakefluid"] = {
+        label = "Liquide de frein",
+        weight = 100,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["tire_repairkit"] = {
-        label = "Kit de réparation de pneu",
-        weight = 2000,
+    ["t1ger_brakepad"] = {
+        label = "Plaquettes de frein",
+        weight = 200,
         stack = true,
-        close = true,
+        close = true
     },
 
-    -- Prop Emotes | T1GER Mechanic System
+    ["t1ger_coolant"] = {
+        label = "Liquide de refroidissement",
+        weight = 200,
+        stack = true,
+        close = true
+    },
 
-    ["roadcone"] = {
-        label = "Cône de signalisation",
+    ["t1ger_drivebelt"] = {
+        label = "Courroie d'entraînement",
+        weight = 80,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_fuelfilter"] = {
+        label = "Filtre à carburant",
+        weight = 50,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_hvwiring"] = {
+        label = "Câblage haute tension",
+        weight = 300,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_oilfilter"] = {
+        label = "Filtre à huile",
+        weight = 70,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_sparkplugs"] = {
+        label = "Bougies d'allumage",
+        weight = 20,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_steeringfluid"] = {
+        label = "Liquide de direction",
+        weight = 100,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_tires"] = {
+        label = "Pneus",
         weight = 1000,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["toolstrolley"] = {
+    ["t1ger_transmissionfluid"] = {
+        label = "Huile de transmission",
+        weight = 150,
+        stack = true,
+        close = true
+    },
+
+    -- Kits
+
+    ["t1ger_repairkit"] = {
+        label = "Kit de réparation",
+        weight = 500,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_repairkit_adv"] = {
+        label = "Kit de réparation avancé",
+        weight = 800,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_carjack"] = {
+        label = "Cric",
+        weight = 1200,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_patchkit"] = {
+        label = "Kit de rustine",
+        weight = 100,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_fuelcan"] = {
+        label = "Bidon d'essence",
+        weight = 600,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_jumpstarter"] = {
+        label = "Démarreur de secours",
+        weight = 300,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_repairkit_tire"] = {
+        label = "Kit de réparation de pneu",
+        weight = 150,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_diagnostictool"] = {
+        label = "Outil de diagnostic",
+        weight = 200,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_servicebook"] = {
+        label = "Carnet d'entretien",
+        weight = 500,
+        stack = true,
+        close = true
+    },
+
+    -- Accessoires de signalisation
+
+    ["t1ger_roadcone"] = {
+        label = "Cône de signalisation",
+        weight = 200,
+        stack = true,
+        close = true
+    },
+
+    ["t1ger_toolstrolley"] = {
         label = "Chariot à outils",
-        weight = 15000,
+        weight = 2500,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["toolbox"] = {
+    ["t1ger_toolbox"] = {
         label = "Boîte à outils",
-        weight = 5000,
+        weight = 800,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["enginehoist"] = {
-        label = "Grue d'atelier",
-        weight = 30000,
+    ["t1ger_consign"] = {
+        label = "Panneau de chantier",
+        weight = 400,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["consign"] = {
-        label = "Panneau de signalisation",
-        weight = 2000,
+    ["t1ger_roadbarrier"] = {
+        label = "Barrière de route",
+        weight = 1200,
         stack = true,
-        close = true,
+        close = true
     },
 
-    ["roadbarrier"] = {
-        label = "Barrière de sécurité",
-        weight = 10000,
-        stack = true,
-        close = true,
-    },
-
-    -- Materials | T1GER Mechanic System
+    -- Materials
 
     ['scrap_metal'] = {
         label = 'Ferraille',
