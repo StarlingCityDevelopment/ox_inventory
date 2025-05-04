@@ -7,9 +7,6 @@ local Inventory = exports.ox_inventory
 local sharedClothing = shared.clothing
 local sharedClothingSlots = sharedClothing.slots
 
--- Cache for player appearance data to reduce database calls
-local appearanceCache = {}
-
 ---Counts items in a table
 ---@param items table The table of items to count
 ---@return number The number of items in the table
@@ -64,7 +61,6 @@ end
 local function processClothingItems(clothes, sex, itemSet, itemType)
     if not validateClothingData(itemSet, sex, itemType) then return false end
 
-    -- Pre-validate all items before processing to avoid partial updates
     for key, _ in pairs(itemSet) do
         local slotKey = 'clothes_' .. key
         if sharedClothingSlots[slotKey] and not sharedClothing[sex][key] then
@@ -73,7 +69,6 @@ local function processClothingItems(clothes, sex, itemSet, itemType)
         end
     end
 
-    -- Process items in batches for better performance
     local itemsToAdd = {}
 
     for key, data in pairs(itemSet) do
@@ -92,7 +87,6 @@ local function processClothingItems(clothes, sex, itemSet, itemType)
         end
     end
 
-    -- Add items in a single batch if possible
     local success = true
     for _, item in ipairs(itemsToAdd) do
         if not Inventory:AddItem(clothes, item.slot, item.count, item.metadata, item.slotId) then
@@ -158,7 +152,6 @@ end
 ---@param appearance table|nil The appearance data of the player (optional)
 ---@return boolean Whether the sync was successful
 local function syncPlayerClothes(src, appearance)
-    -- Get player data
     local player = QBox:GetPlayer(src)
     if not player then
         lib.print.error('Player not found')
@@ -166,55 +159,36 @@ local function syncPlayerClothes(src, appearance)
 
     local citizenid = player.PlayerData.citizenid
 
-    -- Get appearance data if not provided
+    appearance = exports.bl_appearance:GetPlayerAppearance(citizenid)
     if not appearance then
-        -- Check cache first
-        if appearanceCache[citizenid] then
-            appearance = appearanceCache[citizenid]
-            lib.print.debug('Using cached appearance for player: ' .. citizenid)
-        else
-            appearance = exports.bl_appearance:GetPlayerAppearance(citizenid)
-            if not appearance then
-                lib.print.error('Failed to get player appearance')
-            end
-
-            -- Cache the appearance data
-            appearanceCache[citizenid] = appearance
-
-            -- Set up cache invalidation after 5 minutes
-            SetTimeout(300000, function()
-                appearanceCache[citizenid] = nil
-                lib.print.debug('Invalidated appearance cache for: ' .. citizenid)
-            end)
-        end
+        lib.print.error('Failed to get player appearance')
+        return false
     end
 
-    -- Get clothes inventory
     local clothes = clothing.getClothesInv(src, citizenid)
     if not clothes then
         lib.print.error('Failed to get clothes inventory')
+        return false
     end
 
-    -- Determine sex from model
     local sex = getSexFromModel(appearance.model)
     if not sex then
         lib.print.error('Failed to get sex from model')
+        return false
     end
 
-    -- Clear existing inventory
     Inventory:ClearInventory(clothes, 'clothes_outfits')
 
-    -- Process prop items
     if not processClothingItems(clothes, sex, appearance.props, 'prop') then
         lib.print.error('Failed to process prop items')
+        return false
     end
 
-    -- Process drawable items
     if not processClothingItems(clothes, sex, appearance.drawables, 'component') then
         lib.print.error('Failed to process drawable items')
+        return false
     end
 
-    -- Sync slots with clients
     for i = 1, 16 do
         clothes:syncSlotsWithClients({
             slots = { item = { slot = i } },
@@ -226,7 +200,6 @@ local function syncPlayerClothes(src, appearance)
     return true
 end
 
--- Callback to get inventory clothes
 lib.callback.register('ox_inventory:getInventoryClothes', function(source)
     local success, result = pcall(function()
         local player = QBox:GetPlayer(source)
@@ -259,7 +232,6 @@ lib.callback.register('ox_inventory:getInventoryClothes', function(source)
     return result
 end)
 
--- Adds a clothing item
 function clothing.addClothing(payload)
     local success, result = pcall(function()
         if not payload.source then
@@ -283,6 +255,8 @@ function clothing.addClothing(payload)
         end
 
         BlAppearance:SavePlayerAppearance(player.PlayerData.citizenid, newAppearance)
+        lib.print.info('Successfully added clothing item for player: ' .. player.PlayerData.citizenid)
+
         return true
     end)
 
@@ -316,15 +290,10 @@ function clothing.removeClothing(payload)
     local appearance
     local citizenid = player.PlayerData.citizenid
 
-    if appearanceCache[citizenid] then
-        appearance = appearanceCache[citizenid]
-        lib.print.debug('Using cached appearance for player: ' .. citizenid)
-    else
-        appearance = BlAppearance:GetPlayerAppearance(citizenid)
-        if not appearance then
-            lib.print.error('Failed to get appearance data')
-            return false
-        end
+    appearance = BlAppearance:GetPlayerAppearance(citizenid)
+    if not appearance then
+        lib.print.error('Failed to get appearance data')
+        return false
     end
 
     local sex = getSexFromModel(appearance.model)
@@ -361,14 +330,9 @@ function clothing.removeClothing(payload)
         return false
     end
 
-    local success = BlAppearance:SetPlayerAppearance(citizenid, newAppearance)
-    if not success then
-        lib.print.error('Failed to save new appearance data')
-        return false
-    end
-
-    appearanceCache[citizenid] = newAppearance
+    BlAppearance:SavePlayerAppearance(citizenid, newAppearance)
     lib.print.info('Successfully removed clothing item for player: ' .. citizenid)
+
     return true
 end
 
@@ -429,6 +393,8 @@ function clothing.addOutfit(payload)
             Wait(2000)
             syncPlayerClothes(payload.source, newAppearance)
         end)
+        lib.print.info('Successfully added outfit for player: ' .. citizenid)
+
         return true
     end)
 
@@ -473,8 +439,7 @@ function clothing.removeOutfit(payload)
             return false
         end
 
-        local newAppearance = lib.callback.await('ox_inventory:removeOutfit', payload.source,
-            payload.fromSlot.metadata.outfit)
+        local newAppearance = lib.callback.await('ox_inventory:removeOutfit', payload.source, payload.fromSlot.metadata.outfit)
         if not newAppearance then
             error('Failed to get new appearance')
             return false
@@ -493,6 +458,7 @@ function clothing.removeOutfit(payload)
         end
 
         BlAppearance:SavePlayerAppearance(citizenid, newAppearance)
+        lib.print.info('Successfully removed outfit for player: ' .. citizenid)
         return true
     end)
 

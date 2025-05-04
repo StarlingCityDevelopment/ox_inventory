@@ -112,6 +112,7 @@ local function processComponents(components, isProp)
         local success = true
         if isProp then
             success = BLAppearance:SetPedProp(cache.ped, data)
+            success = data.value == -1 and true or success
         else
             success = BLAppearance:SetPedDrawable(cache.ped, data)
         end
@@ -143,16 +144,13 @@ local function handleOutfit(data, action)
         showProgressBar(5000, progressLabel)
     end)
 
-    -- Get current appearance
     local appearance = BLAppearance:GetPedAppearance(cache.ped)
     if not appearance then
         lib.print.error('Failed to get appearance data')
         return false
     end
 
-    -- Handle outfit based on action
     if action == "remove" then
-        -- Process drawables and props
         if not processComponents(data.drawables, false) then
             lib.print.error('Failed to process drawable components')
             return false
@@ -162,16 +160,18 @@ local function handleOutfit(data, action)
             lib.print.error('Failed to process prop components')
             return false
         end
-    elseif action == "add" then
-        -- Apply outfit
-        local success = BLAppearance:SetPedClothes(cache.ped, data)
-        if not success then
-            lib.print.error('Failed to set ped clothes')
-            return false
-        end
 
         Wait(500)
         appearance = BLAppearance:GetPedAppearance(cache.ped)
+        if not appearance then
+            lib.print.error('Failed to get updated appearance')
+            return false
+        end
+    elseif action == "add" then
+        BLAppearance:SetPedClothes(cache.ped, data)
+        Wait(500)
+        appearance = BLAppearance:GetPedAppearance(cache.ped)
+
         if not appearance then
             lib.print.error('Failed to get updated appearance')
             return false
