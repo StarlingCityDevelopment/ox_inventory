@@ -5,9 +5,6 @@ return {
         stack = false,
         close = false,
         description = "Pour arroser des plantes",
-        client = {
-            image = "watering_can.webp",
-        }
     },
 
     ["fertilizer"] = {
@@ -16,9 +13,6 @@ return {
         stack = true,
         close = false,
         description = "Boisson énergisante pour votre plante",
-        client = {
-            image = "fertilizer.webp",
-        }
     },
 
     ["advanced_fertilizer"] = {
@@ -27,9 +21,6 @@ return {
         stack = true,
         close = false,
         description = "Le plat préféré de ta plante préféré",
-        client = {
-            image = "advanced_fertilizer.webp",
-        }
     },
 
     ["liquid_fertilizer"] = {
@@ -38,164 +29,101 @@ return {
         stack = false,
         close = false,
         description = "De l'eau enrichie. (Ne pas boire !)",
-        client = {
-            image = "liquid_fertilizer.webp",
-        }
     },
 
-    ["weed_lemonhaze_seed"] = {
-        label = "Graine de Weed",
+    ["weed_ak47_seed"] = {
+        label = "Graine de AK-47",
         weight = 20,
         stack = true,
         close = true,
         description = "Une hybride connue pour son arôme puissant et ses effets équilibrés entre relaxation et euphorie.",
-        client = {
-            image = "weed_lemonhaze_seed.webp",
-        },
         server = {
             export = "it-drugs.useSeed"
         }
     },
 
-    ["weed_lemonhaze"] = {
-        label = "Weed \"Cheese\"",
+    ["weed_ak47"] = {
+        label = "Weed AK-47",
         weight = 20,
         stack = true,
         close = false,
         description = "Une hybride connue pour son arôme puissant et ses effets équilibrés entre relaxation et euphorie.",
-        client = {
-            image = "weed_lemonhaze.webp",
-        },
     },
 
-    ["weed_og_seed"] = {
-        label = "Graine de Weed",
+    ["weed_purplekush_seed"] = {
+        label = "Graine de Purple Kush",
         weight = 20,
         stack = true,
         close = true,
-        description = "Une sativa offrant arômes floraux et effets puissants, à la fois relaxante et stimulante.",
-        client = {
-            image = "weed_og_seed.webp",
-        },
+        description = "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
         server = {
             export = "it-drugs.useSeed"
         }
     },
 
-    ["weed_og"] = {
-        label = "Weed \"AK-47\"",
+    ["weed_purplekush"] = {
+        label = "Weed Purple Kush",
         weight = 20,
         stack = true,
         close = false,
-        description = "Une sativa offrant arômes floraux et effets puissants, à la fois relaxante et stimulante.",
-        client = {
-            image = "weed_og.webp",
-        },
+        description = "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
     },
 
-    ["weed_purple_haze_seed"] = {
-        label = "Graine de Weed",
+    ["weed_creamcaramel_seed"] = {
+        label = "Graine de Cream Caramel",
         weight = 20,
         stack = true,
         close = true,
-        description =
-        "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
-        client = {
-            image = "weed_purple_haze_seed.webp",
-        },
+        description = "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
         server = {
             export = "it-drugs.useSeed"
         }
     },
 
-    ["weed_purple_haze"] = {
-        label = "Weed \"Purple Kush\"",
+    ["weed_creamcaramel"] = {
+        label = "Weed Cream Caramel",
         weight = 20,
         stack = true,
         close = false,
-        description =
-        "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
-        client = {
-            image = "weed_purple_haze.webp",
-        },
+        description = "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
     },
 
-    ["weed_white_widow_seed"] = {
-        label = "Graine de Weed",
+    ["weed_mooncookies_seed"] = {
+        label = "Graine de Moon Cookies",
         weight = 20,
         stack = true,
         close = true,
-        description =
-        "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
-        client = {
-            image = "weed_white_widow_seed.webp",
-        },
+        description = "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
         server = {
             export = "it-drugs.useSeed"
         }
     },
 
-    ["weed_white_widow"] = {
-        label = "Weed \"White Widow\"",
+    ["weed_mooncookies"] = {
+        label = "Weed Moon Cookies",
         weight = 20,
         stack = true,
         close = false,
-        description =
-        "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
-        client = {
-            image = "weed_white_widow.webp",
-        }
-    },
-
-    ["weed_blueberry_seed"] = {
-        label = "Graine de Weed",
-        weight = 20,
-        stack = true,
-        close = true,
-        description =
-        "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
-        client = {
-            image = "weed_blueberry_seed.webp",
-        },
-        server = {
-            export = "it-drugs.useSeed"
-        }
-    },
-
-    ["weed_blueberry"] = {
-        label = "Weed \"Moon Cookies\"",
-        weight = 20,
-        stack = true,
-        close = false,
-        description =
-        "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
-        client = {
-            image = "weed_blueberry.webp",
-        }
+        description = "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
     },
 
     ["weed_sweetcheese_seed"] = {
-        label = "Graine de Weed",
+        label = "Graine de Sweet Cheese",
         weight = 20,
         stack = true,
         close = true,
-        description =
-        "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
-        client = {
-            image = "weed_sweetcheese_seed.webp",
-        },
+        description = "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
         server = {
             export = "it-drugs.useSeed"
         }
     },
 
     ["weed_sweetcheese"] = {
-        label = "Weed \"Sweet Cheese\"",
+        label = "Weed Sweet Cheese",
         weight = 20,
         stack = true,
         close = false,
-        description =
-        "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
+        description = "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
         client = {
             image = "weed_sweetcheese.webp",
         }
@@ -207,9 +135,6 @@ return {
         stack = true,
         close = true,
         description = "Une plante \"thérapeuthique\"",
-        client = {
-            image = "coca_seed.webp",
-        },
         server = {
             export = "it-drugs.useSeed"
         }
@@ -221,9 +146,6 @@ return {
         stack = true,
         close = false,
         description = "Ou comment la tortue à réellement battue la lièvre...",
-        client = {
-            image = "coca.webp",
-        }
     },
 
     ["paper"] = {
@@ -232,9 +154,6 @@ return {
         stack = true,
         close = false,
         description = "Pour rouler un Teh",
-        client = {
-            image = "paper.webp",
-        }
     },
 
     ["nitrous"] = {
@@ -243,9 +162,6 @@ return {
         stack = true,
         close = false,
         description = "Ceci est de l'azote... Au cas où c'était pas clair...",
-        client = {
-            image = "nitrous.webp",
-        }
     },
 
     ["weed_processing_table"] = {
@@ -254,9 +170,6 @@ return {
         stack = false,
         close = true,
         description = "Pour traiter de la verte",
-        client = {
-            image = "weed_processing_table.webp",
-        },
         server = {
             export = "it-drugs.placeProcessingTable"
         }
@@ -268,9 +181,6 @@ return {
         stack = false,
         close = true,
         description = "La traite des blanches",
-        client = {
-            image = "cocaine_processing_table.webp",
-        },
         server = {
             export = "it-drugs.placeProcessingTable"
         }
@@ -285,9 +195,6 @@ return {
         server = {
             export = "it-drugs.takeDrug"
         },
-        client = {
-            image = "cocaine.webp",
-        },
     },
 
     ["joint"] = {
@@ -299,9 +206,6 @@ return {
         server = {
             export = "it-drugs.takeDrug"
         },
-        client = {
-            image = "joint.webp",
-        }
     },
 
     ["pochon_empty"] = {
