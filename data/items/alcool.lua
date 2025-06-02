@@ -53,7 +53,7 @@ return {
         }
     },
 
-    ['jäger'] = {
+    ['jager'] = {
         label = 'Jäger',
         weight = 1000,
         stack = true,

@@ -27,8 +27,8 @@ return {
         weight = 10
     },
 
-    ['cheese_bait'] = {
-        label = 'Fromage (appât)',
+    ['cheese'] = {
+        label = 'Fromage',
         weight = 10
     },
 
@@ -59,7 +59,7 @@ return {
 
     ['haddock'] = {
         label = 'Aiglefin',
-        weight = 500
+        weight = 700
     },
 
     ['mackerel'] = {
@@ -78,7 +78,7 @@ return {
     },
 
     ['red_snapper'] = {
-        label = 'Vivaneau rouge',
+        label = 'Vivaneau Rouge',
         weight = 2500
     },
 
@@ -92,7 +92,12 @@ return {
         weight = 500
     },
 
-    ['shrimp_fish'] = {
+    ['seaweed'] = {
+        label = 'Algue',
+        weight = 50
+    },
+
+    ['shrimp'] = {
         label = 'Crevette',
         weight = 500
     },

@@ -37,14 +37,6 @@ return {
         description = '',
     },
 
-    ['fish'] = {
-        label = 'Poisson',
-        weight = 8,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
     ['onion'] = {
         label = 'Oignon',
         weight = 8,
@@ -213,16 +205,16 @@ return {
         description = '',
     },
 
-    ['rice'] = {
-        label = 'Riz Cru',
+    ['butter'] = {
+        label = 'Beurre',
         weight = 20,
         stack = true,
         close = true,
         description = '',
     },
 
-    ['seaweed'] = {
-        label = 'Algue',
+    ['rice'] = {
+        label = 'Riz',
         weight = 20,
         stack = true,
         close = true,
@@ -246,14 +238,14 @@ return {
     },
 
     ['tea'] = {
-        label = 'Sachet de Thé',
+        label = 'Thé',
         weight = 20,
         stack = true,
         close = true,
         description = '',
     },
 
-    ['menthe'] = {
+    ['mint'] = {
         label = 'Menthe',
         weight = 20,
         stack = true,
@@ -263,22 +255,6 @@ return {
 
     ['pasta'] = {
         label = 'Pâtes',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cheese'] = {
-        label = 'Fromage',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['kitchenwater'] = {
-        label = 'Eau de Cuisine',
         weight = 20,
         stack = true,
         close = true,
@@ -301,24 +277,8 @@ return {
         description = '',
     },
 
-    ['shrimp'] = {
-        label = 'Crevette',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
     ['cutted_meat'] = {
         label = 'Tranche de Viande',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_fish'] = {
-        label = 'Tranche de Poisson',
         weight = 20,
         stack = true,
         close = true,
@@ -373,24 +333,8 @@ return {
         description = '',
     },
 
-    ['cutted_coffee'] = {
-        label = 'Café en Poudre',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
     ['cutted_wheat'] = {
         label = 'Farine de Blé',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_corn'] = {
-        label = 'Farine de Maïs',
         weight = 20,
         stack = true,
         close = true,
@@ -485,22 +429,6 @@ return {
         description = '',
     },
 
-    ['cutted_milk'] = {
-        label = 'Beurre',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_rice'] = {
-        label = 'Riz Cuit',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
     ['cutted_seaweed'] = {
         label = 'Algue Cuite',
         weight = 20,
@@ -517,32 +445,8 @@ return {
         description = '',
     },
 
-    ['cutted_egg'] = {
-        label = 'Oeuf Cuit',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_tea'] = {
-        label = 'Thé',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_menthe'] = {
+    ['cutted_mint'] = {
         label = 'Feuille de Menthe',
-        weight = 20,
-        stack = true,
-        close = true,
-        description = '',
-    },
-
-    ['cutted_pasta'] = {
-        label = 'Pâtes Cuites',
         weight = 20,
         stack = true,
         close = true,
@@ -557,32 +461,128 @@ return {
         description = '',
     },
 
-    ['cutted_kitchenwater'] = {
-        label = 'Eau Chaude',
+    ['cutted_grouper'] = {
+        label = 'Tranche de Mérou',
         weight = 20,
         stack = true,
         close = true,
         description = '',
     },
 
-    ['cutted_kitchenoil'] = {
-        label = 'Huile Bouillante',
+    ['cutted_mackerel'] = {
+        label = 'Tranche de Maquereaux',
         weight = 20,
         stack = true,
         close = true,
         description = '',
     },
 
-    ['cutted_pickle'] = {
-        label = 'Rondelle de Cornichon',
+    ['cutted_mahi_mahi'] = {
+        label = 'Tranche de Mahi-Mahi',
         weight = 20,
         stack = true,
         close = true,
         description = '',
     },
 
-    ['cutted_shrimp'] = {
-        label = 'Crevette Décortiquée',
+    ['cutted_octopus'] = {
+        label = 'Tranche de Pieuvre',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_red_snapper'] = {
+        label = 'Tranche de Vivaneau Rouge',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_salmon'] = {
+        label = 'Tranche de Saumon',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_sea_bream'] = {
+        label = 'Tranche de Dorade',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_squid'] = {
+        label = 'Tranche de Calamar',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_trout'] = {
+        label = 'Tranche de Truite',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_tuna'] = {
+        label = 'Tranche de Thon',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_clownfish'] = {
+        label = 'Tranche de Poisson-Clown',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_dolphin'] = {
+        label = 'Tranche de Dauphin',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_piranha'] = {
+        label = 'Tranche de Piranha',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_seal'] = {
+        label = 'Tranche de Phoque',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_shark'] = {
+        label = 'Tranche de Requin',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_turtle'] = {
+        label = 'Tranche de Tortue',
         weight = 20,
         stack = true,
         close = true,
