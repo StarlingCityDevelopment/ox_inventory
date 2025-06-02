@@ -31,6 +31,14 @@ return {
         description = "De l'eau enrichie. (Ne pas boire !)",
     },
 
+    ["baggie"] = {
+        label = "Pochon Vide",
+        weight = 1,
+        stack = true,
+        close = false,
+        description = "Un pochon qui ne contient rien",
+    },
+
     ["weed_ak47_seed"] = {
         label = "Graine de AK-47",
         weight = 20,
@@ -48,6 +56,14 @@ return {
         stack = true,
         close = false,
         description = "Une hybride connue pour son arôme puissant et ses effets équilibrés entre relaxation et euphorie.",
+    },
+
+    ["baggie_ak47"] = {
+        label = "Pochon de Weed \"AK47\"",
+        weight = 2,
+        stack = true,
+        close = false,
+        description = "Un pochon qui contient de la weed \"AK47\"",
     },
 
     ["weed_purplekush_seed"] = {
@@ -69,6 +85,14 @@ return {
         description = "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
     },
 
+    ["baggie_purplekush"] = {
+        label = "Pochon de Weed \"Purple Kush\"",
+        weight = 2,
+        stack = true,
+        close = false,
+        description = "Un pochon qui contient de la weed \"Purple Kush\"",
+    },
+
     ["weed_creamcaramel_seed"] = {
         label = "Graine de Cream Caramel",
         weight = 20,
@@ -88,6 +112,14 @@ return {
         description = "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
     },
 
+    ["baggie_creamcaramel"] = {
+        label = "Pochon de Weed \"Cream Caramel\"",
+        weight = 2,
+        stack = true,
+        close = false,
+        description = "Un pochon qui contient de la weed \"\"",
+    },
+
     ["weed_mooncookies_seed"] = {
         label = "Graine de Moon Cookies",
         weight = 20,
@@ -105,6 +137,14 @@ return {
         stack = true,
         close = false,
         description = "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
+    },
+
+    ["baggie_mooncookies"] = {
+        label = "Pochon de Weed \"Moon Cookies\"",
+        weight = 2,
+        stack = true,
+        close = false,
+        description = "Un pochon qui contient de la weed \"Moon Cookies\"",
     },
 
     ["weed_sweetcheese_seed"] = {
@@ -127,6 +167,14 @@ return {
         client = {
             image = "weed_sweetcheese.webp",
         }
+    },
+
+    ["baggie_sweetcheese"] = {
+        label = "Pochon de Weed \"Sweet Cheese\"",
+        weight = 2,
+        stack = true,
+        close = false,
+        description = "Un pochon qui contient de la weed \"Sweet Cheese\"",
     },
 
     ["coca_seed"] = {
@@ -206,62 +254,6 @@ return {
         server = {
             export = "it-drugs.takeDrug"
         },
-    },
-
-    ["pochon_empty"] = {
-        label = "Pochon Vide",
-        weight = 1,
-        stack = true,
-        close = false,
-        description = "Un pochon qui ne contient rien",
-    },
-
-    ["pochon_ak47"] = {
-        label = "Pochon de Weed \"AK47\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"AK47\"",
-    },
-
-    ["pochon_purplekush"] = {
-        label = "Pochon de Weed \"Purple Kush\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"Purple Kush\"",
-    },
-
-    ["pochon_cheese"] = {
-        label = "Pochon de Weed \"Cheese\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"Cheese\"",
-    },
-
-    ["pochon_creamcaramel"] = {
-        label = "Pochon de Weed \"Cream Caramel\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"\"",
-    },
-
-    ["pochon_mooncookies"] = {
-        label = "Pochon de Weed \"Moon Cookies\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"Moon Cookies\"",
-    },
-
-    ["pochon_sweetcheese"] = {
-        label = "Pochon de Weed \"Sweet Cheese\"",
-        weight = 2,
-        stack = true,
-        close = false,
-        description = "Un pochon qui contient de la weed \"Sweet Cheese\"",
     },
 
     ["pochon_coke"] = {
