@@ -17,8 +17,28 @@ return {
         weight = 450
     },
 
+    ['fishing_lead'] = {
+        label = 'Plomb (appât)',
+        weight = 5
+    },
+
     ['worms'] = {
-        label = 'Vers',
+        label = 'Vers (appât)',
+        weight = 10
+    },
+
+    ['cheese_bait'] = {
+        label = 'Fromage (appât)',
+        weight = 10
+    },
+
+    ['bread_bait'] = {
+        label = 'Pain (appât)',
+        weight = 10
+    },
+
+    ['insect_bait'] = {
+        label = 'Insecte (appât)',
         weight = 10
     },
 
@@ -42,14 +62,19 @@ return {
         weight = 500
     },
 
+    ['mackerel'] = {
+        label = 'Maquereau',
+        weight = 1000
+    },
+
     ['mahi_mahi'] = {
         label = 'Mahi Mahi',
         weight = 3500
     },
 
-    ['piranha'] = {
-        label = 'Piranha',
-        weight = 1500
+    ['octopus'] = {
+        label = 'Pieuvre',
+        weight = 1000
     },
 
     ['red_snapper'] = {
@@ -62,9 +87,19 @@ return {
         weight = 1000
     },
 
-    ['shark'] = {
-        label = 'Requin',
-        weight = 7500
+    ['sea_bream'] = {
+        label = 'Dorade',
+        weight = 500
+    },
+
+    ['shrimp_fish'] = {
+        label = 'Crevette',
+        weight = 500
+    },
+
+    ['squid'] = {
+        label = 'Calamar',
+        weight = 3000
     },
 
     ['trout'] = {
@@ -74,6 +109,36 @@ return {
 
     ['tuna'] = {
         label = 'Thon',
-        weight = 10000
+        weight = 1000
+    },
+
+    ['clownfish'] = {
+        label = 'Poisson Clown',
+        weight = 500
+    },
+
+    ['dolphin'] = {
+        label = 'Dauphin',
+        weight = 7500
+    },
+
+    ['piranha'] = {
+        label = 'Piranha',
+        weight = 1500
+    },
+
+    ['seal'] = {
+        label = 'Phoque',
+        weight = 7500
+    },
+
+    ['shark'] = {
+        label = 'Requin',
+        weight = 7500
+    },
+
+    ['turtle'] = {
+        label = 'Tortue',
+        weight = 1000
     },
 }
