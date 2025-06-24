@@ -1,4 +1,9 @@
 return {
+    ['trap_phone'] = {
+        label = 'Trap Phone',
+        weight = 200,
+    },
+
     ["watering_can"] = {
         label = "Arrosoir",
         weight = 500,
