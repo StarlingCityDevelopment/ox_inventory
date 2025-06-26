@@ -4,6 +4,7 @@ import { store } from '../store';
 import { Items } from '../store/items';
 import { imagepath } from '../store/imagepath';
 import { fetchNui } from '../utils/fetchNui';
+import { imageext } from '../store/imageext';
 
 export const canPurchaseItem = (item: Slot, inventory: { type: Inventory['type']; groups: Inventory['groups'] }) => {
   if (inventory.type !== 'shop' || !isSlotWithItem(item)) return true;
@@ -147,16 +148,16 @@ export const getItemUrl = (item: string | SlotWithItem) => {
 
     // @todo validate urls and support webp
     if (metadata?.imageurl) return `${metadata.imageurl}`;
-    if (metadata?.image) return `${imagepath}/${metadata.image}.png`;
+    if (metadata?.image) return `${imagepath}/${metadata.image}.${imageext}`;
   }
 
   const itemName = isObj ? (item.name as string) : item;
   const itemData = Items[itemName];
 
-  if (!itemData) return `${imagepath}/${itemName}.png`;
+  if (!itemData) return `${imagepath}/${itemName}.${imageext}`;
   if (itemData.image) return itemData.image;
 
-  itemData.image = `${imagepath}/${itemName}.png`;
+  itemData.image = `${imagepath}/${itemName}.${imageext}`;
 
   return itemData.image;
 };

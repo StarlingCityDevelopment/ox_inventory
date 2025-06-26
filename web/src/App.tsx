@@ -3,6 +3,7 @@ import useNuiEvent from './hooks/useNuiEvent';
 import { Items } from './store/items';
 import { Locale } from './store/locale';
 import { setImagePath } from './store/imagepath';
+import { setImageExtension } from './store/imageext';
 import { setupInventory } from './store/inventory';
 import { Inventory } from './typings';
 import { useAppDispatch } from './store';
@@ -26,10 +27,11 @@ debugData([
         items: [
           {
             slot: 1,
-            name: 'iron',
+            name: 'cola',
             weight: 3000,
             metadata: {
               description: `name: Svetozar Miletic  \n Gender: Male`,
+              durability: 75,
               ammo: 3,
               mustard: '60%',
               ketchup: '30%',
@@ -40,11 +42,11 @@ debugData([
           { slot: 2, name: 'powersaw', weight: 0, count: 1, metadata: { durability: 75 } },
           { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
           {
-            slot: 4,
-            name: 'water',
+            slot: 7,
+            name: 'WEAPON_FLAREGUN',
             weight: 100,
             count: 1,
-            metadata: { description: 'Generic item description' },
+            metadata: { durability: 75, label: 'Flaregun', description: 'Generic item description' },
           },
           { slot: 5, name: 'water', weight: 100, count: 1 },
           {
@@ -96,11 +98,13 @@ const App: React.FC = () => {
     items: typeof Items;
     leftInventory: Inventory;
     imagepath: string;
-  }>('init', ({ locale, items, leftInventory, imagepath }) => {
+    imageext?: string;
+  }>('init', ({ locale, items, leftInventory, imagepath, imageext }) => {
     for (const name in locale) Locale[name] = locale[name];
     for (const name in items) Items[name] = items[name];
 
     setImagePath(imagepath);
+    setImageExtension(imageext || 'webp');
     dispatch(setupInventory({ leftInventory }));
   });
 
@@ -119,8 +123,8 @@ const App: React.FC = () => {
   );
 };
 
-addEventListener("dragstart", function(event) {
-  event.preventDefault()
-})
+addEventListener('dragstart', function (event) {
+  event.preventDefault();
+});
 
 export default App;

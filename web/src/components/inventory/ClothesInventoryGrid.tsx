@@ -9,7 +9,7 @@ import weights from '../../assets/weight.png';
 
 const PAGE_SIZE = 30;
 
-const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
+const ClothesInventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const weight = useMemo(
     () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items) * 1000) / 1000 : 0),
     [inventory.maxWeight, inventory.items]
@@ -29,24 +29,8 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   return (
     <>
       <div className="inventory-grid-wrapper" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
-        <div>
-          <div className="inventory-grid-header-wrapper">
-            <div className="label-container">
-              <img src={bag} alt="" />
-              <p>{inventory.label}</p>
-            </div>
-            {inventory.maxWeight && (
-              <div className="weight-container">
-                <img src={weights} alt="" />
-                <p>
-                  {(weight / 1000).toFixed(2)}/{inventory.maxWeight / 1000}kg
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
         <div
-          className={inventory.type == 'player' ? 'inventory-grid-container' : 'secinventory-grid-container'}
+          className="clothes-inventory-grid-container"
           ref={containerRef}
         >
           <>
@@ -67,4 +51,4 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   );
 };
 
-export default InventoryGrid;
+export default ClothesInventoryGrid;

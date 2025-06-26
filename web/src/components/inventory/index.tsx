@@ -13,6 +13,8 @@ import { closeTooltip } from '../../store/tooltip';
 import InventoryContext from './InventoryContext';
 import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
+import HotInventory from './HotInventory';
+import ClothesInventory from './ClothesInventory';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
@@ -44,9 +46,15 @@ const Inventory: React.FC = () => {
     <>
       <Fade in={inventoryVisible}>
         <div className="inventory-wrapper">
-          <LeftInventory />
-          <InventoryControl />
-          <RightInventory />
+          <div className="playerinventory">
+            <LeftInventory />
+            <HotInventory />
+          </div>
+          <ClothesInventory />
+          <div className="secondaryinventory">
+            <RightInventory />
+            <InventoryControl />
+          </div>
           <Tooltip />
           <InventoryContext />
         </div>
