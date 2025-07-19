@@ -10,6 +10,13 @@ local VPed = require 'modules.VPed.client'
 local CLOTHING_ANIM_DICT = 'clothingtie'
 local CLOTHING_ANIM_CLIP = 'try_tie_positive_a'
 
+lib.onCache('ped', function(value)
+    if value then
+        SetPedConfigFlag(value, 35, false)
+        SetPedCanLosePropsOnDamage(value, false, 0)
+    end
+end)
+
 local function getGender()
     local model = GetEntityModel(PlayerPedId())
     if model == joaat('mp_m_freemode_01') then
