@@ -30,18 +30,22 @@ server_scripts {
 
 client_script 'init.lua'
 
-ui_page 'web/build/index.html'
+ui_page 'build/index.html'
 
 files {
     'client.lua',
     'server.lua',
     'locales/*.json',
-    'web/build/index.html',
-    'web/build/assets/*.js',
-    'web/build/assets/*.css',
-    'web/images/*.png',
+    'build/index.html',
+    'build/assets/*.js',
+    'build/assets/*.css',
+    -- 'web/images/*.png',
     'modules/**/shared.lua',
     'modules/**/client.lua',
+    'modules/**/appearance_providers.lua',
     'modules/bridge/**/client.lua',
     'data/*.lua',
+    'data/items/*.lua',
 }
+
+provide 'ox_inventory'

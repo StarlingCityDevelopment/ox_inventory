@@ -11,7 +11,6 @@ export const onDrop = (source: DragSource, target?: DropTarget) => {
   const { sourceInventory, targetInventory } = getTargetInventory(state, source.inventory, target?.inventory);
 
   const sourceSlot = sourceInventory.items[source.item.slot - 1] as SlotWithItem;
-
   const sourceData = Items[sourceSlot.name];
 
   if (sourceData === undefined) return console.error(`${sourceSlot.name} item data undefined!`);
@@ -41,8 +40,8 @@ export const onDrop = (source: DragSource, target?: DropTarget) => {
     state.shiftPressed && sourceSlot.count > 1 && sourceInventory.type !== 'shop'
       ? Math.floor(sourceSlot.count / 2)
       : state.itemAmount === 0 || state.itemAmount > sourceSlot.count
-      ? sourceSlot.count
-      : state.itemAmount;
+        ? sourceSlot.count
+        : state.itemAmount;
 
   const data = {
     fromSlot: sourceSlot,
@@ -63,16 +62,16 @@ export const onDrop = (source: DragSource, target?: DropTarget) => {
   isSlotWithItem(targetSlot, true)
     ? sourceData.stack && canStack(sourceSlot, targetSlot)
       ? store.dispatch(
-          stackSlots({
-            ...data,
-            toSlot: targetSlot,
-          })
-        )
+        stackSlots({
+          ...data,
+          toSlot: targetSlot,
+        })
+      )
       : store.dispatch(
-          swapSlots({
-            ...data,
-            toSlot: targetSlot,
-          })
-        )
+        swapSlots({
+          ...data,
+          toSlot: targetSlot,
+        })
+      )
     : store.dispatch(moveSlots(data));
 };

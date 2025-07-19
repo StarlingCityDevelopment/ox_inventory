@@ -1,10 +1,10 @@
 import ClothesInventoryGrid from './ClothesInventoryGrid';
 import { useAppSelector } from '../../store';
-import { selectRightInventory } from '../../store/inventory';
+import { selectClothesInventory } from '../../store/inventory';
 
 const ClothesInventory: React.FC = () => {
-  const rightInventory = useAppSelector(selectRightInventory);
-  return <ClothesInventoryGrid inventory={rightInventory} />;
+  const clothesInventory = useAppSelector(selectClothesInventory);
+  return <ClothesInventoryGrid inventory={clothesInventory} />;
 };
 
 export default ClothesInventory;

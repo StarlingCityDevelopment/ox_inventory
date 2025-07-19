@@ -9,6 +9,7 @@ import { setClipboard } from '../../utils/setClipboard';
 import { useAppSelector } from '../../store';
 import React from 'react';
 import { Menu, MenuItem } from '../utils/menu/Menu';
+import { onRename } from '../../dnd/onRename';
 
 interface DataProps {
   action: string;
@@ -51,6 +52,9 @@ const InventoryContext: React.FC = () => {
         break;
       case 'drop':
         isSlotWithItem(item) && onDrop({ item: item, inventory: 'player' });
+        break;
+      case 'rename':
+        onRename(item);
         break;
       case 'remove':
         fetchNui('removeComponent', { component: data?.component, slot: data?.slot });
@@ -95,6 +99,7 @@ const InventoryContext: React.FC = () => {
         <MenuItem onClick={() => handleClick({ action: 'use' })} label={Locale.ui_use || 'Use'} />
         <MenuItem onClick={() => handleClick({ action: 'give' })} label={Locale.ui_give || 'Give'} />
         <MenuItem onClick={() => handleClick({ action: 'drop' })} label={Locale.ui_drop || 'Drop'} />
+        <MenuItem onClick={() => handleClick({ action: 'rename' })} label={Locale.ui_rename || 'Rename'} />
         {item && item.metadata?.ammo > 0 && (
           <MenuItem onClick={() => handleClick({ action: 'removeAmmo' })} label={Locale.ui_remove_ammo} />
         )}

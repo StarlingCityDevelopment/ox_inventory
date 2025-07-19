@@ -87,6 +87,7 @@ else
         itemnotify = GetConvarInt('inventory:itemnotify', 1) == 1,
         weaponnotify = GetConvarInt('inventory:weaponnotify', 1) == 1,
         imagepath = GetConvar('inventory:imagepath', 'nui://ox_inventory/web/images'),
+        imageext = GetConvar('inventory:imageext', 'webp'),
         dropprops = GetConvarInt('inventory:dropprops', 0) == 1,
         dropmodel = joaat(GetConvar('inventory:dropmodel', 'prop_med_bag_01b')),
         weaponmismatch = GetConvarInt('inventory:weaponmismatch', 1) == 1,
@@ -222,7 +223,7 @@ if not success then
     return spamError(msg)
 end
 
-if not LoadResourceFile(shared.resource, 'web/build/index.html') then
+if not LoadResourceFile(shared.resource, 'build/index.html') then
     return spamError(
         'UI has not been built, refer to the documentation or download a release build.\n	^3https://coxdocs.dev/ox_inventory^0')
 end
@@ -232,6 +233,8 @@ if shared.target and GetResourceState('ox_target') ~= 'started' then
     shared.target = false
     warn('ox_target is not loaded - it should start before ox_inventory')
 end
+
+require 'modules.clothes.shared'
 
 if lib.context == 'server' then
     shared.ready = false

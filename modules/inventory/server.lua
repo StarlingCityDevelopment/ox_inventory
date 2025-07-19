@@ -62,11 +62,10 @@ end
 function OxInventory:syncSlotsWithClients(slots, syncOwner)
 	for playerId in pairs(self.openedBy) do
 		if self.id ~= playerId then
-            local target = Inventories[playerId]
-
-            if target then
-			    TriggerClientEvent('ox_inventory:updateSlots', playerId, slots, target.weight)
-            end
+			local target = Inventories[playerId]
+			if target then
+				TriggerClientEvent('ox_inventory:updateSlots', playerId, slots, target.weight)
+			end
 		end
 	end
 
@@ -109,6 +108,8 @@ local function loadInventoryData(data, player, ignoreSecurityChecks)
 			data.type = 'trunk'
 		elseif data.id:find('^evidence-') then
 			data.type = 'policeevidence'
+		elseif data.id:find('^clothes-') then
+			data.type = 'clothes'
 		end
 	end
 
@@ -132,7 +133,7 @@ local function loadInventoryData(data, player, ignoreSecurityChecks)
 					return shared.info('Failed to load vehicle inventory data (no entity exists with given netid).')
 				end
 
-                data.entityId = entity
+				data.entityId = entity
 			else
 				local vehicles = GetAllVehicles()
 
@@ -142,7 +143,7 @@ local function loadInventoryData(data, player, ignoreSecurityChecks)
 
 					if _plate:find(plate) then
 						entity = vehicle
-                        data.entityId = entity
+						data.entityId = entity
 						data.netid = NetworkGetNetworkIdFromEntity(entity)
 						break
 					end
@@ -163,18 +164,20 @@ local function loadInventoryData(data, player, ignoreSecurityChecks)
 
 			local model, class = lib.callback.await('ox_inventory:getVehicleData', source, data.netid)
 			local storage = Vehicles[data.type].models[model] or Vehicles[data.type][class]
-            local dbId
+			local dbId
 
-            if server.getOwnedVehicleId then
-                dbId = server.getOwnedVehicleId(entity)
-            else
-                dbId = data.id:sub(6)
-            end
+			if server.getOwnedVehicleId then
+				dbId = server.getOwnedVehicleId(entity)
+			else
+				dbId = data.id:sub(6)
+			end
 
-            inventory = Inventory.Create(data.id, plate, data.type, storage[1], 0, storage[2], false, nil, nil, dbId)
+			inventory = Inventory.Create(data.id, plate, data.type, storage[1], 0, storage[2], false, nil, nil, dbId)
 		end
 	elseif data.type == 'policeevidence' then
 		inventory = Inventory.Create(data.id, locale('police_evidence'), data.type, 100, 0, 100000, false)
+	elseif data.type == 'clothes' then
+		inventory = Inventory.Create(data.id, locale('clothes') or 'Vêtement', data.type, 50, 0, 50000, false)
 	else
 		local stash = RegisteredStashes[data.id]
 
@@ -196,14 +199,14 @@ local function loadInventoryData(data, player, ignoreSecurityChecks)
 
 			if not inventory then
 				inventory = Inventory.Create(stash.name, stash.label or stash.name, 'stash', stash.slots, 0, stash.maxWeight, owner, nil, stash.groups)
-                inventory.coords = stash.coords
-                inventory.distance = stash.distance
+				inventory.coords = stash.coords
+				inventory.distance = stash.distance
 			end
 		end
 	end
 
 	if data.netid then
-        inventory.entityId = data.entityId or NetworkGetEntityFromNetworkId(data.netid)
+		inventory.entityId = data.entityId or NetworkGetEntityFromNetworkId(data.netid)
 		inventory.netid = data.netid
 	end
 
@@ -1634,6 +1637,74 @@ local function dropItem(source, playerInventory, fromData, data)
 	}
 end
 
+---@param source number
+---@param playerInventory OxInventory
+---@param clothesInventory OxInventory
+---@param fromData SlotWithItem?
+---@param data SwapSlotData
+local function dropClothes(source, playerInventory, clothesInventory, fromData, data)
+    if not fromData then return end
+
+	local toData = table.clone(fromData)
+	toData.slot = data.toSlot
+	toData.count = data.count
+	toData.weight = Inventory.SlotWeight(Items(toData.name), toData)
+
+    if toData.weight > shared.playerweight then return end
+
+	if not TriggerEventHooks('swapItems', {
+		source = source,
+		fromInventory = clothesInventory.id,
+		fromSlot = fromData,
+		fromType = clothesInventory.type,
+		toInventory = 'newdrop',
+		toSlot = data.toSlot,
+		toType = 'drop',
+		count = data.count,
+        action = 'move',
+	}) then return end
+
+    fromData.count -= data.count
+    fromData.weight = Inventory.SlotWeight(Items(fromData.name), fromData)
+
+    if fromData.count < 1 then
+        fromData = nil
+    else
+        toData.metadata = table.clone(toData.metadata)
+    end
+
+	local slot = data.fromSlot
+	clothesInventory.weight -= toData.weight
+	clothesInventory.items[slot] = fromData
+
+	local dropId = generateInvId('drop')
+	local inventory = Inventory.Create(dropId, ('Drop %s'):format(dropId:gsub('%D', '')), 'drop', shared.playerslots, toData.weight, shared.playerweight, false, {[data.toSlot] = toData})
+
+	if not inventory then return end
+
+	inventory.coords = data.coords
+	Inventory.Drops[dropId] = {coords = inventory.coords, instance = data.instance}
+	playerInventory.changed = true
+
+	TriggerClientEvent('ox_inventory:createDrop', -1, dropId, Inventory.Drops[dropId], playerInventory.open and source, slot)
+
+	if server.loglevel > 0 then
+		lib.logger(playerInventory.id, 'swapSlots', ('%sx %s transferred from "%s" to "%s"'):format(data.count, toData.name, playerInventory.label, dropId))
+	end
+
+	if server.syncInventory then server.syncInventory(playerInventory) end
+
+	return true, {
+		weight = clothesInventory.weight,
+		items = {
+			{
+				item = fromData or { slot = data.fromSlot },
+				inventory = clothesInventory.id
+			}
+		}
+	}
+end
+
 local activeSlots = {}
 
 ---@param source number
@@ -1642,11 +1713,10 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 	if data.count < 1 then return end
 
 	local playerInventory = Inventory(source)
-
 	if not playerInventory then return end
 
-	local toInventory = (data.toType == 'player' and playerInventory) or Inventory(playerInventory.open)
-	local fromInventory = (data.fromType == 'player' and playerInventory) or Inventory(playerInventory.open)
+	local toInventory = (data.toType == 'player' and playerInventory) or (data.toType == 'clothes' and Inventory('clothes-' .. playerInventory.owner, playerInventory.id)) or Inventory(playerInventory.open)
+	local fromInventory = (data.fromType == 'player' and playerInventory) or (data.fromType == 'clothes' and Inventory('clothes-' .. playerInventory.owner, playerInventory.id)) or Inventory(playerInventory.open)
 
 	if not fromInventory or not toInventory then
 		playerInventory:closeInventory()
@@ -1694,7 +1764,6 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 
 	if toInventory and (data.toType == 'newdrop' or fromInventory ~= toInventory or data.fromSlot ~= data.toSlot) then
 		local fromData = fromInventory.items[data.fromSlot]
-
 		if not fromData then
 			return false, {
 				{
@@ -1713,6 +1782,9 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
         end
 
         if data.toType == 'newdrop' then
+			if data.fromType == 'clothes' then
+				return dropClothes(source, playerInventory, fromInventory, fromData, data)
+			end
             return dropItem(source, playerInventory, fromData, data)
         end
 
@@ -1927,7 +1999,6 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
                             inventory = toInventory.id
                         }
                     }, true)
-
                     fromInventory:syncSlotsWithClients({
                         {
                             item = fromInventory.items[data.fromSlot] or { slot = data.fromSlot },
@@ -2752,8 +2823,12 @@ function Inventory.InspectInventory(playerId, invId)
 	local playerInventory = Inventory(playerId)
 
 	if playerInventory and inventory then
-		playerInventory:openInventory(inventory)
-		TriggerClientEvent('ox_inventory:viewInventory', playerId, playerInventory, inventory)
+		local clothesInventory = Inventory('clothes-' .. playerInventory.owner, playerInventory.id)
+		if clothesInventory then
+			playerInventory:openInventory(inventory)
+			playerInventory:openInventory(clothesInventory)
+			TriggerClientEvent('ox_inventory:viewInventory', playerId, playerInventory, clothesInventory, inventory)
+		end
 	end
 end
 

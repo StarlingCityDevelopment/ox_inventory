@@ -26,29 +26,37 @@ const SlotTooltip: React.ForwardRefRenderFunction<
       {!itemData ? (
         <div className="tooltip-wrapper" ref={ref} style={style}>
           <div className="tooltip-header-wrapper">
-            <p>{item.name}</p>
+            <img src={getItemUrl(item.name)} alt="item-image" />
+            <div className="tooltip-header-content" style={{ marginLeft: '4px' }}>
+              <p>{item.name}</p>
+              <Divider />
+            </div>
           </div>
-          <Divider />
         </div>
       ) : (
         <div style={{ ...style }} className="tooltip-wrapper" ref={ref}>
           <div className="tooltip-header-wrapper">
-            <p>{item.metadata?.label || itemData.label || item.name}</p>
-            {inventoryType === 'crafting' ? (
-              <div className="tooltip-crafting-duration">
-                <ClockIcon />
-                <p>{(item.duration !== undefined ? item.duration : 3000) / 1000}s</p>
+            <img src={getItemUrl(item.name)} alt="item-image" />
+            <div className="tooltip-header-content">
+              <div className="tooltip-title-row">
+                <p>{item.metadata?.label || itemData.label || item.name}</p>
+                {inventoryType === 'crafting' ? (
+                  <div className="tooltip-crafting-duration">
+                    <ClockIcon />
+                    <p>{(item.duration !== undefined ? item.duration : 3000) / 1000}s</p>
+                  </div>
+                ) : (
+                  <p>{item.metadata?.type}</p>
+                )}
               </div>
-            ) : (
-              <p>{item.metadata?.type}</p>
-            )}
-          </div>
-          <Divider />
-          {description && (
-            <div className="tooltip-description">
-              <ReactMarkdown>{description}</ReactMarkdown>
+              <Divider />
+              {description && (
+                <div className="tooltip-description">
+                  <ReactMarkdown>{description}</ReactMarkdown>
+                </div>
+              )}
             </div>
-          )}
+          </div>
           {inventoryType !== 'crafting' ? (
             <>
               {item.durability !== undefined && (

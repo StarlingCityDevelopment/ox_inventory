@@ -8,7 +8,7 @@ $secondaryColorLight: rgba(255, 255, 255, 0.5);
 $secondaryColorDark: rgba(214, 214, 214, 0.8);
 
 $gridCols: 5;
-$gridRows: 5;
+$gridRows: 4;
 $secondarygridRows: 4;
 $gridSize: 9.5vh;
 $gridGap: 0.4vw;
@@ -17,8 +17,15 @@ $secondarycontainerSize: calc(#{$secondarygridRows} * #{$gridSize + 0.22vh} + #{
 
 $serverColour: #ff0000;
 
+* {
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+html,
 body {
   margin: 0;
+  padding: 0;
   font-family: 'JetBrains Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -121,9 +128,8 @@ button:active {
   justify-content: center;
   align-items: flex-start;
   height: 100%;
-  gap: 3vw;
+  gap: 30vw;
   background: linear-gradient(45deg, rgba(24, 24, 24, 0.15) 0%, rgba(17, 17, 17, 0.45) 100%);
-  padding-top: 10vh;
 }
 
 .inventory-control {
@@ -131,6 +137,7 @@ button:active {
   flex-direction: column;
   align-items: start;
   gap: 1vw;
+  width: 100%;
 
   .inventory-control-wrapper {
     display: flex;
@@ -138,13 +145,14 @@ button:active {
     gap: 1vw;
     justify-content: center;
     align-items: center;
+    width: 100%;
   }
 
   .inventory-control-input {
     transition: 200ms;
     width: 100%;
     height: 2vw;
-    font-family: $mainFont;
+    font-family: Roboto, sans-serif;
     font-size: 1vw;
     text-align: center;
     outline: none;
@@ -173,54 +181,6 @@ button:active {
       background-color: $secondaryColorDark;
     }
   }
-}
-
-.useful-controls-dialog {
-  background-color: $mainColor;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: $textColor;
-  width: 450px;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  border-radius: 4px;
-  gap: 16px;
-}
-
-.useful-controls-dialog-overlay {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-.useful-controls-dialog-title {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 18px;
-}
-
-.useful-controls-dialog-close {
-  width: 25px;
-  height: 25px;
-  padding: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  fill: $textColor;
-  &:hover {
-    background-color: $secondaryColorHighlight;
-    cursor: pointer;
-  }
-}
-
-.useful-controls-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .divider {
@@ -258,35 +218,50 @@ button:active {
   color: grey !important;
 }
 
-// Dialog is used fro useful controls window
-
-.verticalline {
-  position: relative;
-  top: 2vw;
-  left: 0.6vw;
-  height: calc(#{4.8} * #{$gridSize + 0.22vh} + #{4.8} * #{$gridGap});
-  width: 2px;
-  background: linear-gradient(180deg, rgba(233, 233, 233, 0.4) 0%, rgba(233, 233, 233, 0) 100%);
-}
-
-.line {
+.line-pockets {
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, rgba(251, 75, 32, 0.4) 0%, rgba(233, 233, 233, 0) 100%);
+  background: linear-gradient(90deg, rgba(255, 0, 0, 0.4) 0%, rgba(233, 233, 233, 0) 100%);
+}
+
+.line-actions {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(233, 233, 233, 0) 0%, rgba(255, 0, 0, 0.4) 100%);
 }
 
 .playerinventory {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: calc(#{5.5} * #{$gridSize + 0.22vh} + #{5.5} * #{$gridGap});
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1vw;
+  transform: perspective(800px) rotateX(0deg) rotateY(10deg) rotateZ(0deg);
+}
+
+.playerinventory-wrapper {
+  padding: calc($gridGap);
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  border-radius: 6px;
 }
 
 .secondaryinventory {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: calc(#{5.5} * #{$gridSize + 0.22vh} + #{5.5} * #{$gridGap});
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: 1vw;
+  transform: perspective(800px) rotateX(0deg) rotateY(-10deg) rotateZ(0deg);
+}
+
+.secondaryinventory-wrapper {
+  padding: calc($gridGap);
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  border-radius: 6px;
 }
 
 // inventory grids
@@ -302,6 +277,7 @@ button:active {
   align-items: start;
   justify-content: end;
   gap: 1vw;
+  width: 100%;
 }
 
 .inventory-grid-header-wrapper {
@@ -327,14 +303,27 @@ button:active {
   overflow-y: scroll;
 }
 
-.clothes-inventory-grid-container {
-  margin-top: 12.5vh;
-  display: grid;
-  height: $containerSize;
-  grid-template-columns: repeat(3, $gridSize);
-  grid-auto-rows: $gridSize + 0.22vh;
-  gap: $gridGap;
-  overflow-y: scroll;
+// inventory clothes
+.inventory-clothes-wrapper {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 29vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .inventory-clothes-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+  }
 }
 
 .secinventory-grid-container {
@@ -478,14 +467,40 @@ button:active {
   }
 }
 
+// inventory clothes slots
+.inventory-clothes-slot {
+  background-color: $secondaryColor;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 2.5%;
+  image-rendering: -webkit-optimize-contrast;
+  position: relative;
+  background-size: 7vh;
+  color: $textColor;
+  border-width: 2px;
+  width: $gridSize - 0.8vh;
+  height: $gridSize - 0.8vh;
+  overflow-y: scroll;
+  border: 1px solid rgba(255, 0, 0, 0.5);
+}
+
+.item-clothes-slot-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  p {
+    font-size: 12px;
+  }
+}
+
 .tooltip-wrapper {
   pointer-events: none;
   display: flex;
   background-color: $mainColor;
-  width: 200px;
+  width: 300px;
   padding: 8px;
   flex-direction: column;
-  min-width: 200px;
   color: $textColor;
   font-family: $mainFont;
   border-radius: 4px;
@@ -501,8 +516,19 @@ button:active {
 .tooltip-header-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  gap: 4px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .tooltip-header-content {
+    width: 100%;
+  }
+
   p {
     font-size: 15px;
     font-weight: 400;

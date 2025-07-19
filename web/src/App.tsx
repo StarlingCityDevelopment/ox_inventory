@@ -20,7 +20,7 @@ debugData([
       leftInventory: {
         id: 'test',
         type: 'player',
-        slots: 50,
+        slots: 60,
         label: 'Bob Smith',
         weight: 3000,
         maxWeight: 5000,
@@ -60,6 +60,15 @@ debugData([
             },
           },
         ],
+      },
+      clothesInventory: {
+        id: 'clothes_CITIZENID',
+        type: 'clothes',
+        slots: 17,
+        label: 'Vêtements',
+        weight: 100,
+        maxWeight: 100000,
+        items: [],
       },
       rightInventory: {
         id: 'shop',

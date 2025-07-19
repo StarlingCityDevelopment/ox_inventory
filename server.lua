@@ -14,6 +14,8 @@ local db = require 'modules.mysql.server'
 local Items = require 'modules.items.server'
 local Inventory = require 'modules.inventory.server'
 
+require 'modules.clothes.server'
+
 ---@param player table
 ---@param data table?
 --- player requires source, identifier, and name
@@ -63,6 +65,8 @@ function server.setPlayerInventory(player, data)
 		if server.syncInventory then server.syncInventory(inv) end
 		TriggerClientEvent('ox_inventory:setPlayerInventory', player.source, Inventory.Drops, inventory, totalWeight, inv.player)
 	end
+
+	Inventory('clothes-' .. player.identifier, player.source)
 end
 exports('setPlayerInventory', server.setPlayerInventory)
 AddEventHandler('ox_inventory:setPlayerInventory', server.setPlayerInventory)
@@ -115,7 +119,7 @@ end
 ---@param invType string
 ---@param data? string|number|table
 ---@param ignoreSecurityChecks boolean?
----@return table | false | nil, table | false | nil, string?
+---@return table | false | nil, table | false | nil, table | false | nil, string?
 local function openInventory(source, invType, data, ignoreSecurityChecks)
 	if Inventory.Lock then return false end
 
@@ -160,7 +164,7 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 
                     -- 0: no lock; 1: unlocked; 8: boot unlocked
                     if lockStatus > 1 and lockStatus ~= 8 then
-                        return false, false, 'vehicle_locked'
+                        return false, false, false, 'vehicle_locked'
                     end
                 end
 
@@ -263,6 +267,11 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 		left:openInventory(left)
 	end
 
+	local clothes = Inventory('clothes-' .. left.owner, left.id)
+	if not clothes then
+		return false, false, false, 'clothes_inventory_not_found'
+	end
+
 	return {
 		id = left.id,
 		label = left.label,
@@ -280,6 +289,14 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 		items = right.items,
 		coords = closestCoords or right.coords,
 		distance = right.distance
+	}, clothes and {
+		id = clothes.id,
+		label = clothes.label,
+		type = clothes.type,
+		slots = clothes.slots,
+		weight = clothes.weight,
+		maxWeight = clothes.maxWeight,
+		items = clothes.items
 	}
 end
 
@@ -307,10 +324,10 @@ end)
 ---@param invType string
 ---@param data string|number|table
 function server.forceOpenInventory(playerId, invType, data)
-	local left, right = openInventory(playerId, invType, data, true)
+	local left, right, clothes = openInventory(playerId, invType, data, true)
 
-	if left and right then
-		TriggerClientEvent('ox_inventory:forceOpenInventory', playerId, left, right)
+	if left and right and clothes then
+		TriggerClientEvent('ox_inventory:forceOpenInventory', playerId, left, clothes, right)
 		return right.id
 	end
 end
@@ -520,6 +537,20 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 			return true
 		end
 	end
+end)
+
+lib.callback.register('ox_inventory:renameItem', function(source, slot, newName)
+	local inventory = Inventory(source)
+	if not inventory then return end
+
+	local item = inventory.items[slot.slot]
+	if not item then return end
+
+	item.metadata.label = newName
+	Inventory.SetMetadata(inventory, slot.slot, item.metadata)
+
+	if server.syncInventory then server.syncInventory(inventory) end
+	return true
 end)
 
 local function conversionScript()

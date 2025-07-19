@@ -30,6 +30,7 @@ const Inventory: React.FC = () => {
 
   useNuiEvent<{
     leftInventory?: InventoryProps;
+    clothesInventory?: InventoryProps;
     rightInventory?: InventoryProps;
   }>('setupInventory', (data) => {
     dispatch(setupInventory(data));
@@ -47,13 +48,17 @@ const Inventory: React.FC = () => {
       <Fade in={inventoryVisible}>
         <div className="inventory-wrapper">
           <div className="playerinventory">
-            <LeftInventory />
-            <HotInventory />
+            <div className='playerinventory-wrapper'>
+              <LeftInventory />
+              <HotInventory />
+            </div>
           </div>
           <ClothesInventory />
           <div className="secondaryinventory">
-            <RightInventory />
-            <InventoryControl />
+            <div className='secondaryinventory-wrapper'>
+              <RightInventory />
+              <InventoryControl />
+            </div>
           </div>
           <Tooltip />
           <InventoryContext />

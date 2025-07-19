@@ -9,9 +9,9 @@ const HotInventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => 
       <div className="hotinventory-grid-wrapper">
         <div className="label-container">
           <img src={bag} alt="" />
-          <p>POCKETS</p>
+          <p>POCHE</p>
         </div>
-        <div className="line"></div>
+        <div className="line-pockets"></div>
 
         <div className="hotinventory-grid-container">
           <>

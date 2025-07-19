@@ -7,7 +7,7 @@ import { useIntersection } from '../../hooks/useIntersection';
 import bag from '../../assets/bag.png';
 import weights from '../../assets/weight.png';
 
-const PAGE_SIZE = 30;
+const PAGE_SIZE = 40;
 
 const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   const weight = useMemo(
