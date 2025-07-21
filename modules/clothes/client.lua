@@ -1,6 +1,7 @@
 if not lib then return end
 
 local clothes = {
+    initial = false,
     data = {},
     stagedChanges = {},
     isInventoryOpen = false,
@@ -25,6 +26,44 @@ local function getGender()
     return "female"
 end
 
+local function getCollectionDataForComponent(ped, componentId, drawable)
+    if drawable and drawable >= 0 then
+        local collectionName = GetPedCollectionNameFromDrawable(ped, componentId, drawable)
+        local localIndex = GetPedCollectionLocalIndexFromDrawable(ped, componentId, drawable)
+        return collectionName, localIndex
+    end
+    return nil, nil
+end
+
+local function getCollectionDataForProp(ped, propId, drawable)
+    if drawable and drawable >= 0 then
+        local collectionName = GetPedCollectionNameFromProp(ped, propId, drawable)
+        local localIndex = GetPedCollectionLocalIndexFromProp(ped, propId, drawable)
+        return collectionName, localIndex
+    end
+    return nil, nil
+end
+
+local function updateClothingDataWithCollections(clothingData)
+    for name, data in pairs(clothingData) do
+        if data.component_id and not data.collection and data.drawable then
+            local collectionName, localIndex = getCollectionDataForComponent(PlayerPedId(), data.component_id,
+                data.drawable)
+            if collectionName and localIndex then
+                data.collection = collectionName
+                data.localIndex = localIndex
+            end
+        elseif data.prop_id and not data.collection and data.drawable then
+            local collectionName, localIndex = getCollectionDataForProp(PlayerPedId(), data.prop_id, data.drawable)
+            if collectionName and localIndex then
+                data.collection = collectionName
+                data.localIndex = localIndex
+            end
+        end
+    end
+    return clothingData
+end
+
 local function countStagedChanges()
     local count = 0
     for _ in pairs(clothes.stagedChanges) do
@@ -46,6 +85,7 @@ function clothes.init()
     for index, name in pairs(shared.componentMap) do
         local drawable = GetPedDrawableVariation(PlayerPedId(), index)
         local texture = GetPedTextureVariation(PlayerPedId(), index)
+        local collectionName, localIndex = getCollectionDataForComponent(PlayerPedId(), index, drawable)
 
         local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or 0
         local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or 0
@@ -55,6 +95,8 @@ function clothes.init()
                 component_id = index,
                 drawable = drawable,
                 texture = texture,
+                collection = collectionName,
+                localIndex = localIndex,
             }
         end
     end
@@ -62,6 +104,7 @@ function clothes.init()
     for index, name in pairs(shared.propMap) do
         local drawable = GetPedPropIndex(PlayerPedId(), index) or 0
         local texture = GetPedPropTextureIndex(PlayerPedId(), index) or 0
+        local collectionName, localIndex = getCollectionDataForProp(PlayerPedId(), index, drawable)
 
         local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or -1
         local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or -1
@@ -71,11 +114,18 @@ function clothes.init()
                 prop_id = index,
                 drawable = drawable,
                 texture = texture,
+                collection = collectionName,
+                localIndex = localIndex,
             }
         end
     end
 
     clothes.data = playerClothes
+    clothes.data = updateClothingDataWithCollections(clothes.data)
+end
+
+function clothes.setInitialCreation()
+    clothes.initial = true
 end
 
 function clothes.check()
@@ -91,6 +141,7 @@ function clothes.check()
     for index, name in pairs(shared.componentMap) do
         local actualDrawable = GetPedDrawableVariation(PlayerPedId(), index)
         local actualTexture = GetPedTextureVariation(PlayerPedId(), index)
+        local actualCollectionName, actualLocalIndex = getCollectionDataForComponent(PlayerPedId(), index, actualDrawable)
 
         local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or 0
         local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or 0
@@ -104,6 +155,8 @@ function clothes.check()
                         component_id = index,
                         drawable = actualDrawable,
                         texture = actualTexture,
+                        collection = actualCollectionName,
+                        localIndex = actualLocalIndex,
                     }
                 end
             end
@@ -113,6 +166,8 @@ function clothes.check()
                     component_id = index,
                     drawable = actualDrawable,
                     texture = actualTexture,
+                    collection = actualCollectionName,
+                    localIndex = actualLocalIndex,
                 }
             end
         end
@@ -121,6 +176,7 @@ function clothes.check()
     for index, name in pairs(shared.propMap) do
         local actualDrawable = GetPedPropIndex(PlayerPedId(), index) or 0
         local actualTexture = GetPedPropTextureIndex(PlayerPedId(), index) or 0
+        local actualCollectionName, actualLocalIndex = getCollectionDataForProp(PlayerPedId(), index, actualDrawable)
 
         local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or -1
         local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or -1
@@ -134,6 +190,8 @@ function clothes.check()
                         prop_id = index,
                         drawable = actualDrawable,
                         texture = actualTexture,
+                        collection = actualCollectionName,
+                        localIndex = actualLocalIndex,
                     }
                 end
             end
@@ -143,6 +201,8 @@ function clothes.check()
                     prop_id = index,
                     drawable = actualDrawable,
                     texture = actualTexture,
+                    collection = actualCollectionName,
+                    localIndex = actualLocalIndex,
                 }
             end
         end
@@ -152,6 +212,11 @@ function clothes.check()
     for _ in pairs(changedClothes) do changedCount = changedCount + 1 end
 
     if changedCount > 0 then
+        if clothes.initial then
+            clothes.initial = false
+            return lib.callback.await('ox_inventory:setClothes', 10000, changedClothes)
+        end
+
         local input = lib.inputDialog('Changement de vêtements',
             {
                 {
@@ -178,7 +243,13 @@ function clothes.check()
 
         for index, name in pairs(shared.componentMap) do
             if clothes.data[name] then
-                SetPedComponentVariation(PlayerPedId(), index, clothes.data[name].drawable, clothes.data[name].texture, 0)
+                if clothes.data[name].collection and clothes.data[name].localIndex then
+                    SetPedCollectionComponentVariation(PlayerPedId(), index, clothes.data[name].collection,
+                        clothes.data[name].localIndex, clothes.data[name].texture, 0)
+                else
+                    SetPedComponentVariation(PlayerPedId(), index, clothes.data[name].drawable,
+                        clothes.data[name].texture, 0)
+                end
             else
                 local defaultData = defaultClothes[name]
                 if defaultData then
@@ -194,7 +265,13 @@ function clothes.check()
                 if clothes.data[name].drawable == -1 then
                     ClearPedProp(PlayerPedId(), index)
                 else
-                    SetPedPropIndex(PlayerPedId(), index, clothes.data[name].drawable, clothes.data[name].texture, true)
+                    if clothes.data[name].collection and clothes.data[name].localIndex then
+                        SetPedCollectionPropIndex(PlayerPedId(), index, clothes.data[name].collection,
+                            clothes.data[name].localIndex, clothes.data[name].texture, true)
+                    else
+                        SetPedPropIndex(PlayerPedId(), index, clothes.data[name].drawable, clothes.data[name].texture,
+                            true)
+                    end
                 end
             else
                 local defaultData = defaultClothes[name]
@@ -320,13 +397,23 @@ function clothes.applyChangesToPlayer()
                 clothes.data[name] = nil
             end
         elseif change.component_id then
-            SetPedComponentVariation(PlayerPedId(), change.component_id, change.drawable, change.texture, 0)
+            if change.collection and change.localIndex then
+                SetPedCollectionComponentVariation(PlayerPedId(), change.component_id, change.collection,
+                    change.localIndex, change.texture, 0)
+            else
+                SetPedComponentVariation(PlayerPedId(), change.component_id, change.drawable, change.texture, 0)
+            end
             clothes.data[name] = change
         elseif change.prop_id then
             if change.drawable == -1 then
                 ClearPedProp(PlayerPedId(), change.prop_id)
             else
-                SetPedPropIndex(PlayerPedId(), change.prop_id, change.drawable, change.texture, true)
+                if change.collection and change.localIndex then
+                    SetPedCollectionPropIndex(PlayerPedId(), change.prop_id, change.collection, change.localIndex,
+                        change.texture, true)
+                else
+                    SetPedPropIndex(PlayerPedId(), change.prop_id, change.drawable, change.texture, true)
+                end
             end
             clothes.data[name] = change
         end
@@ -349,19 +436,28 @@ function clothes.applyStagedChangesToVPed()
 
     for name, data in pairs(clothes.data) do
         if data.component_id then
-            SetPedComponentVariation(vped, data.component_id, data.drawable, data.texture, 0)
+            if data.collection and data.localIndex then
+                SetPedCollectionComponentVariation(vped, data.component_id, data.collection, data.localIndex,
+                    data.texture, 0)
+            else
+                SetPedComponentVariation(vped, data.component_id, data.drawable, data.texture, 0)
+            end
         elseif data.prop_id then
             if data.drawable == -1 then
                 ClearPedProp(vped, data.prop_id)
             else
-                SetPedPropIndex(vped, data.prop_id, data.drawable, data.texture, true)
+                if data.collection and data.localIndex then
+                    SetPedCollectionPropIndex(vped, data.prop_id, data.collection, data.localIndex, data.texture, true)
+                else
+                    SetPedPropIndex(vped, data.prop_id, data.drawable, data.texture, true)
+                end
             end
         end
     end
 end
 
 lib.callback.register('ox_inventory:getCurrentClothes', function()
-    return clothes.data
+    return updateClothingDataWithCollections(clothes.data)
 end)
 
 lib.callback.register('ox_inventory:setCurrentClothes', function(data)
@@ -393,23 +489,37 @@ lib.callback.register('ox_inventory:applyComponent', function(metadata)
             local componentId = component.component_id
             local drawable = component.drawable or 0
             local texture = component.texture or 0
+            local collection = component.collection
+            local localIndex = component.localIndex
             local componentName = shared.componentMap[componentId]
+
+            if not collection and drawable then
+                collection, localIndex = getCollectionDataForComponent(targetPed, componentId, drawable)
+            end
 
             if clothes.isInventoryOpen then
                 clothes.stagedChanges[componentName] = {
                     component_id = componentId,
                     drawable = drawable,
                     texture = texture,
+                    collection = collection,
+                    localIndex = localIndex,
                 }
             else
                 clothes.data[componentName] = {
                     component_id = componentId,
                     drawable = drawable,
                     texture = texture,
+                    collection = collection,
+                    localIndex = localIndex,
                 }
             end
 
-            SetPedComponentVariation(targetPed, componentId, drawable, texture, 0)
+            if collection and localIndex then
+                SetPedCollectionComponentVariation(targetPed, componentId, collection, localIndex, texture, 0)
+            else
+                SetPedComponentVariation(targetPed, componentId, drawable, texture, 0)
+            end
         end
     end
 
@@ -436,23 +546,37 @@ lib.callback.register('ox_inventory:applyProp', function(metadata)
             local propId = prop.prop_id
             local drawable = prop.drawable or 0
             local texture = prop.texture or 0
+            local collection = prop.collection
+            local localIndex = prop.localIndex
             local propName = shared.propMap[propId]
+
+            if not collection and drawable and drawable >= 0 then
+                collection, localIndex = getCollectionDataForProp(targetPed, propId, drawable)
+            end
 
             if clothes.isInventoryOpen then
                 clothes.stagedChanges[propName] = {
                     prop_id = propId,
                     drawable = drawable,
                     texture = texture,
+                    collection = collection,
+                    localIndex = localIndex,
                 }
             else
                 clothes.data[propName] = {
                     prop_id = propId,
                     drawable = drawable,
                     texture = texture,
+                    collection = collection,
+                    localIndex = localIndex,
                 }
             end
 
-            SetPedPropIndex(targetPed, propId, drawable, texture, true)
+            if collection and localIndex then
+                SetPedCollectionPropIndex(targetPed, propId, collection, localIndex, texture, true)
+            else
+                SetPedPropIndex(targetPed, propId, drawable, texture, true)
+            end
         end
     end
 
@@ -532,5 +656,6 @@ lib.callback.register('ox_inventory:removeProp', function(propIds)
 end)
 
 RegisterNetEvent('ox_inventory:checkClothes', clothes.check)
+RegisterNetEvent('ox_inventory:setInitialCreation', clothes.setInitialCreation)
 
 return clothes

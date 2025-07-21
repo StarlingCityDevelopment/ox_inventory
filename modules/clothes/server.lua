@@ -227,6 +227,8 @@ function clothing.addOutfit(payload)
                 prop_id = actuelItem.metadata.prop_id or nil,
                 drawable = actuelItem.metadata.drawable,
                 texture = actuelItem.metadata.texture,
+                collection = actuelItem.metadata.collection,
+                localIndex = actuelItem.metadata.localIndex,
             })
 
             if not success then
@@ -235,6 +237,8 @@ function clothing.addOutfit(payload)
                     prop_id = actuelItem.metadata.prop_id or nil,
                     drawable = actuelItem.metadata.drawable,
                     texture = actuelItem.metadata.texture,
+                    collection = actuelItem.metadata.collection,
+                    localIndex = actuelItem.metadata.localIndex,
                 }, slot)
 
                 if not success then
@@ -269,6 +273,8 @@ function clothing.addOutfit(payload)
                     component_id = data.component_id,
                     drawable = data.drawable,
                     texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
                 }, slot)
                 if not success then
                     disabled[src] = false
@@ -293,6 +299,8 @@ function clothing.addOutfit(payload)
                     prop_id = data.prop_id,
                     drawable = data.drawable,
                     texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
                 }, slot)
                 if not success then
                     disabled[src] = false
@@ -364,6 +372,8 @@ function clothing.removeOutfit(payload)
                 prop_id = data.metadata.prop_id or nil,
                 drawable = data.metadata.drawable,
                 texture = data.metadata.texture,
+                collection = data.metadata.collection,
+                localIndex = data.metadata.localIndex,
             }
         end
     end
@@ -484,6 +494,8 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
                         prop_id = playerClothes[name].prop_id or nil,
                         drawable = playerClothes[name].drawable,
                         texture = playerClothes[name].texture,
+                        collection = playerClothes[name].collection,
+                        localIndex = playerClothes[name].localIndex,
                     }, slot)
                     if not success then
                         disabled[src] = false
@@ -498,6 +510,8 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
                             prop_id = playerClothes[name].prop_id or nil,
                             drawable = playerClothes[name].drawable,
                             texture = playerClothes[name].texture,
+                            collection = playerClothes[name].collection,
+                            localIndex = playerClothes[name].localIndex,
                         })
                     end
                 end
@@ -509,6 +523,68 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
                         return false
                     end
                 end
+            end
+        end
+    end
+
+    disabled[src] = false
+    return true
+end)
+
+lib.callback.register('ox_inventory:setClothes', function(source, changedClothes)
+    local src = source
+
+    if disabled[src] then
+        return false
+    end
+
+    disabled[src] = true
+
+    local player = Inventory(src)
+    if not player then
+        disabled[src] = false
+        return false
+    end
+
+    local clothes = Inventory('clothes-' .. player.owner)
+    if not clothes then
+        disabled[src] = false
+        return false
+    end
+
+    for name, data in pairs(changedClothes) do
+        local slot = shared.clothing.nameToSlots[name]
+
+        if not slot then
+            disabled[src] = false
+            return false
+        end
+
+        local actuelItem = Inventory.GetSlot(clothes, slot)
+        if actuelItem then
+            local metadata = actuelItem.metadata or {}
+            if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
+                Inventory.SetMetadata(clothes, slot, {
+                    component_id = data.component_id or nil,
+                    prop_id = data.prop_id or nil,
+                    drawable = data.drawable,
+                    texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
+                })
+            end
+        else
+            local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, slot, {
+                component_id = data.component_id or nil,
+                prop_id = data.prop_id or nil,
+                drawable = data.drawable,
+                texture = data.texture,
+                collection = data.collection,
+                localIndex = data.localIndex,
+            })
+            if not success then
+                disabled[src] = false
+                return false
             end
         end
     end
@@ -559,6 +635,8 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
                         prop_id = data.prop_id or nil,
                         drawable = data.drawable,
                         texture = data.texture,
+                        collection = data.collection,
+                        localIndex = data.localIndex,
                     })
                     if not success then
                         disabled[src] = false
@@ -571,6 +649,8 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
                     prop_id = data.prop_id or nil,
                     drawable = data.drawable,
                     texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
                 })
                 if not success then
                     disabled[src] = false
