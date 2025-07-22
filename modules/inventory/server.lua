@@ -2645,11 +2645,11 @@ local function updateWeapon(source, action, value, slot, specialAmmo)
 				elseif value < weapon.metadata.ammo then
 					local durability = Items(weapon.name).durability * math.abs((weapon.metadata.ammo or 0.1) - value)
 					weapon.metadata.ammo = value
-					weapon.metadata.durability = weapon.metadata.durability - durability
+					weapon.metadata.durability = 100 --weapon.metadata.durability - durability
 					weapon.weight = Inventory.SlotWeight(item, weapon)
 				end
 			elseif action == 'melee' and value > 0 then
-				weapon.metadata.durability = weapon.metadata.durability - ((Items(weapon.name).durability or 1) * value)
+				weapon.metadata.durability = 100 --weapon.metadata.durability - ((Items(weapon.name).durability or 1) * value)
 			end
 
             if (weapon.metadata.durability or 0) < 0 then
