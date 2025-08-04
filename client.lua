@@ -2009,7 +2009,7 @@ end)
 
 RegisterNUICallback('renameItem', function(slot, cb)
 	client.closeInventory()
-	local input = lib.inputDialog('Changer le nom', { 'Nouveau nom' })
+	local input = lib.inputDialog('Changer le nom', { {type = 'input', label ='Nouveau nom', max = 128} })
 	if input and input[1] and input[1] ~= '' then
 		lib.callback.await('ox_inventory:renameItem', false, slot, input[1])
 	end
