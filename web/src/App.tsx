@@ -20,7 +20,7 @@ debugData([
       leftInventory: {
         id: 'test',
         type: 'player',
-        slots: 60,
+        slots: 500,
         label: 'Bob Smith',
         weight: 3000,
         maxWeight: 5000,

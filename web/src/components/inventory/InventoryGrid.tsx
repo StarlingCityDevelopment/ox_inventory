@@ -3,7 +3,6 @@ import { Inventory } from '../../typings';
 import InventorySlot from './InventorySlot';
 import { getTotalWeight } from '../../helpers';
 import { useAppSelector } from '../../store';
-import { useIntersection } from '../../hooks/useIntersection';
 import bag from '../../assets/bag.png';
 import weights from '../../assets/weight.png';
 
@@ -16,15 +15,36 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   );
 
   const [page, setPage] = useState(0);
-  const containerRef = useRef(null);
-  const { ref, entry } = useIntersection({ threshold: 0.5 });
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
 
   useEffect(() => {
-    if (entry && entry.isIntersecting) {
-      setPage((prev) => ++prev);
-    }
-  }, [entry]);
+    setPage(0);
+  }, [inventory.id, inventory.items.length]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const sentinel = sentinelRef.current;
+    if (!container || !sentinel) return;
+
+    const startIndex = inventory.type === 'player' ? 5 : 0;
+    const totalAvailable = Math.max(inventory.items.length - startIndex, 0);
+    if ((page + 1) * PAGE_SIZE >= totalAvailable) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting) {
+          setPage((p) => p + 1);
+        }
+      },
+      { root: container, threshold: 0.1 }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [page, inventory.items.length, inventory.type]);
 
   return (
     <>
@@ -50,16 +70,20 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
           ref={containerRef}
         >
           <>
-            {inventory.items.slice(inventory.type == 'player' ? 5 : 0, (page + 1) * PAGE_SIZE).map((item, index) => (
-              <InventorySlot
-                key={`${inventory.type}-${inventory.id}-${item.slot}`}
-                item={item}
-                ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
-                inventoryType={inventory.type}
-                inventoryGroups={inventory.groups}
-                inventoryId={inventory.id}
-              />
-            ))}
+            {(() => {
+              const start = inventory.type == 'player' ? 5 : 0;
+              const end = start + (page + 1) * PAGE_SIZE;
+              return inventory.items.slice(start, end).map((item) => (
+                <InventorySlot
+                  key={`${inventory.type}-${inventory.id}-${item.slot}`}
+                  item={item}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+              ));
+            })()}
+            <div ref={sentinelRef} style={{ width: '100%', height: 1 }} />
           </>
         </div>
       </div>
