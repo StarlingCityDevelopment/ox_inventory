@@ -294,11 +294,23 @@ function clothes.check()
 end
 
 function clothes.sync()
-    local save = shared.saveAppearanceClient(PlayerPedId())
-    local success = lib.callback.await('ox_inventory:syncClothes', 5000, clothes.data, save)
-    if not success then
+    local ok, saveOrErr = pcall(shared.saveAppearanceClient, PlayerPedId())
+    if not ok then
         return false
     end
+
+    local ok2, successOrErr = pcall(function()
+        return lib.callback.await('ox_inventory:syncClothes', 5000, clothes.data, saveOrErr)
+    end)
+
+    if not ok2 then
+        return false
+    end
+
+    if not successOrErr then
+        return false
+    end
+
     return true
 end
 
@@ -421,14 +433,9 @@ function clothes.applyChangesToPlayer()
     end
 
     Wait(100)
-
-    local success = clothes.sync()
-    if not success then
-        LocalPlayer.state.invBusy = false
-        return false
-    end
-
     LocalPlayer.state.invBusy = false
+
+    return clothes.sync()
 end
 
 function clothes.applyStagedChangesToVPed()

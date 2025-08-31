@@ -105,6 +105,9 @@ end
 
 shared.saveAppearanceServer = function(source, appearance)
     local player = exports.qbx_core:GetPlayer(source)
-    if not player then return end
-    exports.bl_appearance:SavePlayerAppearance(player.PlayerData.citizenid, appearance)
+    if not player then
+        return
+    end
+    local cid = player.PlayerData and player.PlayerData.citizenid or "unknown"
+    exports.bl_appearance:SavePlayerAppearance(cid, appearance)
 end
