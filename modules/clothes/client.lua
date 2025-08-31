@@ -214,6 +214,7 @@ function clothes.check()
     if changedCount > 0 then
         if clothes.initial then
             clothes.initial = false
+            clothes.init()
             return lib.callback.await('ox_inventory:setClothes', 10000, changedClothes)
         end
 

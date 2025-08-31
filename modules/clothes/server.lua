@@ -542,19 +542,21 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
         return false
     end
 
-    disabled[src] = true
+    if not changedClothes or next(changedClothes) == nil then
+        return false
+    end
 
     local player = Inventory(src)
     if not player then
-        disabled[src] = false
         return false
     end
 
     local clothes = Inventory('clothes-' .. player.owner)
     if not clothes then
-        disabled[src] = false
         return false
     end
+
+    disabled[src] = true
 
     for name, data in pairs(changedClothes) do
         local slot = shared.clothing.nameToSlots[name]
@@ -565,6 +567,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
         end
 
         local actuelItem = Inventory.GetSlot(clothes, slot)
+
         if actuelItem then
             local metadata = actuelItem.metadata or {}
             if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
@@ -578,14 +581,14 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
                 })
             end
         else
-            local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, slot, {
+            local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
                 component_id = data.component_id or nil,
                 prop_id = data.prop_id or nil,
                 drawable = data.drawable,
                 texture = data.texture,
                 collection = data.collection,
                 localIndex = data.localIndex,
-            })
+            }, slot)
             if not success then
                 disabled[src] = false
                 return false
