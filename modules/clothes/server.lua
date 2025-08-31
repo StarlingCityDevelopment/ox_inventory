@@ -458,7 +458,7 @@ lib.callback.register('ox_inventory:getClothesInventory', function(source)
     return clothes
 end)
 
-lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes)
+lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes, save)
     local src = source
 
     if disabled[src] then
@@ -481,6 +481,10 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
     if not clothes then
         disabled[src] = false
         return false
+    end
+
+    if save ~= nil then
+        shared.saveAppearanceServer(src, save)
     end
 
     for name, slot in pairs(shared.clothing.nameToSlots) do

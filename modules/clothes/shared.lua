@@ -97,3 +97,14 @@ shared.propMap = {
     [6] = "watches",
     [7] = "bracelets",
 }
+
+shared.saveAppearanceClient = function(ped)
+    local appearance = exports.bl_appearance:GetPedAppearance(ped)
+    return appearance
+end
+
+shared.saveAppearanceServer = function(source, appearance)
+    local player = exports.qbx_core:GetPlayer(source)
+    if not player then return end
+    exports.bl_appearance:SavePlayerAppearance(player.PlayerData.citizenid, appearance)
+end

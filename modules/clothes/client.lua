@@ -294,7 +294,8 @@ function clothes.check()
 end
 
 function clothes.sync()
-    local success = lib.callback.await('ox_inventory:syncClothes', 5000, clothes.data)
+    local save = shared.saveAppearanceClient(PlayerPedId())
+    local success = lib.callback.await('ox_inventory:syncClothes', 5000, clothes.data, save)
     if not success then
         return false
     end
