@@ -7,7 +7,7 @@ return {
     ["watering_can"] = {
         label = "Arrosoir",
         weight = 500,
-        stack = false,
+        stack = true,
         close = false,
         description = "Pour arroser des plantes",
     },
@@ -31,7 +31,7 @@ return {
     ["liquid_fertilizer"] = {
         label = "Engrais Liquide",
         weight = 200,
-        stack = false,
+        stack = true,
         close = false,
         description = "De l'eau enrichie. (Ne pas boire !)",
     },
@@ -398,7 +398,7 @@ return {
         description = "The Capn's special recipe",
     },
 
-    ["seringue"] = {
+    ["syringe"] = {
         label = "Seringue",
         weight = 1,
         stack = true,

@@ -3,35 +3,35 @@ return {
 
     ["t1ger_vehicledoor"] = {
         label = "Porte de véhicule",
-        weight = 1800,
+        weight = 7500, -- 15000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_vehiclehood"] = {
         label = "Capot de véhicule",
-        weight = 2200,
+        weight = 6000, -- 12000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_vehicletrunk"] = {
         label = "Coffre de véhicule",
-        weight = 2000,
+        weight = 5000, -- 10000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_vehiclewheel"] = {
         label = "Roue de véhicule",
-        weight = 1200,
+        weight = 5000, -- 10000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_vehiclewindow"] = {
         label = "Vitre de véhicule",
-        weight = 8000,
+        weight = 1250, -- 2500g / 2
         stack = true,
         close = true
     },
@@ -40,56 +40,56 @@ return {
 
     ["t1ger_alternator"] = {
         label = "Alternateur",
-        weight = 600,
+        weight = 3000, -- 6000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_brakes"] = {
         label = "Freins",
-        weight = 700,
+        weight = 3500, -- 7000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_electricmotor"] = {
         label = "Moteur électrique",
-        weight = 3500,
+        weight = 20000, -- 40000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_evbattery"] = {
-        label = "Batterie EV",
-        weight = 2500,
+        label = "Batterie VE",
+        weight = 150000, -- 300000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_fuelinjector"] = {
         label = "Injecteur de carburant",
-        weight = 50,
+        weight = 100, -- 200g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_powersteeringpump"] = {
         label = "Pompe de direction assistée",
-        weight = 400,
+        weight = 1250, -- 2500g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_radiator"] = {
         label = "Radiateur",
-        weight = 900,
+        weight = 3000, -- 6000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_transmission"] = {
-        label = "Boîte de vitesses",
-        weight = 6000,
+        label = "Transmission",
+        weight = 40000, -- 80000g / 2
         stack = true,
         close = true
     },
@@ -98,91 +98,91 @@ return {
 
     ["t1ger_airfilter"] = {
         label = "Filtre à air",
-        weight = 50,
+        weight = 150, -- 300g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_batterycoolant"] = {
-        label = "Liquide de refroidissement batterie",
-        weight = 200,
+        label = "Liquide de refroidissement de batterie",
+        weight = 750, -- 1500g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_brakefluid"] = {
         label = "Liquide de frein",
-        weight = 100,
+        weight = 500, -- 1000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_brakepad"] = {
         label = "Plaquettes de frein",
-        weight = 200,
+        weight = 1000, -- 2000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_coolant"] = {
         label = "Liquide de refroidissement",
-        weight = 200,
+        weight = 1000, -- 2000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_drivebelt"] = {
         label = "Courroie d'entraînement",
-        weight = 80,
+        weight = 400, -- 800g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_fuelfilter"] = {
         label = "Filtre à carburant",
-        weight = 50,
+        weight = 300, -- 600g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_hvwiring"] = {
         label = "Câblage haute tension",
-        weight = 300,
+        weight = 1500, -- 3000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_oilfilter"] = {
         label = "Filtre à huile",
-        weight = 70,
+        weight = 450, -- 900g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_sparkplugs"] = {
         label = "Bougies d'allumage",
-        weight = 20,
+        weight = 200, -- 400g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_steeringfluid"] = {
-        label = "Liquide de direction",
-        weight = 100,
+        label = "Liquide de direction assistée",
+        weight = 500, -- 1000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_tires"] = {
         label = "Pneus",
-        weight = 1000,
+        weight = 20000, -- set / 40000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_transmissionfluid"] = {
-        label = "Huile de transmission",
-        weight = 150,
+        label = "Liquide de transmission",
+        weight = 1250, -- 2500g / 2
         stack = true,
         close = true
     },
@@ -191,187 +191,101 @@ return {
 
     ["t1ger_repairkit"] = {
         label = "Kit de réparation",
-        weight = 500,
+        weight = 1000, -- 2000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_repairkit_adv"] = {
         label = "Kit de réparation avancé",
-        weight = 800,
+        weight = 2500, -- 5000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_carjack"] = {
         label = "Cric",
-        weight = 1200,
+        weight = 2500, -- 5000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_patchkit"] = {
-        label = "Kit de rustine",
-        weight = 100,
+        label = "Kit de rustines",
+        weight = 200, -- 400g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_fuelcan"] = {
-        label = "Bidon d'essence",
-        weight = 600,
+        label = "Jerrican",
+        weight = 1000, -- 2000g / 2 (empty)
         stack = true,
         close = true
     },
 
     ["t1ger_jumpstarter"] = {
-        label = "Démarreur de secours",
-        weight = 300,
+        label = "Démarreur portable",
+        weight = 2500, -- 5000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_repairkit_tire"] = {
         label = "Kit de réparation de pneu",
-        weight = 150,
+        weight = 400, -- 800g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_diagnostictool"] = {
-        label = "Outil de diagnostic",
-        weight = 200,
+        label = "Outil de diagnostic véhicule",
+        weight = 750, -- 1500g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_servicebook"] = {
         label = "Carnet d'entretien",
-        weight = 500,
+        weight = 150, -- 300g / 2
         stack = true,
         close = true
     },
 
-    -- Accessoires de signalisation
+    -- Objets d'animation
 
     ["t1ger_roadcone"] = {
         label = "Cône de signalisation",
-        weight = 200,
+        weight = 1500, -- 3000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_toolstrolley"] = {
-        label = "Chariot à outils",
-        weight = 2500,
+        label = "Chariot d'outils",
+        weight = 7500, -- 15000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_toolbox"] = {
         label = "Boîte à outils",
-        weight = 800,
+        weight = 2500, -- 5000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_consign"] = {
         label = "Panneau de chantier",
-        weight = 400,
+        weight = 1500, -- 3000g / 2
         stack = true,
         close = true
     },
 
     ["t1ger_roadbarrier"] = {
-        label = "Barrière de route",
-        weight = 1200,
+        label = "Barrière routière",
+        weight = 10000, -- 20000g / 2
         stack = true,
         close = true
-    },
-
-    -- Materials
-
-    ['scrap_metal'] = {
-        label = 'Ferraille',
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["steel"] = {
-        label = "Acier",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["aluminium"] = {
-        label = "Aluminium",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["plastic"] = {
-        label = "Plastique",
-        weight = 250,
-        stack = true,
-        close = true,
-    },
-
-    ["rubber"] = {
-        label = "Caoutchouc",
-        weight = 250,
-        stack = true,
-        close = true,
-    },
-
-    ["electric_scrap"] = {
-        label = "Déchets électroniques",
-        weight = 250,
-        stack = true,
-        close = true,
-    },
-
-    ["glass"] = {
-        label = "Verre",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["copper"] = {
-        label = "Cuivre",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["carbon_fiber"] = {
-        label = "Fibre de carbone",
-        weight = 750,
-        stack = true,
-        close = true,
-    },
-
-    ["brass"] = {
-        label = "Laiton",
-        weight = 1000,
-        stack = true,
-        close = true,
-    },
-
-    ["synthetic_oil"] = {
-        label = "Huile synthétique",
-        weight = 500,
-        stack = true,
-        close = true,
-    },
-
-    ["acid"] = {
-        label = "Acide synthétique",
-        weight = 500,
-        stack = true,
-        close = true,
     },
 }
