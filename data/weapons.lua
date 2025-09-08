@@ -1,5 +1,187 @@
 return {
 	Weapons = {
+		-- Kyros Weapon Pack V6
+
+        ['WEAPON_BLUEARP'] = {
+			label = 'BLUE ARP',
+			weight = 4500,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_DAR15'] = {
+			label = 'DESERT AR-15',
+			weight = 4900,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_M16'] = {
+			label = 'M16 RIFLE',
+			weight = 5900,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_SPEAR'] = {
+			label = 'MCX SPEAR',
+			weight = 5200,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_MK47'] = {
+			label = 'MK47',
+			weight = 5200,
+			ammoname = 'ammo-rifle2'
+		},
+
+		['WEAPON_RAM7K'] = {
+			label = 'RAM-7 KNIGHT',
+			weight = 5700,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_REDAUG'] = {
+			label = 'RED AUG BURST',
+			weight = 4600,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_CZBREN'] = {
+			label = 'CZ BREN',
+			weight = 5300,
+			ammoname = 'ammo-rifle'
+		},
+
+		['WEAPON_TP9SF'] = {
+			label = 'CANIK TP9SF',
+			weight = 1700,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_G19XD'] = {
+			label = 'G19X DESERT',
+			weight = 2700,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_G17B'] = {
+			label = 'GLOCK 17 BLACKOUT',
+			weight = 1900,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GLOCK18'] = {
+			label = 'GLOCK 18',
+			weight = 1500,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GLOCK20S'] = {
+			label = 'GLOCK 20 SWITCH',
+			weight = 1600,
+			ammoname = 'ammo-10'
+		},
+
+		['WEAPON_GLOCK22'] = {
+			label = 'GLOCK 22',
+			weight = 1500,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GLOCK22S'] = {
+			label = 'GLOCK 22 SWITCH',
+			weight = 1600,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GLOCK45'] = {
+			label = 'GLOCK 45',
+			weight = 1700,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GLOCKDEMON'] = {
+			label = 'GLOCK DEMON',
+			weight = 1600,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_M9A3'] = {
+			label = 'GREY M9A3',
+			weight = 1900,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_ILLGLOCK19X'] = {
+			label = 'ILLEGAL G19X SWITCH',
+			weight = 2100,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_SR9'] = {
+			label = 'RUGER SR9',
+			weight = 1700,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_GX4'] = {
+			label = 'TAURUS GX4',
+			weight = 1200,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_TGLOCK45'] = {
+			label = 'TAN GLOCK 45',
+			weight = 1800,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_SUB2000'] = {
+			label = 'KEL-TEC SUB2000',
+			weight = 4000,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_MAC4A1'] = {
+			label = 'MAC-4A1',
+			weight = 3000,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_MICROMP5'] = {
+			label = 'MICRO MP5',
+			weight = 2900,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_MINIAK47'] = {
+			label = 'MINI AK-47',
+			weight = 4800,
+			ammoname = 'ammo-rifle2'
+		},
+
+		['WEAPON_RAM9D'] = {
+			label = 'RAM-9 DESERT',
+			weight = 5900,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_UDP9'] = {
+			label = 'UDP-9',
+			weight = 2850,
+			ammoname = 'ammo-9'
+		},
+
+		['WEAPON_BERETTA1301'] = {
+			label = 'BERETTA 1301',
+			weight = 4600,
+			ammoname = 'ammo-shotgun'
+		},
+
+		['WEAPON_MINISHOTGUN'] = {
+			label = 'MINI SHOTTY',
+			weight = 2900,
+			ammoname = 'ammo-shotgun'
+		},
+
 		-- Kyros Weapon Pack V5
 
 		['WEAPON_FN57'] = {
@@ -841,6 +1023,113 @@ return {
 			ammoname = 'ammo-shotgun'
 		},
 
+		-- Kyros Weapon Pack Airsoft
+
+        ['WEAPON_AIRSOFTAK47'] = {
+            label = 'AIRSOFT AK47',
+            weight = 5500,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTG36C'] = {
+            label = 'AIRSOFT G36C',
+            weight = 5000,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTGLOCK'] = {
+            label = 'AIRSOFT GLOCK',
+            weight = 1200,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTM14'] = {
+            label = 'AIRSOFT M14',
+            weight = 4000,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTM249'] = {
+            label = 'AIRSOFT M249',
+            weight = 6000,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTUZI'] = {
+            label = 'AIRSOFT UZI',
+            weight = 1600,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTMP5'] = {
+            label = 'AIRSOFT MP5',
+            weight = 2200,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTR870'] = {
+            label = 'AIRSOFT R870',
+            weight = 2400,
+            durability = 0.1,
+            ammoname = 'ammo-airsoft'
+        },
+
+		['WEAPON_AIRSOFTDRACO'] = {
+			label = 'AIRSOFT DRACO',
+			weight = 3200,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
+		['WEAPON_AIRSOFTSCAR'] = {
+			label = 'AIRSOFT SCAR',
+			weight = 4000,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
+		['WEAPON_AIRSOFTAUG'] = {
+			label = 'AIRSOFT AUG',
+			weight = 3000,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+		
+		['WEAPON_AIRSOFTXD'] = {
+			label = 'AIRSOFT XD UM',
+			weight = 1200,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
+		['WEAPON_AIRSOFTM4A1'] = {
+			label = 'AIRSOFT M4A1 UM',
+			weight = 4500,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
+		['WEAPON_AIRSOFTFN57'] = {
+			label = 'AIRSOFT FN57',
+			weight = 1200,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
+		['WEAPON_AIRSOFTP90'] = {
+			label = 'AIRSOFT P90',
+			weight = 3500,
+			durability = 0.1,
+			ammoname = 'ammo-airsoft'
+		},
+
 		-- Vanilla
 
 		['WEAPON_BATTLERIFLE'] = {
@@ -1463,7 +1752,7 @@ return {
 	},
 
 	Components = {
-		-- Kyros Weapon Pack V5
+		-- Kyros Weapon Pack
 
 		['at_clip_drum_pistol'] = {
 			label = '50 Round Drum',
@@ -1482,6 +1771,13 @@ return {
 					`COMPONENT_MGGLOCK_CLIP_03`, -- v5
 					`COMPONENT_TGLOCK19_CLIP_03`, -- v5
 					`COMPONENT_MIDASGLOCK_CLIP_03`, -- v5
+					`COMPONENT_G19XD_CLIP_DRUM`, -- v6
+					`COMPONENT_GLOCK20S_CLIP_DRUM`, -- v6
+					`COMPONENT_GLOCK22_CLIP_DRUM`, -- v6
+					`COMPONENT_GLOCK22S_CLIP_DRUM`, -- v6
+					`COMPONENT_GLOCK45_CLIP_DRUM`, -- v6
+					`COMPONENT_ILLGLOCK19X_CLIP_DRUM`, -- v6
+					`COMPONENT_TGLOCK45_CLIP_DRUM`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1502,8 +1798,15 @@ return {
 					`COMPONENT_MGGLOCK_CLIP_04`, -- v5
 					`COMPONENT_TGLOCK19_CLIP_04`, -- v5
 					`COMPONENT_MIDASGLOCK_CLIP_04`, -- v5
+					`COMPONENT_G19XD_CLIP_100`, -- v6
+					`COMPONENT_GLOCK20S_CLIP_100`, -- v6
+					`COMPONENT_GLOCK22_CLIP_100`, -- v6
+					`COMPONENT_GLOCK22S_CLIP_100`, -- v6
+					`COMPONENT_GLOCK45_CLIP_100`, -- v6
+					`COMPONENT_ILLGLOCK19X_CLIP_100`, -- v6
+					`COMPONENT_TGLOCK45_CLIP_100`, -- v6
 				},
-				usetime = 5500
+				usetime = 3500
 			}
 		},
 
@@ -1523,6 +1826,17 @@ return {
 					`COMPONENT_TGLOCK19_CLIP_05`, -- pistol
 					`COMPONENT_MIDASGLOCK_CLIP_05`, -- pistol
 					`COMPONENT_REDARP_CLIP_04`, -- rifle
+					`COMPONENT_BLUEARP_CLIP_CLEAR`, -- v6
+					`COMPONENT_DAR15_CLIP_CLEAR`, -- v6
+					`COMPONENT_G19XD_CLIP_CLEAR`, -- v6
+					`COMPONENT_GLOCK20S_CLIP_CLEAR`, -- v6
+					`COMPONENT_GLOCK22_CLIP_CLEAR`, -- v6
+					`COMPONENT_GLOCK22S_CLIP_CLEAR`, -- v6
+					`COMPONENT_GLOCK45_CLIP_CLEAR`, -- v6
+					`COMPONENT_TGLOCK45_CLIP_CLEAR`, -- v6
+					`COMPONENT_ILLGLOCK19X_CLIP_CLEAR`, -- v6
+					`COMPONENT_GX4_CLIP_CLEAR`, -- v6
+					`COMPONENT_UDP9_CLIP_EXTENDED`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1541,7 +1855,7 @@ return {
 					`COMPONENT_AT_PI_FLSH`,
 					`COMPONENT_AT_PI_FLSH_02`,
 					`COMPONENT_AT_PI_FLSH_03`,
-					`COMPONENT_AT_PI_PDG19G4_FLSH`, -- pd
+				    `COMPONENT_AT_PI_PDG19G4_FLSH`, -- pd
 					`COMPONENT_AT_AR_PDHK417_FLSH`,	-- pd
 					`COMPONENT_AT_PI_PINKGLOCK19FLSH`, -- female
                     `COMPONENT_AT_G18C_FLSH`, -- v1
@@ -1555,8 +1869,10 @@ return {
 					`COMPONENT_AT_PI_RUGER57FLSH`, -- v4
 					`COMPONENT_AT_AR_BAR15_FLSH`, -- v5
 					`COMPONENT_AT_AR_DMK18_FLSH`, -- v5
-					`COMPONENT_AT_PI_GLOCKBEAMS_FLSH`, -- v5 check
-					`COMPONENT_AT_PI_FLSH`, -- v5 check
+					`COMPONENT_AT_PI_GLOCKBEAMS_FLSH`, -- v5 
+					`COMPONENT_SPEAR_FLSH`, -- v6
+					`COMPONENT_M9A3_FLSH`, -- v6
+					`COMPONENT_SR9_FLSH`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1567,7 +1883,6 @@ return {
 			weight = 280,
 			type = 'muzzle',
 			client = {
-                image = 'at_suppressor.png',
 				component = {
 					`COMPONENT_AT_PI_SUPP`,
 					`COMPONENT_AT_PI_SUPP_02`,
@@ -1586,6 +1901,8 @@ return {
 					`COMPONENT_AT_SR_P90_SUPP`, -- v3
 					`COMPONENT_AT_AR_DMK18_SUPP`, -- v5
 					`COMPONENT_AT_AR_REDM4A1_SUPP`, -- v5
+					`COMPONENT_SPEAR_SUPP`, -- v6
+					`COMPONENT_M9A3_SUPP`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1651,7 +1968,6 @@ return {
 			type = 'magazine',
 			weight = 280,
 			client = {
-                image = 'at_clip_extended.png',
 				component = {
 					`COMPONENT_APPISTOL_CLIP_02`,
 					`COMPONENT_CERAMICPISTOL_CLIP_02`,
@@ -1664,7 +1980,7 @@ return {
 					`COMPONENT_SNSPISTOL_MK2_CLIP_02`,
 					`COMPONENT_VINTAGEPISTOL_CLIP_02`,
                     `COMPONENT_TECPISTOL_CLIP_02`,
-					`COMPONENT_PINKGLOCK19_CLIP_02`, -- female
+  					`COMPONENT_PINKGLOCK19_CLIP_02`, -- female
 					`COMPONENT_PXDS9_CLIP_02`, -- female
                     `COMPONENT_P226_CLIP_02`, -- v1
                     `COMPONENT_G18C_CLIP_02`, -- v1
@@ -1689,6 +2005,19 @@ return {
 					`COMPONENT_MGGLOCK_CLIP_02`, -- v5
 					`COMPONENT_MIDASGLOCK_CLIP_02`, -- v5
 					`COMPONENT_TGLOCK19_CLIP_02`, -- v5
+					`COMPONENT_TP9SF_CLIP_EXTENDED`, -- v6
+					`COMPONENT_G19XD_CLIP_EXTENDED`, -- v6
+					`COMPONENT_G17B_CLIP_02`, -- v6
+					`COMPONENT_GLOCK20S_CLIP_EXTENDED`, -- v6
+					`COMPONENT_GLOCK22_CLIP_EXTENDED`, -- v6
+					`COMPONENT_GLOCK22S_CLIP_EXTENDED`, -- v6
+					`COMPONENT_GLOCK45_CLIP_EXTENDED`, -- v6
+					`COMPONENT_GLOCKDEMON_CLIP_EXTENDED`, -- v6
+					`COMPONENT_M9A3_CLIP_02`, -- v6
+					`COMPONENT_ILLGLOCK19X_CLIP_EXTENDED`, -- v6
+					`COMPONENT_SR9_CLIP_EXTENDED`, -- v6
+					`COMPONENT_GX4_CLIP_EXTENDED`, -- v6
+					`COMPONENT_TGLOCK45_CLIP_EXTENDED`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1699,7 +2028,6 @@ return {
 			type = 'magazine',
 			weight = 280,
 			client = {
-                image = 'at_clip_extended.png',
 				component = {
 					`COMPONENT_ASSAULTSMG_CLIP_02`,
 					`COMPONENT_COMBATPDW_CLIP_02`,
@@ -1715,6 +2043,8 @@ return {
 					`COMPONENT_MP9_CLIP_02`, -- v2
 					`COMPONENT_TUZI_CLIP_02`, -- v3
 					`COMPONENT_TEC9S_CLIP_02`, -- v5
+					`COMPONENT_SUB2000_CLIP_02`, -- v6
+					`COMPONENT_RAM9D_CLIP_02`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1725,7 +2055,6 @@ return {
 			type = 'magazine',
 			weight = 280,
 			client = {
-                image = 'at_clip_extended2.png',
 				component = {
 					`COMPONENT_ASSAULTSHOTGUN_CLIP_02`,
 					`COMPONENT_HEAVYSHOTGUN_CLIP_02`,
@@ -1740,7 +2069,6 @@ return {
 			type = 'magazine',
 			weight = 280,
 			client = {
-                image = 'at_clip_extended2.png',
 				component = {
 					`COMPONENT_ADVANCEDRIFLE_CLIP_02`,
 					`COMPONENT_ASSAULTRIFLE_CLIP_02`,
@@ -1755,9 +2083,9 @@ return {
 					`COMPONENT_SPECIALCARBINE_CLIP_02`,
 					`COMPONENT_SPECIALCARBINE_MK2_CLIP_02`,
 					`COMPONENT_TACTICALRIFLE_CLIP_02`,
-					`COMPONENT_BATTLERIFLE_CLIP_02`,
+					`COMPONENT_CARBINERIFLE_BOXMAG`,
 					`COMPONENT_PDHK417_CLIP_02`, -- pd
-					`COMPONENT_PINKSCAR_CLIP_02`, -- female
+					`COMPONENT_PINKSCAR_CLIP_02`, -- female 
 					`COMPONENT_ACE_CLIP_02`, -- v2
 					`COMPONENT_HERAARMS_BOXMAG`, -- v2
 					`COMPONENT_G36K_CLIP_02`, -- v2
@@ -1765,7 +2093,7 @@ return {
                     `COMPONENT_SCARV3_CLIP_02`, -- v3
                     `COMPONENT_AUGA1_CLIP_02`, -- v3
 					`COMPONENT_BARP_CLIP_02`, -- v4
-					`COMPONENT_PLR_CLIP_02`, -- v4
+					`COMPONENT_PLR_CLIP_02`, -- v4   
 					`COMPONENT_BSCAR_CLIP_02`, -- v5
 					`COMPONENT_LBTANARP_CLIP_02`, -- v5
 					`COMPONENT_RAM7_CLIP_02`, -- v5
@@ -1774,6 +2102,12 @@ return {
 					`COMPONENT_BLACKARP_CLIP_02`, -- v5
 					`COMPONENT_TANARP_CLIP_02`, -- v5
 					`COMPONENT_WOARP_CLIP_02`, -- v5
+					`COMPONENT_BLUEARP_CLIP_EXTENDED`, -- v6
+					`COMPONENT_M16_CLIP_02`, -- v6
+					`COMPONENT_RAM7K_CLIP_02`, -- v6
+					`COMPONENT_REDAUG_CLIP_EXTENDED`, -- v6
+					`COMPONENT_CZBREN_CLIP_02`, -- v6
+					`COMPONENT_MINIAK47_CLIP_02`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1843,7 +2177,6 @@ return {
 			type = 'magazine',
 			weight = 280,
 			client = {
-                image = 'at_clip_drum.png',
 				component = {
 					`COMPONENT_ASSAULTRIFLE_CLIP_03`,
 					`COMPONENT_COMPACTRIFLE_CLIP_03`,
@@ -1853,7 +2186,9 @@ return {
 					`COMPONENT_LBTANARP_CLIP_03`, -- v5
 					`COMPONENT_WOARP_CLIP_03`, -- v5
 					`COMPONENT_REDARP_CLIP_03`, -- v5
-					`COMPONENT_THOMPSON_CLIP_02` -- v5
+					`COMPONENT_THOMPSON_CLIP_02`, -- v5
+					`COMPONENT_BLUEARP_CLIP_DRUM`, -- v6
+					`COMPONENT_MK47_CLIP_DRUM`, -- v6
 				},
 				usetime = 2500
 			}
@@ -1920,18 +2255,20 @@ return {
 					`COMPONENT_AT_ARPISTOLSCOPE_MEDIUM`, -- v4
 					`COMPONENT_AT_BAR15_SCOPE_MEDIUM`, -- v5
 					`COMPONENT_AT_DMK18_SCOPE_MEDIUM`, -- v5
+					`COMPONENT_SPEAR_SCOPE_MEDIUM`, -- v6
 				},
 				usetime = 2500
 			}
 		},
 
-		['at_scope_large'] = {
+        ['at_scope_large'] = {
 			label = 'Large Scope',
 			type = 'sight',
 			weight = 280,
 			client = {
 				component = {
 					`COMPONENT_AT_SCOPE_LARGE_MK2`,
+					`COMPONENT_AT_SCOPE_LARGE`,
 					`COMPONENT_AT_BARRETT50_SCOPE_MAX`, -- v1
 					`COMPONENT_AT_AWP_SCOPE_LARGE`, -- v3
 					`COMPONENT_AT_M200_SCOPE_LARGE`, -- v3
@@ -2697,6 +3034,11 @@ return {
 	},
 
 	Ammo = {
+        ['ammo-airsoft'] = {
+			label = 'Airsoft BB',
+			weight = 3,
+		},
+        
 		['ammo-22'] = {
 			label = '.22 Long Rifle',
 			weight = 3,
@@ -2725,6 +3067,11 @@ return {
 		['ammo-9'] = {
 			label = '9mm',
 			weight = 7,
+		},
+
+        ['ammo-10'] = {
+			label = '10mm',
+			weight = 8,
 		},
 
 		['ammo-firework'] = {
