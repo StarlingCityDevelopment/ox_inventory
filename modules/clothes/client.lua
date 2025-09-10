@@ -288,7 +288,7 @@ function clothes.check()
             end
         end
 
-        return true
+        return clothes.sync()
     end
 
     return false
