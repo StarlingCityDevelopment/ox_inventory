@@ -667,4 +667,250 @@ end)
 RegisterNetEvent('ox_inventory:checkClothes', clothes.check)
 RegisterNetEvent('ox_inventory:setInitialCreation', clothes.setInitialCreation)
 
+exports('GetCurrentClothes', function()
+    return updateClothingDataWithCollections(clothes.data)
+end)
+
+exports('SetClothesData', function(data)
+    if data and type(data) == "table" then
+        clothes.data = data
+        return true
+    end
+    return false
+end)
+
+exports('InitClothes', function()
+    clothes.init()
+    return true
+end)
+
+exports('CheckClothes', function()
+    return clothes.check()
+end)
+
+exports('SyncClothes', function()
+    return clothes.sync()
+end)
+
+exports('IsInitialCreation', function()
+    return clothes.initial
+end)
+
+exports('GetGender', function()
+    return getGender()
+end)
+
+exports('IsInventoryOpen', function()
+    return clothes.isInventoryOpen
+end)
+
+exports('SetInventoryOpen', function(isOpen)
+    clothes.setInventoryOpen(isOpen)
+    return true
+end)
+
+exports('ApplyChangesToPlayer', function()
+    return clothes.applyChangesToPlayer()
+end)
+
+exports('GetStagedChanges', function()
+    return clothes.stagedChanges
+end)
+
+exports('SetStagedChanges', function(changes)
+    if changes and type(changes) == "table" then
+        clothes.stagedChanges = changes
+        return true
+    end
+    return false
+end)
+
+exports('ClearStagedChanges', function()
+    clothes.stagedChanges = {}
+    return true
+end)
+
+exports('ClearClothes', function()
+    clothes.data = {}
+    clothes.stagedChanges = {}
+    return true
+end)
+
+exports('GetCollectionDataForComponent', function(ped, componentId, drawable)
+    local collectionName, localIndex = getCollectionDataForComponent(ped or PlayerPedId(), componentId, drawable)
+    return { collectionName = collectionName, localIndex = localIndex }
+end)
+
+exports('GetCollectionDataForProp', function(ped, propId, drawable)
+    local collectionName, localIndex = getCollectionDataForProp(ped or PlayerPedId(), propId, drawable)
+    return { collectionName = collectionName, localIndex = localIndex }
+end)
+
+exports('UpdateClothingDataWithCollections', function(clothingData)
+    return updateClothingDataWithCollections(clothingData)
+end)
+
+exports('CountStagedChanges', function()
+    return countStagedChanges()
+end)
+
+exports('SetInitialCreation', function()
+    clothes.setInitialCreation()
+end)
+
+exports('ApplyComponent', function(metadata)
+    if not metadata then
+        return false
+    end
+
+    local components = metadata.component_id and { metadata } or metadata
+    if type(components) ~= "table" then
+        return false
+    end
+
+    local targetPed = PlayerPedId()
+    if not targetPed or targetPed == 0 then
+        return false
+    end
+
+    for _, component in pairs(components) do
+        if component.component_id and shared.componentMap[component.component_id] then
+            local componentId = component.component_id
+            local drawable = component.drawable or 0
+            local texture = component.texture or 0
+            local collection = component.collection
+            local localIndex = component.localIndex
+            local componentName = shared.componentMap[componentId]
+
+            if not collection and drawable then
+                collection, localIndex = getCollectionDataForComponent(targetPed, componentId, drawable)
+            end
+
+            clothes.data[componentName] = {
+                component_id = componentId,
+                drawable = drawable,
+                texture = texture,
+                collection = collection,
+                localIndex = localIndex,
+            }
+
+            if collection and localIndex then
+                SetPedCollectionComponentVariation(targetPed, componentId, collection, localIndex, texture, 0)
+            else
+                SetPedComponentVariation(targetPed, componentId, drawable, texture, 0)
+            end
+        end
+    end
+
+    return true
+end)
+
+exports('ApplyProp', function(metadata)
+    if not metadata then
+        return false
+    end
+
+    local props = metadata.prop_id and { metadata } or metadata
+    if type(props) ~= "table" then
+        return false
+    end
+
+    local targetPed = PlayerPedId()
+    if not targetPed or targetPed == 0 then
+        return false
+    end
+
+    for _, prop in pairs(props) do
+        if prop.prop_id and shared.propMap[prop.prop_id] then
+            local propId = prop.prop_id
+            local drawable = prop.drawable or 0
+            local texture = prop.texture or 0
+            local collection = prop.collection
+            local localIndex = prop.localIndex
+            local propName = shared.propMap[propId]
+
+            if not collection and drawable and drawable >= 0 then
+                collection, localIndex = getCollectionDataForProp(targetPed, propId, drawable)
+            end
+
+            clothes.data[propName] = {
+                prop_id = propId,
+                drawable = drawable,
+                texture = texture,
+                collection = collection,
+                localIndex = localIndex,
+            }
+
+            if collection and localIndex then
+                SetPedCollectionPropIndex(targetPed, propId, collection, localIndex, texture, true)
+            else
+                SetPedPropIndex(targetPed, propId, drawable, texture, true)
+            end
+        end
+    end
+
+    return true
+end)
+
+exports('RemoveComponent', function(componentIds)
+    if not componentIds then
+        return false
+    end
+
+    local ids = type(componentIds) == "table" and componentIds or { componentIds }
+    local gender = getGender()
+    local targetPed = PlayerPedId()
+
+    if not targetPed or targetPed == 0 then
+        return false
+    end
+
+    for _, componentId in pairs(ids) do
+        if shared.componentMap[componentId] then
+            local name = shared.componentMap[componentId]
+            local defaultClothes = shared.clothing[gender] and shared.clothing[gender][name]
+
+            if defaultClothes then
+                clothes.data[name] = nil
+                SetPedComponentVariation(targetPed, componentId, defaultClothes.drawable, defaultClothes.texture, 0)
+            end
+        end
+    end
+
+    return true
+end)
+
+exports('RemoveProp', function(propIds)
+    if not propIds then
+        return false
+    end
+
+    local ids = type(propIds) == "table" and propIds or { propIds }
+    local gender = getGender()
+    local targetPed = PlayerPedId()
+
+    if not targetPed or targetPed == 0 then
+        return false
+    end
+
+    for _, propId in pairs(ids) do
+        if shared.propMap[propId] then
+            local name = shared.propMap[propId]
+            local defaultClothes = shared.clothing[gender] and shared.clothing[gender][name]
+
+            if defaultClothes then
+                clothes.data[name] = nil
+
+                if defaultClothes.drawable == -1 then
+                    ClearPedProp(targetPed, propId)
+                else
+                    SetPedPropIndex(targetPed, propId, defaultClothes.drawable, defaultClothes.texture, true)
+                end
+            end
+        end
+    end
+
+    return true
+end)
+
 return clothes

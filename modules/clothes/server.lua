@@ -687,6 +687,191 @@ exports('DisableClothing', function(source)
     disabled[source] = true
 end)
 
+exports('GetPlayerClothes', function(source)
+    if disabled[source] then
+        return false
+    end
+
+    local player = Inventory(source)
+    if not player then
+        return false
+    end
+
+    local clothes = Inventory('clothes-' .. player.owner)
+    if not clothes then
+        return false
+    end
+
+    local playerClothes = {}
+    for name, slot in pairs(shared.clothing.nameToSlots) do
+        if name ~= "outfits" then
+            local item = Inventory.GetSlot(clothes, slot)
+            if item and item.metadata then
+                playerClothes[name] = {
+                    component_id = item.metadata.component_id or nil,
+                    prop_id = item.metadata.prop_id or nil,
+                    drawable = item.metadata.drawable,
+                    texture = item.metadata.texture,
+                    collection = item.metadata.collection,
+                    localIndex = item.metadata.localIndex,
+                }
+            end
+        end
+    end
+
+    return playerClothes
+end)
+
+exports('SetPlayerClothes', function(source, clothesData)
+    if disabled[source] then
+        return false
+    end
+
+    if not clothesData or next(clothesData) == nil then
+        return false
+    end
+
+    local player = Inventory(source)
+    if not player then
+        return false
+    end
+
+    local clothes = Inventory('clothes-' .. player.owner)
+    if not clothes then
+        return false
+    end
+
+    disabled[source] = true
+
+    for name, data in pairs(clothesData) do
+        local slot = shared.clothing.nameToSlots[name]
+        if slot then
+            local actuelItem = Inventory.GetSlot(clothes, slot)
+            if actuelItem then
+                Inventory.SetMetadata(clothes, slot, {
+                    component_id = data.component_id or nil,
+                    prop_id = data.prop_id or nil,
+                    drawable = data.drawable,
+                    texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
+                })
+            else
+                Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                    component_id = data.component_id or nil,
+                    prop_id = data.prop_id or nil,
+                    drawable = data.drawable,
+                    texture = data.texture,
+                    collection = data.collection,
+                    localIndex = data.localIndex,
+                }, slot)
+            end
+        end
+    end
+
+    Inventory.Save(clothes)
+    disabled[source] = false
+    return true
+end)
+
+exports('IsClothingDisabled', function(source)
+    return disabled[source] == true
+end)
+
+exports('SyncPlayerClothes', function(source, playerClothes, save)
+    if disabled[source] then
+        return false
+    end
+
+    local player = Inventory(source)
+    if not player then
+        return false
+    end
+
+    return lib.callback.await('ox_inventory:syncClothes', source, playerClothes, save)
+end)
+
+exports('GetClothesInventory', function(source)
+    if disabled[source] then
+        return false
+    end
+
+    local player = Inventory(source)
+    if not player then
+        return false
+    end
+
+    local clothes = Inventory('clothes-' .. player.owner)
+    if not clothes then
+        return false
+    end
+
+    return clothes
+end)
+
+exports('ClearPlayerClothes', function(source)
+    if disabled[source] then
+        return false
+    end
+
+    local player = Inventory(source)
+    if not player then
+        return false
+    end
+
+    local clothes = Inventory('clothes-' .. player.owner)
+    if not clothes then
+        return false
+    end
+
+    disabled[source] = true
+
+    for name, slot in pairs(shared.clothing.nameToSlots) do
+        if name ~= "outfits" then
+            local actuelItem = Inventory.GetSlot(clothes, slot)
+            if actuelItem then
+                Inventory.RemoveItem(clothes, actuelItem.name, 1, nil, slot)
+            end
+        end
+    end
+
+    Inventory.Save(clothes)
+    disabled[source] = false
+    return true
+end)
+
+exports('ApplyClothingComponent', function(source, metadata)
+    if disabled[source] then
+        return false
+    end
+
+    return lib.callback.await('ox_inventory:applyComponent', source, metadata)
+end)
+
+exports('ApplyClothingProp', function(source, metadata)
+    if disabled[source] then
+        return false
+    end
+
+    return lib.callback.await('ox_inventory:applyProp', source, metadata)
+end)
+
+exports('RemoveClothingComponent', function(source, componentIds)
+    if disabled[source] then
+        return false
+    end
+
+    return lib.callback.await('ox_inventory:removeComponent', source, componentIds)
+end)
+
+exports('RemoveClothingProp', function(source, propIds)
+    if disabled[source] then
+        return false
+    end
+
+    return lib.callback.await('ox_inventory:removeProp', source, propIds)
+end)
+
 RegisterNetEvent('ox_inventory:enableClothings', function()
     local src = source
     disabled[src] = false
