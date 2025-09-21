@@ -32,12 +32,12 @@ jobs:
 
       - name: Bundle files
         run: |
-          mkdir -p ./temp/starling_inventory
-          mkdir -p ./temp/starling_inventory/locales/
-          cp ./{fxmanifest.lua,init.lua,client.lua,server.lua} ./temp/starling_inventory
-          cp ./{locales/en.json,locales/fr.json} ./temp/starling_inventory/locales
-          cp -r ./{build,data,modules} ./temp/starling_inventory
-          cd ./temp && zip -r ../starling_inventory.zip ./starling_inventory
+          mkdir -p ./temp/ox_inventory
+          mkdir -p ./temp/ox_inventory/locales/
+          cp ./{fxmanifest.lua,init.lua,client.lua,server.lua} ./temp/ox_inventory
+          cp ./{locales/en.json,locales/fr.json} ./temp/ox_inventory/locales
+          cp -r ./{build,data,modules} ./temp/ox_inventory
+          cd ./temp && zip -r ../ox_inventory.zip ./ox_inventory
 
       - name: Create Release
         uses: 'marvinpinto/action-automatic-releases@v1.2.1'
@@ -46,7 +46,7 @@ jobs:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
           title: 'Ready to download'
           prerelease: true
-          files: starling_inventory.zip
+          files: ox_inventory.zip
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,4 +57,4 @@ jobs:
           token: ${{ secrets.PAT }}
           repository: StarlingCityDevelopment/resources
           event-type: update-resources
-          client-payload: '{"res": "starling_inventory"}'
+          client-payload: '{"res": "ox_inventory"}'
