@@ -99,7 +99,11 @@ shared.propMap = {
 }
 
 shared.saveAppearanceClient = function(ped)
-    local appearance = exports.bl_appearance:GetPedAppearance(ped)
+    local appearance = {
+        headOverlay = exports.bl_appearance:GetPedHeadOverlay(ped),
+        props = exports.bl_appearance:GetPedProps(ped),
+        drawables = exports.bl_appearance:GetPedDrawables(ped),
+    }
     return appearance
 end
 
@@ -109,5 +113,5 @@ shared.saveAppearanceServer = function(source, appearance)
         return
     end
     local cid = player.PlayerData and player.PlayerData.citizenid or "unknown"
-    exports.bl_appearance:SavePlayerAppearance(cid, appearance)
+    exports.bl_appearance:SavePlayerClothes(cid, appearance)
 end
