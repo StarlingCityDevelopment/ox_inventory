@@ -3,7 +3,7 @@ shared.clothing = {
         -- Drawables
         ["masks"] = { drawable = 0, texture = 0, },
         ["torsos"] = { drawable = 15, texture = 0, },
-        ["legs"] = { drawable = 14, texture = 1, },
+        ["legs"] = { drawable = 294, texture = 10, },
         ["bags"] = { drawable = 0, texture = 0, },
         ["shoes"] = { drawable = 34, texture = 0, },
         ["neck"] = { drawable = 0, texture = 0, },
@@ -22,9 +22,9 @@ shared.clothing = {
         -- Drawables
         ["masks"] = { drawable = 0, texture = 0, },
         ["torsos"] = { drawable = 15, texture = 0, },
-        ["legs"] = { drawable = 14, texture = 1, },
+        ["legs"] = { drawable = 15, texture = 0, },
         ["bags"] = { drawable = 0, texture = 0, },
-        ["shoes"] = { drawable = 34, texture = 0, },
+        ["shoes"] = { drawable = 35, texture = 0, },
         ["neck"] = { drawable = 0, texture = 0, },
         ["shirts"] = { drawable = 15, texture = 0, },
         ["vest"] = { drawable = 0, texture = 0, },
