@@ -99,12 +99,12 @@ shared.propMap = {
 }
 
 shared.saveAppearanceClient = function(ped)
-    local appearance = {
-        headOverlay = exports.bl_appearance:GetPedHeadOverlay(ped),
-        props = exports.bl_appearance:GetPedProps(ped),
-        drawables = exports.bl_appearance:GetPedDrawables(ped),
+    local appearance = exports.bl_appearance:GetPedAppearance(ped)
+    return {
+        headOverlay = appearance.headOverlay,
+        drawables = appearance.drawables,
+        props = appearance.props,
     }
-    return appearance
 end
 
 shared.saveAppearanceServer = function(source, appearance)
