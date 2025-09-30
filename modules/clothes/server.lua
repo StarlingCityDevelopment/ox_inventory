@@ -223,6 +223,7 @@ function clothing.addOutfit(payload)
             end
 
             success = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+                label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                 component_id = actuelItem.metadata.component_id or nil,
                 prop_id = actuelItem.metadata.prop_id or nil,
                 drawable = actuelItem.metadata.drawable,
@@ -233,6 +234,7 @@ function clothing.addOutfit(payload)
 
             if not success then
                 success = Inventory.AddItem(clothes, actuelItem.name, 1, {
+                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = actuelItem.metadata.component_id or nil,
                     prop_id = actuelItem.metadata.prop_id or nil,
                     drawable = actuelItem.metadata.drawable,
@@ -398,6 +400,7 @@ function clothing.removeOutfit(payload)
     CreateThread(function()
         Wait(50)
         Inventory.SetMetadata(player, payload.toSlot, {
+            label = item.metadata.label or nil,
             outfit = current
         })
         Inventory.Save(clothes)
@@ -572,6 +575,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
             local metadata = actuelItem.metadata or {}
             if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
                 Inventory.SetMetadata(clothes, slot, {
+                    label = metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
                     drawable = data.drawable,
@@ -582,6 +586,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
             end
         else
             local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                 component_id = data.component_id or nil,
                 prop_id = data.prop_id or nil,
                 drawable = data.drawable,
@@ -638,6 +643,7 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
                 local metadata = actuelItem.metadata or {}
                 if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
                     local success, response = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+                        label = metadata.label or nil,
                         component_id = data.component_id or nil,
                         prop_id = data.prop_id or nil,
                         drawable = data.drawable,
@@ -652,6 +658,7 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
                 end
             else
                 local success, response = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
                     drawable = data.drawable,
@@ -749,6 +756,7 @@ exports('SetPlayerClothes', function(source, clothesData)
             local actuelItem = Inventory.GetSlot(clothes, slot)
             if actuelItem then
                 Inventory.SetMetadata(clothes, slot, {
+                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
                     drawable = data.drawable,
@@ -758,6 +766,7 @@ exports('SetPlayerClothes', function(source, clothesData)
                 })
             else
                 Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
                     drawable = data.drawable,
