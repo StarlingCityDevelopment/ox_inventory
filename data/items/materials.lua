@@ -3,14 +3,14 @@ return {
 
     ["scrap_metal"] = {
         label = "Ferraille",
-        weight = 1000,
+        weight = 500,
         stack = true,
         close = true,
     },
 
     ["steel"] = {
         label = "Acier",
-        weight = 1000,
+        weight = 500,
         stack = true,
         close = true,
     },
@@ -31,56 +31,56 @@ return {
 
     ["rubber"] = {
         label = "Caoutchouc",
-        weight = 250,
+        weight = 200,
         stack = true,
         close = true,
     },
 
     ["electric_scrap"] = {
         label = "Déchets électriques",
-        weight = 250,
+        weight = 300,
         stack = true,
         close = true,
     },
 
     ["glass"] = {
         label = "Verre",
-        weight = 1000,
+        weight = 200,
         stack = true,
         close = true,
     },
 
     ["copper"] = {
         label = "Cuivre",
-        weight = 1000,
+        weight = 500,
         stack = true,
         close = true,
     },
 
     ["carbon_fiber"] = {
         label = "Fibre de carbone",
-        weight = 750,
+        weight = 150,
         stack = true,
         close = true,
     },
 
     ["brass"] = {
         label = "Laiton",
-        weight = 1000,
+        weight = 500,
         stack = true,
         close = true,
     },
 
     ["synthetic_oil"] = {
         label = "Huile synthétique",
-        weight = 500,
+        weight = 100,
         stack = true,
         close = true,
     },
 
     ["acid"] = {
         label = "Acide synthétique",
-        weight = 500,
+        weight = 200,
         stack = true,
         close = true,
     },

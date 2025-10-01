@@ -11,7 +11,7 @@ return {
 
     ['stickynote'] = {
         label = 'Notes de cahier',
-        weight = 5,
+        weight = 1,
         stack = false,
     },
 

@@ -34,13 +34,6 @@ return {
         close = true,
     },
 
-    ["soda"] = {
-        label = "Soda",
-        weight = 500,
-        stack = true,
-        close = true,
-    },
-
     ["chips"] = {
         label = "Chips",
         weight = 500,

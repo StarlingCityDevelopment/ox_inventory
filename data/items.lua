@@ -9,6 +9,7 @@ local files = {
     'fishing',
     'hotel',
     'inventory',
+    'materials',
     'mechanics',
     'police',
     'radio',

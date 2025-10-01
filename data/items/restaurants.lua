@@ -406,7 +406,7 @@ return {
     },
 
     ['cutted_peach'] = {
-        label = 'Tranche de ',
+        label = 'Tranche de Pêche',
         weight = 20,
         stack = true,
         close = true,

@@ -1,7 +1,7 @@
 return {
     ['radio'] = {
         label = 'Radio',
-        weight = 1000,
+        weight = 750,
         allowArmed = true,
         client = {
             event = 'mm_radio:client:use'
@@ -21,7 +21,7 @@ return {
 
     ['radiocell'] = {
         label = 'Piles AAA',
-        weight = 200,
+        weight = 100,
         stack = true,
         consume = 2,
         client = {
