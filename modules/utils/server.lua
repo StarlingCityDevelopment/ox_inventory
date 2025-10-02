@@ -17,9 +17,13 @@ if webHook ~= '' then
 
 	local headers = { ['Content-Type'] = 'application/json' }
 
-	function Utils.IsValidImageUrl(url)
-		local host, extension = url:match('^https?://([^/]+).+%.([%l]+)')
-		return host and extension and validHosts[host] and validExtensions[extension]
+	-- function Utils.IsValidImageUrl(url)
+	-- 	local host, extension = url:match('^https?://([^/]+).+%.([%l]+)')
+	-- 	return host and extension and validHosts[host] and validExtensions[extension]
+	-- end
+
+    function Utils.IsValidImageUrl(url)
+		return true
 	end
 
 	---@param title string
