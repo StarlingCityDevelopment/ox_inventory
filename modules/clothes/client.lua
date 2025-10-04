@@ -222,6 +222,17 @@ function clothes.check()
             {
                 {
                     type = 'select',
+                    label = 'Type de paiement',
+                    options = {
+                        { value = 'cash', label = 'Espèces' },
+                        { value = 'bank',  label = 'Banque' }
+                    },
+                    default = 'cash',
+                    clearable = false,
+                    required = true,
+                },
+                {
+                    type = 'select',
                     label = 'Type de changement',
                     options = {
                         { value = 'clothes', label = 'Vêtements' },
@@ -232,15 +243,6 @@ function clothes.check()
                     required = true,
                 }
             })
-
-        if not input or not input[1] then
-            return false
-        end
-
-        local success = lib.callback.await('ox_inventory:checkClothes', 2500, changedClothes, input[1])
-        if not success then
-            return false
-        end
 
         for index, name in pairs(shared.componentMap) do
             if clothes.data[name] then
@@ -286,6 +288,15 @@ function clothes.check()
                     ClearPedProp(PlayerPedId(), index)
                 end
             end
+        end
+
+        if not input or not input[1] or not input[2] then
+            return false
+        end
+
+        local success = lib.callback.await('ox_inventory:checkClothes', 2500, changedClothes, input[1], input[2])
+        if not success then
+            return false
         end
     end
 

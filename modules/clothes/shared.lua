@@ -73,6 +73,23 @@ shared.clothing = {
         [15] = "bracelets",
         [16] = "decals",
     },
+    nameToPrice = {
+        ["jackets"] = 30,
+        ["shirts"] = 20,
+        ["torsos"] = 22,
+        ["bags"] = 12,
+        ["vest"] = 28,
+        ["legs"] = 18,
+        ["shoes"] = 25,
+        ["hats"] = 10,
+        ["masks"] = 15,
+        ["glasses"] = 14,
+        ["earrings"] = 11,
+        ["neck"] = 17,
+        ["watches"] = 35,
+        ["bracelets"] = 16,
+        ["decals"] = 9,
+    },
 }
 
 shared.componentMap = {

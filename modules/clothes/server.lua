@@ -605,7 +605,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
     return true
 end)
 
-lib.callback.register('ox_inventory:checkClothes', function(source, changedClothes, type)
+lib.callback.register('ox_inventory:checkClothes', function(source, changedClothes, payment, type)
     local src = source
 
     if disabled[src] then
@@ -613,6 +613,26 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
     end
 
     if not changedClothes or next(changedClothes) == nil then
+        return false
+    end
+
+    if payment ~= 'cash' and payment ~= 'bank' then
+        return false
+    end
+
+    local amount = 0
+
+    for name, value in pairs(changedClothes) do
+        amount = amount + (shared.clothing.nameToPrice[name] or 0)
+    end
+
+    if amount > 0 and not exports.qbx_core:GetMoney(src, payment) then
+        lib.notify(src, {
+            title = 'Vêtements',
+            description = 'Vous n\'avez pas assez d\'argent',
+            type = 'error',
+            duration = 7500,
+        })
         return false
     end
 
