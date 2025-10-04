@@ -1740,121 +1740,101 @@ local function giveItemToTarget(serverId, slotId, count)
 end
 exports('giveItemToTarget', giveItemToTarget)
 
+local isGivingItem, entityToGive = false, nil
+
+local function giveItemToTarget(serverId, slotId, count)
+	if type(slotId) ~= 'number' then return TypeError('slotId', 'number', type(slotId)) end
+	if count and type(count) ~= 'number' then return TypeError('count', 'number', type(count)) end
+
+	if slotId == currentWeapon?.slot then
+		currentWeapon = Weapon.Disarm(currentWeapon)
+	end
+
+	Utils.PlayAnim(0, 'mp_common', 'givetake1_a', 1.0, 1.0, 2000, 50, 0.0, 0, 0, 0)
+
+	local notification = lib.callback.await('ox_inventory:giveItem', false, slotId, serverId, count or 0)
+
+	if notification then
+		lib.notify({ type = 'error', description = locale(table.unpack(notification)) })
+	end
+end
+
+exports('giveItemToTarget', giveItemToTarget)
+
 local function isGiveTargetValid(ped, coords)
 	if cache.vehicle and GetVehiclePedIsIn(ped, false) == cache.vehicle then
 		return true
 	end
+
 	local entity = Utils.Raycast(1|2|4|8|16, coords + vec3(0, 0, 0.5), 0.2)
+
 	return entity == ped and IsEntityVisible(ped)
-end
-
-local noPlayer = "Pas de joueur à proximité"
-local givedistance = 3.0
-
-local function manualPlayerSelection(players, data)
-	exports.ox_inventory:closeInventory()
-
-	lib.showTextUI([[
-	[ENTER] pour donner l'objet
-
-	[BACKSPACE] pour annuler
-
-	[LEFT] [RIGHT] pour sélectionner le joueur
-	]])
-
-	local selected = nil
-	local index = 1
-	local active = players[index]
-
-	while type(selected) ~= "table" and selected == nil do
-		Citizen.Wait(0)
-		DisplayHelpTextThisFrame("inv_helpnotification", false)
-
-		if IsControlPressed(189, 189) then --[[ left Key ]]
-			index = index > 1 and index - 1 or #players
-			Wait(100)
-		elseif IsControlPressed(190, 190) then --[[ Right Key ]]
-			index = index < #players and index + 1 or 1
-			Wait(100)
-		elseif IsControlPressed(191, 191) then --[[ Confirm ]]
-			selected = active
-			Wait(100)
-		elseif IsControlPressed(194, 194) then --[[ Cancel ]]
-			selected = false
-			Wait(100)
-		end
-
-		active = players[index]
-		DrawMarker(
-			1, active.coords.x, active.coords.y, active.coords.z - 0.98,
-			0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-			0, 200, 255, 50, false, false,
-			0, false, false, false, false
-		)
-	end
-
-	if selected and selected.id then
-		giveItemToTarget(GetPlayerServerId(selected.id), data.slot, data.count)
-	end
-
-	lib.hideTextUI()
 end
 
 RegisterNUICallback('giveItem', function(data, cb)
 	cb(1)
+
 	if usingItem then return end
 
-	Citizen.CreateThread(function()
-		if cache.vehicle then
-			return
-		end
+	isGivingItem = true
+	entityToGive = nil
 
-		local playerCoords = GetEntityCoords(cache.ped)
-		local players = lib.getNearbyPlayers(playerCoords, givedistance)
-
-		if players == {} or #players == 0 then
-			lib.notify({
-				title = noPlayer,
-				type = "warning"
-			})
-			return
-		end
-
-		local validPlayers = {}
-		for i = 1, #players do
-			local player = players[i]
-			if isGiveTargetValid(player.ped, player.coords) then
-				table.insert(validPlayers, player)
-			end
-		end
-
-		if #validPlayers == 0 then
-			lib.notify({
-				title = noPlayer,
-				type = "warning"
-			})
-			return
-		end
-
-		if #validPlayers == 1 then
-			return giveItemToTarget(GetPlayerServerId(validPlayers[1].id), data.slot, data.count)
-		end
-
-		manualPlayerSelection(validPlayers, data)
-	end)
-
-	if cache.vehicle then
-		local seats = GetVehicleMaxNumberOfPassengers(cache.vehicle) - 1
-		if seats >= 0 then
-			local passenger = GetPedInVehicleSeat(cache.vehicle, cache.seat - 2 * (cache.seat % 2) + 1)
-			if passenger ~= 0 and IsEntityVisible(passenger) then
-				return giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(passenger)), data.slot, data
-				.count)
-			end
-		end
-		return
+	if invOpen then
+		client.closeInventory()
 	end
+
+	local uiOpts = { icon = 'fa-hand-holding' }
+	lib.showTextUI('Sélectionnez une personne avec [ALT]', uiOpts)
+
+	CreateThread(function()
+		local success = false
+		local start = GetGameTimer()
+		local timeout = 15000
+
+		while true do
+			if not isGivingItem and entityToGive ~= nil then
+				success = true
+				break
+			end
+
+			if GetGameTimer() - start >= timeout then
+				break
+			end
+
+			Wait(0)
+		end
+
+		lib.hideTextUI()
+
+		if success and entityToGive ~= nil then
+			giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entityToGive)), data.slot, data.count)
+		else
+			lib.notify({
+				title = 'Inventory',
+				description = 'Aucun cible sélectionnée, annulée.',
+				type = 'error',
+				duration = 5000
+			})
+		end
+
+		entityToGive = nil
+		isGivingItem = false
+	end)
 end)
+
+exports.ox_target:addGlobalPlayer({
+	name = 'ox_inventory:giveItem',
+	label = 'Donner un objet',
+	icon = 'fa-hand-holding',
+	distance = 3.0,
+	onSelect = function(data)
+		entityToGive = data.entity
+		isGivingItem = false
+	end,
+	canInteract = function(entity, distance, coords, name, bone)
+		return isGivingItem and isGiveTargetValid(entity, coords)
+	end
+})
 
 RegisterNUICallback('useButton', function(data, cb)
 	useButton(data.id, data.slot)
