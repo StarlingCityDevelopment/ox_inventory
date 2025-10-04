@@ -703,7 +703,7 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
     end
 
     disabled[src] = false
-    return true
+    return exports.qbx_core:RemoveMoney(src, payment, amount, 'Achat de vêtements')
 end)
 
 exports('EnableClothing', function(source)
