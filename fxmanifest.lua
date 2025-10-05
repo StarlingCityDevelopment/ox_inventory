@@ -47,4 +47,5 @@ files {
     'modules/bridge/**/client.lua',
     'data/*.lua',
     'data/items/*.lua',
+    'data/weapons/*.lua',
 }
