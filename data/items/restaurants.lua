@@ -4,9 +4,9 @@ return {
         weight = 0,
         stack = true,
         close = true,
-        client = {
-            export = 'mt-restaurants.useFoodItem'
-        }
+        -- client = {
+        --     export = 'mt-restaurants.useFoodItem'
+        -- }
     },
 
     ["restaurant_box"] = {
