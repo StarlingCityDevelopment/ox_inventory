@@ -20,4 +20,14 @@ return {
         weight = 1250,
         stack = false,
     },
+
+    ['drill'] = {
+        label = "Foreuse",
+        weight = 2750,
+    },
+
+    ['rope'] = {
+        label = "Corde",
+        weight = 1750,
+    },
 }
