@@ -55,6 +55,13 @@ return {
         close = true,
     },
 
+    ['bandage'] = {
+        label = 'Bandage',
+        weight = 25,
+        stack = true,
+        close = true,
+    },
+
     ['morphine30'] = {
         label = 'Morphine 30MG',
         weight = 2,
