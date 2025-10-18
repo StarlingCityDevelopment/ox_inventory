@@ -4,17 +4,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_vodka_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['rhum'] = {
@@ -22,17 +11,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_rum_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['whiskey'] = {
@@ -40,17 +18,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'h4_prop_battle_whiskey_bottle_s',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['jager'] = {
@@ -58,17 +25,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_vodka_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['absinthe'] = {
@@ -76,17 +32,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_vodka_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['tequila'] = {
@@ -94,17 +39,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_tequila_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['cognac'] = {
@@ -112,17 +46,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_bottle_cognac',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['beer'] = {
@@ -130,17 +53,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_beer_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['martini'] = {
@@ -148,17 +60,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'amb@world_human_drinking@coffee@male@idle_a', clip = 'idle_a' },
-            prop = {
-                model = 'prop_tequila',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['champagne'] = {
@@ -166,17 +67,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'amb@world_human_drinking@coffee@male@idle_a', clip = 'idle_a' },
-            prop = {
-                model = 'prop_drink_champ',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['wine'] = {
@@ -184,17 +74,6 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'amb@world_human_drinking@coffee@male@idle_a', clip = 'idle_a' },
-            prop = {
-                model = 'p_wine_glass_s',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 
     ['gin'] = {
@@ -202,16 +81,5 @@ return {
         weight = 1000,
         stack = true,
         close = true,
-        consume = 1,
-        client = {
-            anim = { dict = 'anim@amb@nightclub@mini@drinking@drinking_shots@ped_b@drunk@heeled@', clip = 'drink' },
-            prop = {
-                model = 'prop_whiskey_bottle',
-                pos = { x = 0.02, y = 0.02, z = -0.02 },
-                rot = { x = 0.0, y = 0.0, z = 0.0 }
-            },
-            disable = { sprint = true, car = true, combat = true, },
-            usetime = 5000,
-        }
     },
 }
