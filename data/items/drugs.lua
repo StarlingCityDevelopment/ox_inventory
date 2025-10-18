@@ -301,14 +301,6 @@ return {
         description = "Un soda vert fluo. Surement plein de \"plantes\"...",
     },
 
-    ["cola_drink"] = {
-        label = "Cola",
-        weight = 50,
-        stack = true,
-        close = true,
-        description = "Le soda classique",
-    },
-
     ["spunkblue_drink"] = {
         label = "Spunk Bleu",
         weight = 50,
