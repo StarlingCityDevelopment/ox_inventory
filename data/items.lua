@@ -17,6 +17,7 @@ local files = {
     'robberies',
     'tuners',
     'vehiclekeys',
+    'halloween',
 }
 
 for _, file in ipairs(files) do
