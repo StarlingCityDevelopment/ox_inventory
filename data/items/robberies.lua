@@ -1,24 +1,9 @@
 return {
-    ['gold'] = {
-        label = 'Or',
-        weight = 160,
-    },
+    -- Outils
 
-    ['diamond'] = {
-        label = 'Diamant',
-        weight = 160,
-    },
-
-    ['stickynote'] = {
-        label = 'Notes de cahier',
-        weight = 1,
-        stack = false,
-    },
-
-    ['laptop'] = {
-        label = "Ordinateur portable",
-        weight = 1250,
-        stack = false,
+    ['lockpick'] = {
+        label = 'Crochet',
+        weight = 50,
     },
 
     ['drill'] = {
@@ -32,233 +17,220 @@ return {
     },
 
     ['hack_laptop'] = {
-        label = 'Hacking Laptop',
+        label = 'Ordinateur de piratage',
         weight = 1250,
-        stack = true
     },
 
     ['loot_bag'] = {
-        label = 'Duffle bag',
+        label = 'Sac de butin',
         weight = 800,
-        stack = true
     },
 
-    ['printer'] = {
-        label = 'Printer',
+    ['stickynote'] = {
+        label = 'Note autocollante',
+        weight = 1,
+        stack = false,
+    },
+
+    ['laptop'] = {
+        label = "Ordinateur portable",
+        weight = 1250,
+        stack = false,
+    },
+
+    -- Matériaux
+
+    ['gold'] = {
+        label = 'Or',
+        weight = 160,
+    },
+
+    ['diamond'] = {
+        label = 'Diamant',
+        weight = 160,
+    },
+
+    -- Objets - Braquage de maison
+
+    ['toaster'] = {
+        label = 'Grille-pain',
         weight = 2750,
-        stack = true
     },
 
-    ['npc_phone'] = {
-        label = 'Phone',
-        weight = 150,
-        stack = true
-    },
-
-    ['monitor'] = {
-        label = 'Monitor',
-        weight = 1500,
-        stack = true
+    ['microwave'] = {
+        label = 'Micro-ondes',
+        weight = 2750,
     },
 
     ['television'] = {
-        label = 'TV',
+        label = 'Télévision',
         weight = 3000,
-        stack = true
     },
 
     ['flat_television'] = {
-        label = 'Flat TV',
+        label = 'Télévision à écran plat',
         weight = 3000,
-        stack = true
-    },
-
-    ['radio_alarm'] = {
-        label = 'Radio',
-        weight = 500,
-        stack = true
-    },
-
-    ['fan'] = {
-        label = 'Fan',
-        weight = 1500,
-        stack = true
-    },
-
-    ['lockpick'] = {
-        label = 'Lockpick',
-        description = "Can lockpick any doors if you have enough skill!",
-        weight = 50,
-        stack = true
-    },
-
-    ['shoebox'] = {
-        label = 'Shoe box',
-        weight = 200,
-        stack = true
-    },
-
-    ['dj_deck'] = {
-        label = 'DJ Deck',
-        weight = 1000,
-        stack = true
     },
 
     ['console'] = {
-        label = 'Console',
+        label = 'Console de jeu',
         weight = 500,
-        stack = true
     },
 
     ['boombox'] = {
-        label = 'Boombox',
+        label = 'Enceinte portable',
         weight = 2000,
-        stack = true
+    },
+
+    ['tapeplayer'] = {
+        label = 'Lecteur de cassettes',
+        weight = 1000,
+    },
+
+    -- Objets - Autres
+
+    ['printer'] = {
+        label = 'Imprimante',
+        weight = 2750,
+    },
+
+    ['npc_phone'] = {
+        label = 'Téléphone',
+        weight = 150,
+    },
+
+    ['monitor'] = {
+        label = 'Écran',
+        weight = 1500,
+    },
+
+    ['radio_alarm'] = {
+        label = 'Radio-réveil',
+        weight = 500,
+    },
+
+    ['fan'] = {
+        label = 'Ventilateur',
+        weight = 1500,
+    },
+
+    ['shoebox'] = {
+        label = 'Boîte à chaussures',
+        weight = 200,
+    },
+
+    ['dj_deck'] = {
+        label = 'Table de mixage DJ',
+        weight = 1000,
     },
 
     ['bong'] = {
         label = 'Bong',
         weight = 300,
-        stack = true
     },
 
     ['coffemachine'] = {
-        label = 'Coffe machine',
+        label = 'Machine à café',
         weight = 1500,
-        stack = true
-    },
-
-    ['tapeplayer'] = {
-        label = 'Tape Player',
-        weight = 1000,
-        stack = true
     },
 
     ['hairdryer'] = {
-        label = 'Hairdryer',
+        label = 'Sèche-cheveux',
         weight = 500,
-        stack = true
-    },
-
-    ['j_phone'] = {
-        label = 'Phone',
-        weight = 150,
-        stack = true
     },
 
     ['sculpture'] = {
         label = 'Sculpture',
         weight = 2000,
-        stack = true
     },
 
     ['toiletry'] = {
-        label = 'Toiletry',
+        label = 'Trousse de toilette',
         weight = 100,
-        stack = true
     },
 
     ['pogo'] = {
-        label = 'Art Piece',
-        description = "Pogo Statue",
+        label = 'Œuvre d’art',
         weight = 1000,
-        stack = true
     },
 
     ['powder'] = {
-        label = 'Bag with powder',
-        description = "Good for discovering lasers that are not visible",
+        label = 'Sac de poudre',
         weight = 100,
-        stack = true
     },
 
     ['bracelet'] = {
         label = 'Bracelet',
         weight = 20,
-        stack = true
     },
 
     ['book'] = {
-        label = 'Book',
+        label = 'Livre',
         weight = 300,
-        stack = true
     },
 
     ['earings'] = {
-        label = 'Earings',
+        label = 'Boucles d’oreilles',
         weight = 5,
-        stack = true
     },
 
     ['gold_bracelet'] = {
-        label = 'Gold bracelet',
+        label = 'Bracelet en or',
         weight = 50,
-        stack = true
     },
 
     ['gold_watch'] = {
-        label = 'Gold watch',
+        label = 'Montre en or',
         weight = 100,
-        stack = true
     },
 
     ['house_locator'] = {
-        label = 'House locator',
+        label = 'Localisateur de maison',
         weight = 200,
-        stack = true
     },
 
     ['necklace'] = {
-        label = 'Necklace',
+        label = 'Collier',
         weight = 30,
-        stack = true
     },
 
     ['notepad'] = {
-        label = 'Notepad',
+        label = 'Bloc-notes',
         weight = 50,
-        stack = true
     },
 
     ['pencil'] = {
-        label = 'Pencil',
+        label = 'Crayon',
         weight = 10,
-        stack = true
     },
 
     ['romantic_book'] = {
-        label = 'Romantic book',
+        label = 'Livre romantique',
         weight = 300,
-        stack = true
     },
 
     ['shampoo'] = {
-        label = 'Shampoo',
+        label = 'Shampoing',
         weight = 300,
-        stack = true
     },
 
     ['soap'] = {
-        label = 'Soap',
+        label = 'Savon',
         weight = 100,
-        stack = true
     },
 
     ['toothpaste'] = {
-        label = 'Toothpaste',
+        label = 'Dentifrice',
         weight = 50,
-        stack = true
     },
 
     ['watch'] = {
-        label = 'Watch',
+        label = 'Montre',
         weight = 50,
-        stack = true
     },
 
     ['skull'] = {
-        label = 'Skull Art with diamonds',
+        label = 'Crâne artistique',
         weight = 500,
-        stack = true
     },
 }

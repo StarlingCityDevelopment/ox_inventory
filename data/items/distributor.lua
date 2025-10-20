@@ -6,6 +6,27 @@ return {
         close = true,
     },
 
+    ["sprunk"] = {
+        label = "Sprunk",
+        weight = 250,
+        stack = true,
+        close = true,
+    },
+
+    ["ecola"] = {
+        label = "eCola",
+        weight = 250,
+        stack = true,
+        close = true,
+    },
+
+    ["lemonade"] = {
+        label = "Limonade",
+        weight = 250,
+        stack = true,
+        close = true,
+    },
+
     ["sandwich"] = {
         label = "Sandwich",
         weight = 500,

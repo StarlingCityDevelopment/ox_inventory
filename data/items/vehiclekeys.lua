@@ -64,4 +64,10 @@ return {
             export = 'qs-vehiclekeys.useVehicletracker',
         },
     },
+
+    ['rentalpaper'] = {
+        label = 'Papier de location',
+        weight = 10,
+        stack = false,
+    },
 }

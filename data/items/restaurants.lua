@@ -588,4 +588,12 @@ return {
         close = true,
         description = '',
     },
+
+    ['cutted_shrimp'] = {
+        label = 'Crevette Unique',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
 }
