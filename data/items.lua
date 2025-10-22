@@ -7,6 +7,7 @@ local files = {
     'distributor',
     'drugs',
     'fishing',
+    'halloween',
     'hotel',
     'inventory',
     'materials',
@@ -15,9 +16,9 @@ local files = {
     'radio',
     'restaurants',
     'robberies',
+    'store',
     'tuners',
     'vehiclekeys',
-    'halloween',
 }
 
 for _, file in ipairs(files) do
