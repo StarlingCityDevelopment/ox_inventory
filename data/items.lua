@@ -2,6 +2,7 @@ local items = {}
 local files = {
     'alcool',
     'ambulance',
+    'ammos',
     'cards',
     'clothes',
     'distributor',

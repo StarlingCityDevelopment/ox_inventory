@@ -348,22 +348,77 @@ end
 -- Serverside item functions
 -----------------------------------------------------------------------------------------------
 
--- Item('testburger', function(event, item, inventory, slot, data)
--- 	if event == 'usingItem' then
--- 		if Inventory.GetItem(inventory, item, inventory.items[slot].metadata, true) > 0 then
--- 			-- if we return false here, we can cancel item use
--- 			return {
--- 				inventory.label, event, 'external item use poggies'
--- 			}
--- 		end
+Item('box_ammo_airsoft', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-airsoft', 250)
+	end
+end)
 
--- 	elseif event == 'usedItem' then
--- 		print(('%s just ate a %s from slot %s'):format(inventory.label, item.label, slot))
+Item('box_ammo_22', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-22', 120)
+	end
+end)
 
--- 	elseif event == 'buying' then
--- 		print(data.id, data.coords, json.encode(data.items[slot], {indent=true}))
--- 	end
--- end)
+Item('box_ammo_38', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-38', 60)
+	end
+end)
+
+Item('box_ammo_44', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-44', 50)
+	end
+end)
+
+Item('box_ammo_45', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-45', 100)
+	end
+end)
+
+Item('box_ammo_50', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-50', 40)
+	end
+end)
+
+Item('box_ammo_9', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-9', 120)
+	end
+end)
+
+Item('box_ammo_10', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-10', 120)
+	end
+end)
+
+Item('box_ammo_rifle', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-rifle', 180)
+	end
+end)
+
+Item('box_ammo_rifle2', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-rifle2', 150)
+	end
+end)
+
+Item('box_ammo_sniper', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-sniper', 80)
+	end
+end)
+
+Item('box_ammo_shotgun', function(event, item, inventory, data, slot)
+	if event == 'usedItem' then
+    	Inventory.AddItem(inventory, 'ammo-shotgun', 50)
+	end
+end)
 
 -----------------------------------------------------------------------------------------------
 
