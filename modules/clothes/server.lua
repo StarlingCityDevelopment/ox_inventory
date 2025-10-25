@@ -31,8 +31,8 @@ local function handleClothingHook(payload)
     local toSlot = type(payload.toSlot) == 'number' and payload.toSlot or payload.toSlot.slot
 
     if toType == 'clothes' or fromType == 'clothes' then
-        if toType == 'clothes' then
-            return ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name
+        if toType == 'clothes' and not ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name then
+            return false
         end
 
         if action == 'move' then
@@ -51,10 +51,17 @@ local function handleOutfitHook(payload)
     end
 
     local action = payload.action
+    local toType = payload.toType
+    local fromType = payload.fromType
+    local toSlot = type(payload.toSlot) == 'number' and payload.toSlot or payload.toSlot.slot
+
     if action == 'move' then
-        return payload.toType == 'clothes' and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
+        if toType == 'clothes' and not ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name then
+            return false
+        end
+        return toType == 'clothes' and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
     elseif action == 'swap' then
-        if payload.toType == 'clothes' or payload.fromType == 'clothes' then
+        if toType == 'clothes' or fromType == 'clothes' then
             lib.notify(payload.source, {
                 title = 'Vêtements',
                 description = 'Vous ne pouvez pas échanger de tenues directement pour le moment.',
