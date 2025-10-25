@@ -328,6 +328,8 @@ function clothing.addOutfit(payload)
     return true
 end
 
+local removed = {}
+
 function clothing.removeOutfit(payload)
     local src = payload.source
 
@@ -402,6 +404,13 @@ function clothing.removeOutfit(payload)
     end
 
     Inventory.Clear(clothes)
+    disabled[src] = false
+
+    removed[src] = {
+        outfit = current,
+        label = item.metadata.label or nil,
+    }
+
     CreateThread(function()
         Wait(25)
         Inventory.SetMetadata(player, payload.toSlot, {
@@ -411,7 +420,6 @@ function clothing.removeOutfit(payload)
         Inventory.Save(clothes)
         Inventory.Save(player)
         lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
-        disabled[src] = false
     end)
     return true
 end
@@ -440,6 +448,39 @@ CreateThread(function()
     })
 
     exports.ox_inventory:registerHook('swapItems', handleOutfitHook, {
+        disableCheck = true,
+        itemFilter = { clothes_outfits = true },
+        inventoryFilter = { '^clothes-[%w]+' }
+    })
+
+    exports.ox_inventory:registerHook('swappedItems', function(payload)
+        local src = payload.source
+
+        if disabled[src] or not removed[src] then
+            return
+        end
+
+        local player = Inventory(src)
+        if not player then
+            return
+        end
+
+        local clothes = Inventory('clothes-' .. player.owner)
+        if not clothes then
+            return
+        end
+
+        local outfitData = removed[src]
+        removed[src] = nil
+
+        Inventory.SetMetadata(player, payload.toSlot, {
+            label = outfitData.label or nil,
+            outfit = outfitData.outfit
+        })
+        lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
+        Inventory.Save(clothes)
+        Inventory.Save(player)
+    end, {
         disableCheck = true,
         itemFilter = { clothes_outfits = true },
         inventoryFilter = { '^clothes-[%w]+' }

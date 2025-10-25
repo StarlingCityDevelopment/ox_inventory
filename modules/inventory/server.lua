@@ -1847,11 +1847,13 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 						if server.loglevel > 0 then
 							lib.logger(playerInventory.owner, 'swapSlots', ('%sx %s transferred from "%s" to "%s" for %sx %s'):format(fromData.count, fromData.name, fromInventory.owner and fromInventory.label or fromInventory.id, toInventory.owner and toInventory.label or toInventory.id, toData.count, toData.name))
 						end
+
+                        TriggerEventHooks('swappedItems', hookPayload)
 					else return false, 'cannot_carry' end
 				else
 					if not TriggerEventHooks('swapItems', hookPayload) then return end
-
 					toData, fromData = Inventory.SwapSlots(fromInventory, toInventory, data.fromSlot, data.toSlot)
+                    TriggerEventHooks('swappedItems', hookPayload)
 				end
 
 			elseif toData and toData.name == fromData.name and table.matches(toData.metadata, fromData.metadata) then
@@ -1893,6 +1895,7 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 					end
 
 					fromData.weight = fromSlotWeight
+                    TriggerEventHooks('swappedItems', hookPayload)
 				else
 					toData.count -= data.count
 					fromData.count += data.count
@@ -1948,6 +1951,8 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 					if fromData.count > 0 then
 						toData.metadata = table.clone(toData.metadata)
 					end
+
+                    TriggerEventHooks('swappedItems', hookPayload)
 				else return false, 'cannot_carry_other' end
 			end
 
