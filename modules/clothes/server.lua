@@ -28,7 +28,13 @@ local function handleClothingHook(payload)
     local toType = payload.toType
     local fromType = payload.fromType
 
+    local toSlot = type(payload.toSlot) == 'number' and payload.toSlot or payload.toSlot.slot
+
     if toType == 'clothes' or fromType == 'clothes' then
+        if toType == 'clothes' then
+            return ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name
+        end
+
         if action == 'move' then
             return toType == 'clothes' and clothing.addClothing(payload) or clothing.removeClothing(payload)
         else
@@ -57,7 +63,6 @@ local function handleOutfitHook(payload)
             })
             return false
         end
-        return false
     end
 
     return true
@@ -396,9 +401,9 @@ function clothing.removeOutfit(payload)
         end
     end
 
-    Inventory.Clear(clothes, 'clothes_outfits')
+    Inventory.Clear(clothes)
     CreateThread(function()
-        Wait(50)
+        Wait(25)
         Inventory.SetMetadata(player, payload.toSlot, {
             label = item.metadata.label or nil,
             outfit = current
