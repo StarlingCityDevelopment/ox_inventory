@@ -24,7 +24,6 @@ return {
         weight = 10,
         stack = true,
         close = true,
-        consume = 1
     },
 
     ['document'] = {
