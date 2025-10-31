@@ -1,7 +1,13 @@
 return {
+    ['mastercard'] = {
+        label = 'Carte de crédit',
+        stack = false,
+        weight = 10,
+    },
+
     ["id_card"] = {
         label = "Carte d'identité",
-        weight = 0,
+        weight = 10,
         stack = false,
         close = true,
         allowArmed = true,
@@ -12,7 +18,7 @@ return {
 
     ["driver_license"] = {
         label = "Permis de conduire",
-        weight = 0,
+        weight = 10,
         stack = false,
         close = true,
         allowArmed = true,

@@ -53,16 +53,16 @@ end
 
 exports('setContainerProperties', setContainerProperties)
 
-setContainerProperties('paperbag', {
+setContainerProperties('wallet', {
 	slots = 5,
-	maxWeight = 1000,
-	blacklist = { 'testburger' }
+	maxWeight = 100,
+	blacklist = { 'id_card', 'driver_license', 'mastercard', 'money' },
 })
 
-setContainerProperties('pizzabox', {
-	slots = 5,
-	maxWeight = 1000,
-	whitelist = { 'pizza' }
+setContainerProperties('keyring', {
+	slots = 10,
+	maxWeight = 500,
+	blacklist = { 'vehiclekeys' },
 })
 
 return containers

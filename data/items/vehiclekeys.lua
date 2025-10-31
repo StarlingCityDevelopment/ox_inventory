@@ -1,7 +1,7 @@
 return {
     ["vehiclekeys"] = {
         label = "Clés",
-        weight = 1,
+        weight = 25,
         stack = false,
         close = false,
         consume = 0,

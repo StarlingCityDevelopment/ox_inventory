@@ -36,12 +36,6 @@ return {
         }
     },
 
-    ['mastercard'] = {
-        label = 'Carte de crédit',
-        stack = false,
-        weight = 10,
-    },
-
     ["phone"] = {
         label = "Téléphone",
         weight = 190,
@@ -68,4 +62,21 @@ return {
         },
         magazine = true,
     },
+
+    ["wallet"] = {
+        label = "Porte monnaie",
+        weight = 25,
+        stack = false,
+        close = false,
+        consume = 0,
+    },
+
+    ["keyring"] = {
+        label = "Porte-clés",
+        weight = 25,
+        stack = false,
+        close = false,
+        consume = 0,
+    },
+
 }
