@@ -56,13 +56,13 @@ exports('setContainerProperties', setContainerProperties)
 setContainerProperties('wallet', {
 	slots = 5,
 	maxWeight = 100,
-	blacklist = { 'id_card', 'driver_license', 'mastercard', 'money' },
+	whitelist = { 'id_card', 'driver_license', 'mastercard', 'money' },
 })
 
 setContainerProperties('keyring', {
 	slots = 10,
 	maxWeight = 500,
-	blacklist = { 'vehiclekeys' },
+	whitelist = { 'vehiclekeys' },
 })
 
 return containers
