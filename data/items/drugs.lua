@@ -4,14 +4,6 @@ return {
         weight = 200,
     },
 
-    ["watering_can"] = {
-        label = "Arrosoir",
-        weight = 500,
-        stack = true,
-        close = false,
-        description = "Pour arroser des plantes",
-    },
-
     ["fertilizer"] = {
         label = "Engrais",
         weight = 500,
