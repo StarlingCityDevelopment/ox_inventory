@@ -242,15 +242,44 @@ return {
         },
     },
 
-    ["joint"] = {
-        label = "Joint",
+    ["joint_sweetcheese"] = {
+        label = "Joint SC",
         weight = 10,
         stack = true,
         close = true,
         description = "Ceci n'est pas un joint de culasse...",
-        server = {
-            export = "it-drugs.takeDrug"
-        },
+    },
+
+    ["joint_ak47"] = {
+        label = "Joint AK",
+        weight = 10,
+        stack = true,
+        close = true,
+        description = "Ceci n'est pas un joint de culasse...",
+    },
+
+    ["joint_purplekush"] = {
+        label = "Joint PK",
+        weight = 10,
+        stack = true,
+        close = true,
+        description = "Ceci n'est pas un joint de culasse...",
+    },
+
+    ["joint_mooncookies"] = {
+        label = "Joint MC",
+        weight = 10,
+        stack = true,
+        close = true,
+        description = "Ceci n'est pas un joint de culasse...",
+    },
+
+    ["joint_creamcaramel"] = {
+        label = "Joint CC",
+        weight = 10,
+        stack = true,
+        close = true,
+        description = "Ceci n'est pas un joint de culasse...",
     },
 
     ["pochon_coke"] = {
