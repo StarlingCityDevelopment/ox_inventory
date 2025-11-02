@@ -7,7 +7,7 @@ return {
     ['WEAPON_BATTLERIFLE'] = {
         label = 'Battle Rifle',
         weight = 3300,
-        ammoname = 'magazine-rifle2',
+        ammoname = 'ammo-rifle2',
     },
 
     ['WEAPON_SNOWLAUNCHER'] = {
@@ -19,31 +19,31 @@ return {
     ['WEAPON_TECPISTOL'] = {
         label = 'Tactical SMG',
         weight = 1500,
-        ammoname = 'magazine-9',
+        ammoname = 'ammo-9',
     },
 
     ['WEAPON_ADVANCEDRIFLE'] = {
         label = 'Advanced Rifle',
         weight = 3100,
-        ammoname = 'magazine-rifle',
+        ammoname = 'ammo-rifle',
     },
 
     ['WEAPON_APPISTOL'] = {
         label = 'AP Pistol',
         weight = 1400,
-        ammoname = 'magazine-9',
+        ammoname = 'ammo-9',
     },
 
     ['WEAPON_ASSAULTRIFLE'] = {
         label = 'Assault Rifle',
         weight = 4500,
-        ammoname = 'magazine-rifle2',
+        ammoname = 'ammo-rifle2',
     },
 
     ['WEAPON_ASSAULTRIFLE_MK2'] = {
         label = 'Assault Rifle MK2',
         weight = 2950,
-        ammoname = 'magazine-rifle2',
+        ammoname = 'ammo-rifle2',
     },
 
     ['WEAPON_ASSAULTSHOTGUN'] = {
@@ -55,7 +55,7 @@ return {
     ['WEAPON_ASSAULTSMG'] = {
         label = 'Assault SMG',
         weight = 2900,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_BALL'] = {
@@ -82,13 +82,13 @@ return {
     ['WEAPON_BULLPUPRIFLE'] = {
         label = 'Bullpup Rifle',
         weight = 2900,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_BULLPUPRIFLE_MK2'] = {
         label = 'Bullpup Rifle MK2',
         weight = 2900,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_BULLPUPSHOTGUN'] = {
@@ -106,49 +106,49 @@ return {
     ['WEAPON_CARBINERIFLE'] = {
         label = 'Carbine Rifle',
         weight = 3100,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_CARBINERIFLE_MK2'] = {
         label = 'Carbine Rifle MK2',
         weight = 3000,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_CERAMICPISTOL'] = {
         label = 'Ceramic Pistol',
         weight = 800,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_PISTOLXM3'] = {
         label = 'WM 29 Pistol',
         weight = 969,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_COMBATMG'] = {
         label = 'Combat MG',
         weight = 7500,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_COMBATMG_MK2'] = {
         label = 'Combat MG MK2',
         weight = 8000,
-        ammoname = 'magazine-rifle2'
+        ammoname = 'ammo-rifle2'
     },
 
     ['WEAPON_COMBATPDW'] = {
         label = 'Combat PDW',
         weight = 2300,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_COMBATPISTOL'] = {
         label = 'Combat Pistol',
         weight = 785,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_COMBATSHOTGUN'] = {
@@ -166,7 +166,7 @@ return {
     ['WEAPON_COMPACTRIFLE'] = {
         label = 'Compact Rifle',
         weight = 3600,
-        ammoname = 'magazine-rifle2'
+        ammoname = 'ammo-rifle2'
     },
 
     ['WEAPON_CROWBAR'] = {
@@ -188,7 +188,7 @@ return {
     ['WEAPON_DOUBLEACTION'] = {
         label = 'Double Action Revolver',
         weight = 940,
-        ammoname = 'magazine-38'
+        ammoname = 'ammo-38'
     },
 
     ['WEAPON_EMPLAUNCHER'] = {
@@ -245,7 +245,7 @@ return {
     ['WEAPON_GUSENBERG'] = {
         label = 'Gusenberg',
         weight = 4900,
-        ammoname = 'magazine-45'
+        ammoname = 'ammo-45'
     },
 
     ['WEAPON_HAMMER'] = {
@@ -261,7 +261,7 @@ return {
     ['WEAPON_HEAVYRIFLE'] = {
         label = 'Heavy Rifle',
         weight = 3300,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_HAZARDCAN'] = {
@@ -288,7 +288,7 @@ return {
     ['WEAPON_HEAVYPISTOL'] = {
         label = 'Heavy Pistol',
         weight = 1100,
-        ammoname = 'magazine-45'
+        ammoname = 'ammo-45'
     },
 
     ['WEAPON_HEAVYSHOTGUN'] = {
@@ -300,13 +300,13 @@ return {
     ['WEAPON_HEAVYSNIPER'] = {
         label = 'Heavy Sniper',
         weight = 12700,
-        ammoname = 'magazine-heavysniper'
+        ammoname = 'ammo-heavysniper'
     },
 
     ['WEAPON_HEAVYSNIPER_MK2'] = {
         label = 'Heavy Sniper MK2',
         weight = 14000,
-        ammoname = 'magazine-heavysniper'
+        ammoname = 'ammo-heavysniper'
     },
 
     ['WEAPON_KNIFE'] = {
@@ -327,55 +327,55 @@ return {
     ['WEAPON_MACHINEPISTOL'] = {
         label = 'Machine Pistol',
         weight = 1400,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_MARKSMANPISTOL'] = {
         label = 'Marksman Pistol',
         weight = 1588,
-        ammoname = 'magazine-22'
+        ammoname = 'ammo-22'
     },
 
     ['WEAPON_MARKSMANRIFLE'] = {
         label = 'Marksman Rifle',
         weight = 7500,
-        ammoname = 'magazine-sniper'
+        ammoname = 'ammo-sniper'
     },
 
     ['WEAPON_MARKSMANRIFLE_MK2'] = {
         label = 'Marksman Rifle MK2',
         weight = 4000,
-        ammoname = 'magazine-sniper'
+        ammoname = 'ammo-sniper'
     },
 
     ['WEAPON_MG'] = {
         label = 'Machine Gun',
         weight = 9000,
-        ammoname = 'magazine-rifle2'
+        ammoname = 'ammo-rifle2'
     },
 
     ['WEAPON_MINIGUN'] = {
         label = 'Minigun',
         weight = 38500,
-        ammoname = 'magazine-rifle2'
+        ammoname = 'ammo-rifle2'
     },
 
     ['WEAPON_MICROSMG'] = {
         label = 'Micro SMG',
         weight = 3000,
-        ammoname = 'magazine-45'
+        ammoname = 'ammo-45'
     },
 
     ['WEAPON_MILITARYRIFLE'] = {
         label = 'Military Rifle',
         weight = 3600,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_MINISMG'] = {
         label = 'Mini SMG',
         weight = 1270,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_MOLOTOV'] = {
@@ -387,13 +387,13 @@ return {
     ['WEAPON_MUSKET'] = {
         label = 'Musket',
         weight = 4500,
-        ammoname = 'magazine-musket'
+        ammoname = 'ammo-musket'
     },
 
     ['WEAPON_NAVYREVOLVER'] = {
         label = 'Navy Revolver',
         weight = 4000,
-        ammoname = 'magazine-44'
+        ammoname = 'ammo-44'
     },
 
     ['WEAPON_NIGHTSTICK'] = {
@@ -409,7 +409,7 @@ return {
     ['WEAPON_GADGETPISTOL'] = {
         label = 'Perico Pistol',
         weight = 1750,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_PIPEBOMB'] = {
@@ -421,19 +421,19 @@ return {
     ['WEAPON_PISTOL'] = {
         label = 'Pistol',
         weight = 1130,
-        ammoname = 'magazine-9',
+        ammoname = 'ammo-9',
     },
 
     ['WEAPON_PISTOL50'] = {
         label = 'Pistol .50',
         weight = 2000,
-        ammoname = 'magazine-50'
+        ammoname = 'ammo-50'
     },
 
     ['WEAPON_PISTOL_MK2'] = {
         label = 'Pistol MK2',
         weight = 1000,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_POOLCUE'] = {
@@ -490,13 +490,13 @@ return {
     ['WEAPON_REVOLVER'] = {
         label = 'Revolver',
         weight = 2260,
-        ammoname = 'magazine-44'
+        ammoname = 'ammo-44'
     },
 
     ['WEAPON_REVOLVER_MK2'] = {
         label = 'Revolver MK2',
         weight = 2600,
-        ammoname = 'magazine-44'
+        ammoname = 'ammo-44'
     },
 
     ['WEAPON_RPG'] = {
@@ -514,13 +514,13 @@ return {
     ['WEAPON_SMG'] = {
         label = 'SMG',
         weight = 3084,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_SMG_MK2'] = {
         label = 'SMG Mk2',
         weight = 2700,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_SMOKEGRENADE'] = {
@@ -532,7 +532,7 @@ return {
     ['WEAPON_SNIPERRIFLE'] = {
         label = 'Sniper Rifle',
         weight = 5000,
-        ammoname = 'magazine-sniper'
+        ammoname = 'ammo-sniper'
     },
 
     ['WEAPON_SNOWBALL'] = {
@@ -544,25 +544,25 @@ return {
     ['WEAPON_SNSPISTOL'] = {
         label = 'SNS Pistol',
         weight = 465,
-        ammoname = 'magazine-45'
+        ammoname = 'ammo-45'
     },
 
     ['WEAPON_SNSPISTOL_MK2'] = {
         label = 'SNS Pistol MK2',
         weight = 465,
-        ammoname = 'magazine-45'
+        ammoname = 'ammo-45'
     },
 
     ['WEAPON_SPECIALCARBINE'] = {
         label = 'Special Carbine',
         weight = 3000,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_SPECIALCARBINE_MK2'] = {
         label = 'Special Carbine MK2',
         weight = 3370,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 
     ['WEAPON_STICKYBOMB'] = {
@@ -596,7 +596,7 @@ return {
     ['WEAPON_VINTAGEPISTOL'] = {
         label = 'Vintage Pistol',
         weight = 700,
-        ammoname = 'magazine-9'
+        ammoname = 'ammo-9'
     },
 
     ['WEAPON_RAYMINIGUN'] = {
@@ -613,12 +613,12 @@ return {
     ['WEAPON_PRECISIONRIFLE'] = {
         label = 'Precision Rifle',
         weight = 4800,
-        ammoname = 'magazine-sniper'
+        ammoname = 'ammo-sniper'
     },
 
     ['WEAPON_TACTICALRIFLE'] = {
         label = 'Tactical Rifle',
         weight = 3400,
-        ammoname = 'magazine-rifle'
+        ammoname = 'ammo-rifle'
     },
 }

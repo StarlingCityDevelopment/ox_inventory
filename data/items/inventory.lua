@@ -51,16 +51,16 @@ return {
         }
     },
 
-    ['magazine'] = {
-        label = 'Magazine',
-        consume = 0,
-        weight = 20,
-        stack = false,
-        client = {
-            export = 'sleepless_inventory_addons.useMagazine',
-        },
-        magazine = true,
-    },
+    -- ['magazine'] = {
+    --     label = 'Magazine',
+    --     consume = 0,
+    --     weight = 20,
+    --     stack = false,
+    --     client = {
+    --         export = 'sleepless_inventory_addons.useMagazine',
+    --     },
+    --     magazine = true,
+    -- },
 
     ["wallet"] = {
         label = "Porte monnaie",
