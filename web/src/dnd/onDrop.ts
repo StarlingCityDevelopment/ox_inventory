@@ -37,11 +37,13 @@ export const onDrop = (source: DragSource, target?: DropTarget) => {
     return console.log(`Cannot swap item ${sourceSlot.name} with container ${targetSlot.name} when opened`);
 
   const count =
-    state.shiftPressed && sourceSlot.count > 1 && sourceInventory.type !== 'shop'
-      ? Math.floor(sourceSlot.count / 2)
-      : state.itemAmount === 0 || state.itemAmount > sourceSlot.count
+    state.itemAmount > 0
+      ? state.itemAmount > sourceSlot.count
         ? sourceSlot.count
-        : state.itemAmount;
+        : state.itemAmount
+      : state.shiftPressed && sourceSlot.count > 1 && sourceInventory.type !== 'shop'
+      ? Math.floor(sourceSlot.count / 2)
+      : sourceSlot.count;
 
   const data = {
     fromSlot: sourceSlot,

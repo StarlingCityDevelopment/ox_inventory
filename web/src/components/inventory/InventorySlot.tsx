@@ -1,12 +1,12 @@
 import React, { useCallback, useRef } from 'react';
 import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
 import { useDrag, useDragDropManager, useDrop } from 'react-dnd';
-import { useAppDispatch } from '../../store';
+import { store, useAppDispatch } from '../../store';
 import WeightBar from '../utils/WeightBar';
 import { onDrop } from '../../dnd/onDrop';
 import { onBuy } from '../../dnd/onBuy';
 import { Items } from '../../store/items';
-import { canCraftItem, canPurchaseItem, getItemUrl, isSlotWithItem } from '../../helpers';
+import { canCraftItem, canPurchaseItem, getItemUrl, getTargetInventory, isSlotWithItem } from '../../helpers';
 import { onUse } from '../../dnd/onUse';
 import { Locale } from '../../store/locale';
 import { onCraft } from '../../dnd/onCraft';
@@ -15,6 +15,7 @@ import { ItemsPayload } from '../../reducers/refreshSlots';
 import { closeTooltip, openTooltip } from '../../store/tooltip';
 import { openContextMenu } from '../../store/contextMenu';
 import { useMergeRefs } from '@floating-ui/react';
+import { openQuantityModal } from '../../store/inventory';
 
 interface SlotProps {
   inventoryId: Inventory['id'];
@@ -73,6 +74,24 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             onCraft(source, { inventory: inventoryType, item: { slot: item.slot } });
             break;
           default:
+            const state = store.getState().inventory;
+            if (state.shiftPressed) {
+              const { sourceInventory } = getTargetInventory(state, source.inventory);
+              const sourceItem = sourceInventory.items.find((i) => i.slot === source.item.slot);
+
+              if (sourceItem && (sourceItem.count || 0) > 1) {
+                dispatch(
+                  openQuantityModal({
+                    open: true,
+                    mode: 'split',
+                    source,
+                    target: { inventory: inventoryType, item: { slot: item.slot } },
+                    max: sourceItem.count || 1,
+                  })
+                );
+                return;
+              }
+            }
             onDrop(source, { inventory: inventoryType, item: { slot: item.slot } });
             break;
         }
