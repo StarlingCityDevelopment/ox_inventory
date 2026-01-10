@@ -11,6 +11,7 @@ local files = {
     'halloween',
     'hotel',
     'inventory',
+    'lean',
     'materials',
     'mechanics',
     'police',
