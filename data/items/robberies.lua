@@ -9,6 +9,7 @@ return {
     ['drill'] = {
         label = "Foreuse",
         weight = 2750,
+        stack = false,
     },
 
     ['rope'] = {
@@ -19,6 +20,7 @@ return {
     ['hack_laptop'] = {
         label = 'Ordinateur de piratage',
         weight = 1250,
+        stack = false,
     },
 
     ['loot_bag'] = {

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
-import { useAppDispatch } from '../../store';
-import { refreshSlots, setAdditionalMetadata, setupInventory } from '../../store/inventory';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { refreshSlots, setAdditionalMetadata, setupInventory, selectQuantityModal, closeQuantityModal, setItemAmount } from '../../store/inventory';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
 import RightInventory from './RightInventory';
@@ -15,10 +15,14 @@ import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
 import HotInventory from './HotInventory';
 import ClothesInventory from './ClothesInventory';
+import QuantityModal from '../utils/QuantityModal';
+import { Locale } from '../../store/locale';
+import { onDrop } from '../../dnd/onDrop';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
   const dispatch = useAppDispatch();
+  const quantityModal = useAppSelector(selectQuantityModal);
 
   useNuiEvent<boolean>('setInventoryVisible', setInventoryVisible);
   useNuiEvent<false>('closeInventory', () => {
@@ -65,6 +69,22 @@ const Inventory: React.FC = () => {
         </div>
       </Fade>
       <InventoryHotbar />
+      <QuantityModal
+        open={!!quantityModal?.open}
+        max={quantityModal?.max || 1}
+        initialValue={1}
+        title={Locale.ui_quantity || 'Quantity'}
+        cancelLabel={Locale.ui_cancel || 'Cancel'}
+        confirmLabel={Locale.ui_confirm || 'Confirm'}
+        onCancel={() => dispatch(closeQuantityModal())}
+        onConfirm={(value) => {
+          if (!quantityModal) return;
+          dispatch(setItemAmount(value));
+          onDrop(quantityModal.source, quantityModal.target);
+          dispatch(setItemAmount(0));
+          dispatch(closeQuantityModal());
+        }}
+      />
     </>
   );
 };

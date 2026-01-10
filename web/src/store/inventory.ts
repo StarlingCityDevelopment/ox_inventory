@@ -69,6 +69,12 @@ export const inventorySlice = createSlice({
 
       container.weight = action.payload;
     },
+    openQuantityModal: (state, action: PayloadAction<Exclude<State['quantityModal'], undefined>>) => {
+      state.quantityModal = action.payload;
+    },
+    closeQuantityModal: (state) => {
+      state.quantityModal = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(isPending, (state) => {
@@ -104,11 +110,14 @@ export const {
   stackSlots,
   refreshSlots,
   setContainerWeight,
+  openQuantityModal,
+  closeQuantityModal,
 } = inventorySlice.actions;
 export const selectLeftInventory = (state: RootState) => state.inventory.leftInventory;
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
 export const selectClothesInventory = (state: RootState) => state.inventory.clothesInventory;
 export const selectItemAmount = (state: RootState) => state.inventory.itemAmount;
 export const selectIsBusy = (state: RootState) => state.inventory.isBusy;
+export const selectQuantityModal = (state: RootState) => state.inventory.quantityModal;
 
 export default inventorySlice.reducer;

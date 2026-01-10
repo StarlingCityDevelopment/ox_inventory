@@ -6,10 +6,13 @@ import { fetchNui } from '../../utils/fetchNui';
 import { Locale } from '../../store/locale';
 import { isSlotWithItem } from '../../helpers';
 import { setClipboard } from '../../utils/setClipboard';
-import { useAppSelector } from '../../store';
-import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
+import React, { useState } from 'react';
 import { Menu, MenuItem } from '../utils/menu/Menu';
 import { onRename } from '../../dnd/onRename';
+import { setItemAmount, openQuantityModal } from '../../store/inventory';
+import { closeContextMenu } from '../../store/contextMenu';
+import QuantityModal from '../utils/QuantityModal';
 
 interface DataProps {
   action: string;
@@ -39,6 +42,30 @@ interface GroupedButtons extends Array<Group> {}
 const InventoryContext: React.FC = () => {
   const contextMenu = useAppSelector((state) => state.contextMenu);
   const item = contextMenu.item;
+  const dispatch = useAppDispatch();
+
+  const [amountModalOpen, setAmountModalOpen] = useState(false);
+  const [amountModalMax, setAmountModalMax] = useState(1);
+
+  const openGiveAmountModal = () => {
+    if (!item) return;
+    const max = Math.max(1, item.count ?? 1);
+
+    if (max <= 1) {
+      dispatch(setItemAmount(1));
+      onGive({ name: item.name, slot: item.slot });
+      return;
+    }
+
+    dispatch(closeContextMenu());
+    setAmountModalMax(max);
+    setAmountModalOpen(true);
+  };
+
+  const closeAmountModal = () => {
+    setAmountModalOpen(false);
+    setAmountModalMax(1);
+  };
 
   const handleClick = (data: DataProps) => {
     if (!item) return;
@@ -48,10 +75,24 @@ const InventoryContext: React.FC = () => {
         onUse({ name: item.name, slot: item.slot });
         break;
       case 'give':
-        onGive({ name: item.name, slot: item.slot });
+        openGiveAmountModal();
         break;
       case 'drop':
-        isSlotWithItem(item) && onDrop({ item: item, inventory: 'player' });
+        if (isSlotWithItem(item)) {
+          const max = Math.max(1, item.count ?? 1);
+          if (max <= 1) {
+            onDrop({ item: item, inventory: 'player' });
+          } else {
+            dispatch(
+              openQuantityModal({
+                open: true,
+                mode: 'drop',
+                source: { item: { name: item.name, slot: item.slot }, inventory: 'player' },
+                max,
+              })
+            );
+          }
+        }
         break;
       case 'rename':
         onRename(item);
@@ -151,6 +192,21 @@ const InventoryContext: React.FC = () => {
           </>
         )}
       </Menu>
+      <QuantityModal
+        open={amountModalOpen}
+        max={amountModalMax}
+        initialValue={1}
+        title={Locale.ui_quantity || 'Quantity'}
+        cancelLabel={Locale.ui_cancel || 'Cancel'}
+        confirmLabel={Locale.ui_confirm || 'Confirm'}
+        onCancel={closeAmountModal}
+        onConfirm={(value) => {
+          if (!item) return;
+          dispatch(setItemAmount(value));
+          onGive({ name: item.name, slot: item.slot });
+          closeAmountModal();
+        }}
+      />
     </>
   );
 };

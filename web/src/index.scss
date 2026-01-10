@@ -1,6 +1,6 @@
 $mainColor: #2e2e2e;
 $textColor: #ffffff;
-$mainFont: 'JetBrains Mono';
+$mainFont: 'Comfortaa';
 
 $secondaryColor: rgba(83, 83, 83, 0.63);
 $secondaryColorHighlight: #33343f;
@@ -26,7 +26,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Comfortaa', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
@@ -87,9 +87,11 @@ input[type='number']::-webkit-outer-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
+
   &:active {
     transform: none;
   }
+
   &:hover {
     background-color: $secondaryColorLight;
     cursor: pointer;
@@ -100,7 +102,7 @@ input[type='number']::-webkit-outer-spin-button {
   padding-top: 5px;
 }
 
-.tooltip-markdown > p {
+.tooltip-markdown>p {
   margin: 0;
 }
 
@@ -159,6 +161,7 @@ button:active {
     border: none;
     color: #fff;
     background-color: $secondaryColor;
+
     &:focus-within {
       background-color: $secondaryColorDark;
     }
@@ -177,6 +180,7 @@ button:active {
     display: flex;
     justify-content: center;
     align-items: center;
+
     &:hover {
       background-color: $secondaryColorDark;
     }
@@ -204,6 +208,7 @@ button:active {
   fill: white;
   border-radius: 5% !important;
   background-color: $secondaryColor !important;
+
   &:hover {
     background-color: $secondaryColorDark !important;
     cursor: pointer;
@@ -286,9 +291,11 @@ button:active {
   align-items: end;
   justify-content: space-between;
   margin: 0 1vw;
+
   p {
     color: $textColor;
   }
+
   img {
     width: 1.5vw;
   }
@@ -343,6 +350,7 @@ button:active {
   align-items: center;
 
   gap: 0.4vw;
+
   p {
     font-size: 1.5vw;
     font-weight: bold;
@@ -360,6 +368,7 @@ button:active {
   img {
     width: 0.9vw;
   }
+
   p {
     font-size: 0.7vw;
     font-weight: bold;
@@ -403,8 +412,10 @@ button:active {
   top: -0.5vw;
   background: linear-gradient(to right top, $serverColour -50%, rgba(0, 0, 0, 0));
   border: 1px solid $serverColour;
-  border-radius: 1px; /* Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+  border-radius: 1px;
+  /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  /* Optional shadow for depth */
   color: white;
   width: 1vw;
   height: 1vw;
@@ -422,6 +433,7 @@ button:active {
   align-self: flex-end;
   padding: 3px;
   gap: 3px;
+
   p {
     font-size: 12px;
   }
@@ -441,6 +453,7 @@ button:active {
     font-size: 0.7vw;
     font-weight: bold;
   }
+
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -452,6 +465,7 @@ button:active {
   justify-content: flex-end;
   align-items: center;
   padding-right: 3px;
+
   p {
     font-size: 14px;
   }
@@ -462,6 +476,7 @@ button:active {
   flex-direction: row;
   justify-content: flex-end;
   padding-right: 3px;
+
   p {
     font-size: 14px;
   }
@@ -489,6 +504,7 @@ button:active {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+
   p {
     font-size: 12px;
   }
@@ -507,6 +523,7 @@ button:active {
   border-color: rgba(0, 0, 0, 0.2);
   border-style: inset;
   border-width: 1px;
+
   p {
     font-size: 12px;
     font-weight: 400;
@@ -540,9 +557,11 @@ button:active {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
   svg {
     padding-right: 3px;
   }
+
   p {
     font-size: 14px;
   }
@@ -556,6 +575,7 @@ button:active {
   display: flex;
   flex-direction: row;
   align-items: center;
+
   img {
     width: 28px;
     height: 28px;
@@ -610,6 +630,7 @@ button:active {
   border-top-left-radius: 0.25vh;
   border-top-right-radius: 0.25vh;
   font-family: $mainFont;
+
   p {
     font-size: 11px;
     padding: 2px;
@@ -627,6 +648,186 @@ button:active {
   background: rgba(255, 255, 255, 0.3);
   height: 0.2vw;
   overflow: hidden;
+}
+
+.amount-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  animation: fadeIn 150ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.amount-modal {
+  width: min(28vw, 450px);
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  border-radius: 6px;
+  padding: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vw;
+  animation: slideUp 200ms ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.amount-modal-title {
+  font-family: $mainFont;
+  text-transform: uppercase;
+  font-size: 1.2vw;
+  font-weight: bold;
+  text-align: center;
+  color: $textColor;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.5vw;
+  border-bottom: 2px solid rgba(255, 0, 0, 0.3);
+}
+
+.amount-modal-value {
+  width: 100%;
+  height: 3vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1vw;
+  font-family: $mainFont;
+  font-size: 1.8vw;
+  font-weight: bold;
+  color: $textColor;
+  background-color: $secondaryColor;
+  border-radius: 4px;
+  transition: all 150ms ease;
+}
+
+.amount-modal-input {
+  text-align: center;
+  background-color: transparent;
+  outline: none;
+  color: $textColor;
+  font-family: $mainFont;
+  font-size: 1.8vw;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  transition: background-color 200ms;
+
+  &:focus {
+    background-color: transparent;
+  }
+}
+
+.amount-modal-range {
+  width: 100%;
+  height: 1vw;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.amount-modal-range::-webkit-slider-runnable-track {
+  height: 0.4vw;
+  background: linear-gradient(90deg, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.5) 100%);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 999px;
+  transition: all 150ms ease;
+}
+
+.amount-modal-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1vw;
+  height: 1vw;
+  margin-top: -0.5vw;
+  border-radius: 999px;
+  background-color: $serverColour;
+  cursor: pointer;
+  transition: all 150ms ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.amount-modal-range::-moz-range-track {
+  height: 0.4vw;
+  background: linear-gradient(90deg, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.5) 100%);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 999px;
+  transition: all 150ms ease;
+}
+
+.amount-modal-range::-moz-range-thumb {
+  width: 1vw;
+  height: 1vw;
+  border-radius: 999px;
+  background-color: $serverColour;
+  cursor: pointer;
+  transition: all 150ms ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.amount-modal-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1vw;
+  width: 100%;
+  padding-top: 0.5vw;
+  border-top: 2px solid rgba(255, 0, 0, 0.2);
+}
+
+.amount-modal-button {
+  flex: 1;
+  height: 2.5vw;
+  background-color: $secondaryColor;
+  color: #fff;
+  font-family: $mainFont;
+  font-size: 1vw;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: $secondaryColorDark;
+    cursor: pointer;
+  }
 }
 
 .transition-fade-enter {
