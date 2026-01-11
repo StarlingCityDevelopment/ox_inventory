@@ -106,17 +106,17 @@ function Inventory.OpenTrunk(entity)
 end
 
 if shared.target then
-    exports.ox_target:addModel(Inventory.Dumpsters, {
-        icon = 'fas fa-dumpster',
-        label = locale('search_dumpster'),
-        onSelect = function(data) return Inventory.OpenDumpster(data.entity) end,
-        distance = 2
-    })
+    -- exports.ox_target:addModel(Inventory.Dumpsters, {
+    --     icon = 'fas fa-dumpster',
+    --     label = locale('search_dumpster'),
+    --     onSelect = function(data) return Inventory.OpenDumpster(data.entity) end,
+    --     distance = 2
+    -- })
 
     exports.ox_target:addGlobalVehicle({
         icon = 'fas fa-truck-ramp-box',
         label = locale('open_label', locale('storage')),
-        distance = 1.5,
+        distance = 3.0,
         canInteract = Inventory.CanAccessTrunk,
         onSelect = function(data)
             return Inventory.OpenTrunk(data.entity)
