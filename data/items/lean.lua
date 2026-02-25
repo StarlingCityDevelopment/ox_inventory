@@ -3,280 +3,280 @@ return {
     -- Cough Syrup Items
     ---------------------------------
     ["promethazine_codeine"] = {
-        label = "Promethazine w/ Codeine",
-        weight = 250,
+        label = "Sirop à la Codeine",
+        weight = 100,
         stack = true,
         close = true,
-        description = "A prescription purple syrup often used in lean."
+        description = "Sirop sous ordonnance, déconseillé aux enfants."
     },
     ["actavis_og"] = {
-        label = "Actavis OG",
-        weight = 250,
+        label = "Sirop Actavis",
+        weight = 100,
         stack = true,
         close = true,
-        description = "Rare and discontinued high-quality purple syrup."
+        description = "Sirop sous ordonnance, déconseillé aux enfants."
     },
     ["hitech_syrup"] = {
-        label = "Hi-Tech Syrup",
-        weight = 250,
+        label = "Sirop HiTech",
+        weight = 100,
         stack = true,
         close = true,
-        description = "Pharmaceutical-grade purple syrup, commonly used in lean."
+        description = "Sirop sous ordonnance, déconseillé aux enfants."
     },
     ["tussionex_yellow"] = {
-        label = "Tussionex Syrup",
-        weight = 250,
+        label = "Tussionex Jaune",
+        weight = 100,
         stack = true,
         close = true,
-        description = "Thick yellow syrup containing hydrocodone."
+        description = "Sirop sous ordonnance, déconseillé aux enfants."
     },
     ["robitussin_ac"] = {
-        label = "Robitussin AC",
-        weight = 250,
+        label = "Robitussin",
+        weight = 100,
         stack = true,
         close = true,
-        description = "Weaker red syrup containing codeine, often used as a cheap lean alternative."
+        description = "Sirop sous ordonnance, déconseillé aux enfants."
     },
 
     ---------------------------------
     -- Baby Bottles (1 Line Left)
     ---------------------------------
     ["babybottle_promethazine_codeine"] = {
-        label = "Baby Bottle",
+        label = "Biberon",
         weight = 300,
         stack = true,
         close = true,
-        description = "A baby bottle with Promethazine and Codeine syrup."
+        description = "Pour les grands enfants principalement (C)"
     },
     ["babybottle_actavis_og"] = {
-        label = "Baby Bottle",
+        label = "Biberon",
         weight = 300,
         stack = true,
         close = true,
-        description = "A baby bottle with Actavis OG syrup."
+        description = "Pour les grands enfants principalement (A)"
     },
     ["babybottle_hitech_syrup"] = {
-        label = "Baby Bottle",
+        label = "Biberon",
         weight = 300,
         stack = true,
         close = true,
-        description = "A baby bottle with Hi-Tech syrup."
+        description = "Pour les grands enfants principalement (H)"
     },
     ["babybottle_tussionex_yellow"] = {
-        label = "Baby Bottle",
+        label = "Biberon",
         weight = 300,
         stack = true,
         close = true,
-        description = "A baby bottle with yellow Tussionex syrup."
+        description = "Pour les grands enfants principalement (T)"
     },
     ["babybottle_robitussin_ac"] = {
-        label = "Baby Bottle",
+        label = "Biberon",
         weight = 300,
         stack = true,
         close = true,
-        description = "A baby bottle with Robitussin AC syrup."
+        description = "Pour les grands enfants principalement (R)"
     },
 
     ---------------------------------
     -- Baby Bottles (Empty)
     ---------------------------------
     ["babybottle_empty"] = {
-        label = "Empty Baby Bottle",
+        label = "Biberon",
         weight = 100,
         stack = true,
         close = true,
-        description = "An empty baby bottle, ready to be filled."
+        description = "Un biberon vide, prêt à être rempli."
     },
 
     ---------------------------------
     -- Sodas (Cups Only)
     ---------------------------------
     ["cup_sprunk_soda"] = {
-        label = "Cup of Sprunk Soda",
+        label = "Gobelet de Sprunk",
         weight = 200,
         stack = true,
         close = true,
-        description = "A styrofoam cup filled with Sprunk soda."
+        description = "Un gobelet de Sprunk."
     },
     ["cup_orange_soda"] = {
-        label = "Cup of Orange Soda",
+        label = "Gobelet de Tang Orange",
         weight = 200,
         stack = true,
         close = true,
-        description = "A styrofoam cup filled with orange soda."
+        description = "Un gobelet de Tang Orange."
     },
 
     ---------------------------------
     -- Lemon-Lime Soda + Lean
     ---------------------------------
     ["cup_sprunk_promethazine_codeine"] = {
-        label = "Sprunk Soda with Codeine",
+        label = "Codeine Sprunk",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with codeine syrup."
+        description = "Un gobelet de Sprunk à la Codéine."
     },
     ["cup_sprunk_actavis_og"] = {
-        label = "Sprunk Soda with Actavis",
+        label = "Actavis Sprunk",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Actavis syrup."
+        description = "Un gobelet de Sprunk à l\'Actavis."
     },
     ["cup_sprunk_hitech_syrup"] = {
-        label = "Sprunk Soda with Hi-Tech",
+        label = "HiTech Sprunk",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Hi-Tech syrup."
+        description = "Un gobelet de Sprunk HiTech"
     },
     ["cup_sprunk_tussionex_yellow"] = {
-        label = "Sprunk Soda with Tussionex",
+        label = "Tussionex Sprunk",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with yellow Tussionex syrup."
+        description = "Un gobelet de Sprunk Tussionex."
     },
     ["cup_sprunk_robitussin_ac"] = {
-        label = "Sprunk Soda with Robitussin AC",
+        label = "Robitussin Sprunk",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Robitussin AC syrup."
+        description = "Un gobelet de Sprunk Robitussin."
     },
 
     ---------------------------------
     -- Orange Soda + Lean
     ---------------------------------
     ["cup_orange_promethazine_codeine"] = {
-        label = "Orange Soda with Codeine",
+        label = "Codeine Orangée",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with codeine syrup."
+        description = "Un gobelet de Codeine Orangée."
     },
     ["cup_orange_actavis_og"] = {
-        label = "Orange Soda with Actavis",
+        label = "Actavis Orangée",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Actavis syrup."
+        description = "Un gobelet de Actavis Orangée."
     },
     ["cup_orange_hitech_syrup"] = {
-        label = "Orange Soda with Hi-Tech",
+        label = "HiTech Orangée",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Hi-Tech syrup."
+        description = "Un gobelet de HiTech Orangée."
     },
     ["cup_orange_tussionex_yellow"] = {
-        label = "Orange Soda with Tussionex",
+        label = "Tussionex Orangée",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with yellow Tussionex syrup."
+        description = "Un gobelet de Codeine Orangée."
     },
     ["cup_orange_robitussin_ac"] = {
-        label = "Orange Soda with Robitussin AC",
+        label = "Robitussin Orangée",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Robitussin AC syrup."
+        description = "Un gobelet de Robitussin Orangée."
     },
 
     ---------------------------------
     -- Lemon-Lime Soda + Lean (Iced)
     ---------------------------------
     ["cup_sprunk_promethazine_codeine_ice"] = {
-        label = "Sprunk Soda with Codeine (Ice)",
+        label = "Sprunk à la Codéine Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with codeine syrup and ice cubes."
+        description = "Un gobelet de Sprunk à la Codéine avec Glaçons."
     },
     ["cup_sprunk_actavis_og_ice"] = {
-        label = "Sprunk Soda with Actavis (Ice)",
+        label = "Sprunk Actavis Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Actavis syrup and ice cubes."
+        description = "Un gobelet de Sprunk Actavis avec Glaçons."
     },
     ["cup_sprunk_hitech_syrup_ice"] = {
-        label = "Sprunk Soda with Hi-Tech (Ice)",
+        label = "Sprunk Hi-Tech Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Hi-Tech syrup and ice cubes."
+        description = "Un gobelet de Sprunk Hi-Tech avec Glaçons."
     },
     ["cup_sprunk_tussionex_yellow_ice"] = {
-        label = "Sprunk Soda with Tussionex (Ice)",
+        label = "Sprunk Tussionex Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with yellow Tussionex syrup and ice cubes."
+        description = "Un gobelet de Sprunk Tussionex avec Glaçons."
     },
     ["cup_sprunk_robitussin_ac_ice"] = {
-        label = "Sprunk Soda with Robitussin AC (Ice)",
+        label = "Sprunk Robitussin Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of Sprunk soda mixed with Robitussin AC syrup and ice cubes."
+        description = "Un gobelet de Sprunk Robitussin avec Glaçons."
     },
 
     ---------------------------------
     -- Orange Soda + Lean (Iced)
     ---------------------------------
     ["cup_orange_promethazine_codeine_ice"] = {
-        label = "Orange Soda with Codeine (Ice)",
+        label = "Codeine Orangée Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with codeine syrup and ice cubes."
+        description = "Un gobelet de Codeine Orangée avec Glaçons."
     },
     ["cup_orange_actavis_og_ice"] = {
-        label = "Orange Soda with Actavis (Ice)",
+        label = "Actavis Orangée Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Actavis syrup and ice cubes."
+        description = "Un gobelet de Actavis Orangée avec Glaçons."
     },
     ["cup_orange_hitech_syrup_ice"] = {
-        label = "Orange Soda with Hi-Tech (Ice)",
+        label = "Hi-Tech Orangée Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Hi-Tech syrup and ice cubes."
+        description = "Un gobelet de Hi-Tech Orangée avec Glaçons."
     },
     ["cup_orange_tussionex_yellow_ice"] = {
-        label = "Orange Soda with Tussionex (Ice)",
+        label = "Tussionex Orangée Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with yellow Tussionex syrup and ice cubes."
+        description = "Un gobelet de Tussionex Orangée avec Glaçons."
     },
     ["cup_orange_robitussin_ac_ice"] = {
-        label = "Orange Soda with Robitussin AC (Ice)",
+        label = "Robitussin Orangée Glacé",
         weight = 250,
         stack = true,
         close = true,
-        description = "A cup of orange soda mixed with Robitussin AC syrup and ice cubes."
+        description = "Un gobelet de Robitussin Orangée avec Glaçons."
     },
 
     ---------------------------------
     -- Misc
     ---------------------------------
     ["styrofoam_cup_empty"] = {
-        label = "Empty Styrofoam Cup",
+        label = "Gobelet Vide",
         weight = 50,
         stack = true,
         close = true,
-        description = "A plain styrofoam cup, ready to be filled."
+        description = "Un gobelet vide, prêt à être rempli."
     },
     ["ice_cubes"] = {
-        label = "Ice Cubes",
+        label = "Glaçons",
         weight = 100,
         stack = true,
         close = true,
-        description = "A small bag of ice cubes for chilling drinks."
+        description = "Un sac de glaçons, pour rafraîchir vos boissons."
     }
 }
