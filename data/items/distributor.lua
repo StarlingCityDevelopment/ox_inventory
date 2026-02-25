@@ -21,7 +21,7 @@ return {
     },
 
     ["orango_tang"] = {
-        label = "Orango Tang",
+        label = "Tang Orange",
         weight = 350,
         stack = false
     },
