@@ -306,39 +306,6 @@ return {
         description = "Une autre poudre magique",
     },
 
-    ["sirop_codeine"] = {
-        label = "Sirop à la Codéine",
-        weight = 10,
-        stack = true,
-        close = true,
-        description = "On va dire que c'est pour soigner un rhume...",
-    },
-
-    ["spunkgreen_drink"] = {
-        label = "Spunk Vert",
-        weight = 50,
-        stack = true,
-        close = true,
-        description = "Un soda vert fluo. Surement plein de \"plantes\"...",
-    },
-
-    ["spunkblue_drink"] = {
-        label = "Spunk Bleu",
-        weight = 50,
-        stack = true,
-        close = true,
-        description = "Un soda bleu clair. Surement plein d'\"eau\"...",
-    },
-
-    ["cup"] = {
-        label = "Gobelet",
-        weight = 1,
-        stack = true,
-        close = false,
-        description =
-        "Le gobelet en plastique allie légèreté, praticité et résistance, parfait pour toutes vos boissons en déplacement ou en fête.",
-    },
-
     ["pochon_opium"] = {
         label = "Pochon d'Opium'",
         weight = 10,
