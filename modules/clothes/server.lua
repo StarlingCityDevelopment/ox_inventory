@@ -4,6 +4,8 @@ local Inventory = require 'modules.inventory.server'
 
 local clothing = {}
 local disabled = {}
+local removed = {}
+local added = {}
 
 local function countItems(inv)
     local count = 0
@@ -324,18 +326,10 @@ function clothing.addOutfit(payload)
         end
     end
 
-    CreateThread(function()
-        Wait(25)
-        clothes = Inventory('clothes-' .. player.owner)
-        Inventory.Save(clothes)
-        lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
-        disabled[src] = false
-    end)
+    added[src] = true
 
     return true
 end
-
-local removed = {}
 
 function clothing.removeOutfit(payload)
     local src = payload.source
@@ -411,23 +405,12 @@ function clothing.removeOutfit(payload)
     end
 
     Inventory.Clear(clothes)
-    disabled[src] = false
 
     removed[src] = {
         outfit = current,
         label = item.metadata.label or nil,
     }
 
-    CreateThread(function()
-        Wait(25)
-        Inventory.SetMetadata(player, payload.toSlot, {
-            label = item.metadata.label or nil,
-            outfit = current
-        })
-        Inventory.Save(clothes)
-        Inventory.Save(player)
-        lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
-    end)
     return true
 end
 
@@ -463,30 +446,40 @@ CreateThread(function()
     exports.ox_inventory:registerHook('swappedItems', function(payload)
         local src = payload.source
 
-        if disabled[src] or not removed[src] then
+        if not removed[src] and not added[src] then
             return
         end
 
         local player = Inventory(src)
         if not player then
+            disabled[src] = false
             return
         end
 
         local clothes = Inventory('clothes-' .. player.owner)
         if not clothes then
+            disabled[src] = false
             return
         end
 
-        local outfitData = removed[src]
-        removed[src] = nil
+        if removed[src] then
+            local outfitData = removed[src]
+            removed[src] = nil
 
-        Inventory.SetMetadata(player, payload.toSlot, {
-            label = outfitData.label or nil,
-            outfit = outfitData.outfit
-        })
+            Inventory.SetMetadata(player, payload.toSlot, {
+                label = outfitData.label or nil,
+                outfit = outfitData.outfit
+            })
+            Inventory.Save(player)
+        end
+
+        if added[src] then
+            added[src] = nil
+        end
+
         lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
         Inventory.Save(clothes)
-        Inventory.Save(player)
+        disabled[src] = false
     end, {
         disableCheck = true,
         itemFilter = { clothes_outfits = true },
