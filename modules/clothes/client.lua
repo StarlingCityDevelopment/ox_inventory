@@ -72,10 +72,103 @@ local function countStagedChanges()
     return count
 end
 
+local function resolveDefaultComponentDrawable(ped, componentId, defaultData)
+    local drawable = defaultData and defaultData.drawable or 0
+
+    if defaultData and defaultData.collection ~= nil and drawable >= 0 then
+        local globalDrawable = GetPedDrawableGlobalIndexFromCollection(ped, componentId, defaultData.collection, drawable)
+        if globalDrawable and globalDrawable >= 0 then
+            return globalDrawable
+        end
+    end
+
+    return drawable
+end
+
+local function resolveDefaultPropDrawable(ped, propId, defaultData)
+    local drawable = defaultData and defaultData.drawable or -1
+
+    if defaultData and defaultData.collection ~= nil and drawable >= 0 then
+        local globalDrawable = GetPedPropGlobalIndexFromCollection(ped, propId, defaultData.collection, drawable)
+        if globalDrawable and globalDrawable >= 0 then
+            return globalDrawable
+        end
+    end
+
+    return drawable
+end
+
+local function isDefaultComponent(ped, componentId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex, defaultData)
+    if not defaultData then
+        return actualDrawable == 0 and actualTexture == 0
+    end
+
+    local defaultDrawable = defaultData.drawable or 0
+    local defaultTexture = defaultData.texture or 0
+
+    if defaultData.collection ~= nil and defaultDrawable >= 0 then
+        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and actualTexture == defaultTexture
+    end
+
+    return actualDrawable == resolveDefaultComponentDrawable(ped, componentId, defaultData) and actualTexture == defaultTexture
+end
+
+local function isDefaultProp(ped, propId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex, defaultData)
+    if not defaultData then
+        return actualDrawable == -1
+    end
+
+    local defaultDrawable = defaultData.drawable or -1
+    local defaultTexture = defaultData.texture or 0
+
+    if defaultDrawable == -1 then
+        return actualDrawable == -1
+    end
+
+    if defaultData.collection ~= nil and defaultDrawable >= 0 then
+        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and actualTexture == defaultTexture
+    end
+
+    return actualDrawable == resolveDefaultPropDrawable(ped, propId, defaultData) and actualTexture == defaultTexture
+end
+
+local function applyDefaultComponentToPed(ped, componentId, defaultData)
+    if not defaultData then
+        SetPedComponentVariation(ped, componentId, 0, 0, 0)
+        return
+    end
+
+    local drawable = defaultData.drawable or 0
+    local texture = defaultData.texture or 0
+
+    if defaultData.collection ~= nil and drawable >= 0 then
+        SetPedCollectionComponentVariation(ped, componentId, defaultData.collection, drawable, texture, 0)
+    else
+        SetPedComponentVariation(ped, componentId, drawable, texture, 0)
+    end
+end
+
+local function applyDefaultPropToPed(ped, propId, defaultData)
+    if not defaultData or (defaultData.drawable or -1) == -1 then
+        ClearPedProp(ped, propId)
+        return
+    end
+
+    local drawable = defaultData.drawable or -1
+    local texture = defaultData.texture or 0
+
+    if defaultData.collection ~= nil and drawable >= 0 then
+        SetPedCollectionPropIndex(ped, propId, defaultData.collection, drawable, texture, true)
+    else
+        SetPedPropIndex(ped, propId, drawable, texture, true)
+    end
+end
+
 function clothes.init()
     local playerClothes = {}
     local gender = getGender()
     local defaultClothes = shared.clothing[gender]
+    local ped = PlayerPedId()
 
     if not defaultClothes then
         clothes.data = {}
@@ -83,14 +176,12 @@ function clothes.init()
     end
 
     for index, name in pairs(shared.componentMap) do
-        local drawable = GetPedDrawableVariation(PlayerPedId(), index)
-        local texture = GetPedTextureVariation(PlayerPedId(), index)
-        local collectionName, localIndex = getCollectionDataForComponent(PlayerPedId(), index, drawable)
+        local drawable = GetPedDrawableVariation(ped, index)
+        local texture = GetPedTextureVariation(ped, index)
+        local collectionName, localIndex = getCollectionDataForComponent(ped, index, drawable)
+        local defaultData = defaultClothes[name]
 
-        local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or 0
-        local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or 0
-
-        if drawable ~= defaultDrawable or texture ~= defaultTexture then
+        if not isDefaultComponent(ped, index, drawable, texture, collectionName, localIndex, defaultData) then
             playerClothes[name] = {
                 component_id = index,
                 drawable = drawable,
@@ -102,14 +193,12 @@ function clothes.init()
     end
 
     for index, name in pairs(shared.propMap) do
-        local drawable = GetPedPropIndex(PlayerPedId(), index) or 0
-        local texture = GetPedPropTextureIndex(PlayerPedId(), index) or 0
-        local collectionName, localIndex = getCollectionDataForProp(PlayerPedId(), index, drawable)
+        local drawable = GetPedPropIndex(ped, index) or -1
+        local texture = GetPedPropTextureIndex(ped, index) or 0
+        local collectionName, localIndex = getCollectionDataForProp(ped, index, drawable)
+        local defaultData = defaultClothes[name]
 
-        local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or -1
-        local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or -1
-
-        if drawable ~= defaultDrawable or texture ~= defaultTexture then
+        if not isDefaultProp(ped, index, drawable, texture, collectionName, localIndex, defaultData) then
             playerClothes[name] = {
                 prop_id = index,
                 drawable = drawable,
@@ -133,24 +222,25 @@ function clothes.check()
 
     local gender = getGender()
     local defaultClothes = shared.clothing[gender]
+    local ped = PlayerPedId()
 
     if not defaultClothes then
         return false
     end
 
     for index, name in pairs(shared.componentMap) do
-        local actualDrawable = GetPedDrawableVariation(PlayerPedId(), index)
-        local actualTexture = GetPedTextureVariation(PlayerPedId(), index)
-        local actualCollectionName, actualLocalIndex = getCollectionDataForComponent(PlayerPedId(), index, actualDrawable)
-
-        local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or 0
-        local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or 0
+        local actualDrawable = GetPedDrawableVariation(ped, index)
+        local actualTexture = GetPedTextureVariation(ped, index)
+        local actualCollectionName, actualLocalIndex = getCollectionDataForComponent(ped, index, actualDrawable)
+        local defaultData = defaultClothes[name]
 
         local storedData = clothes.data[name]
+        local isAtDefault = isDefaultComponent(ped, index, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+            defaultData)
 
         if storedData then
             if storedData.drawable ~= actualDrawable or storedData.texture ~= actualTexture then
-                if actualDrawable ~= defaultDrawable or actualTexture ~= defaultTexture then
+                if not isAtDefault then
                     changedClothes[name] = {
                         component_id = index,
                         drawable = actualDrawable,
@@ -161,7 +251,7 @@ function clothes.check()
                 end
             end
         else
-            if actualDrawable ~= defaultDrawable or actualTexture ~= defaultTexture then
+            if not isAtDefault then
                 changedClothes[name] = {
                     component_id = index,
                     drawable = actualDrawable,
@@ -174,18 +264,18 @@ function clothes.check()
     end
 
     for index, name in pairs(shared.propMap) do
-        local actualDrawable = GetPedPropIndex(PlayerPedId(), index) or 0
-        local actualTexture = GetPedPropTextureIndex(PlayerPedId(), index) or 0
-        local actualCollectionName, actualLocalIndex = getCollectionDataForProp(PlayerPedId(), index, actualDrawable)
-
-        local defaultDrawable = defaultClothes[name] and defaultClothes[name].drawable or -1
-        local defaultTexture = defaultClothes[name] and defaultClothes[name].texture or -1
+        local actualDrawable = GetPedPropIndex(ped, index) or -1
+        local actualTexture = GetPedPropTextureIndex(ped, index) or 0
+        local actualCollectionName, actualLocalIndex = getCollectionDataForProp(ped, index, actualDrawable)
+        local defaultData = defaultClothes[name]
 
         local storedData = clothes.data[name]
+        local isAtDefault = isDefaultProp(ped, index, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+            defaultData)
 
         if storedData then
             if storedData.drawable ~= actualDrawable or storedData.texture ~= actualTexture then
-                if actualDrawable ~= defaultDrawable or actualTexture ~= defaultTexture then
+                if not isAtDefault then
                     changedClothes[name] = {
                         prop_id = index,
                         drawable = actualDrawable,
@@ -196,7 +286,7 @@ function clothes.check()
                 end
             end
         else
-            if actualDrawable ~= defaultDrawable or actualTexture ~= defaultTexture then
+            if not isAtDefault then
                 changedClothes[name] = {
                     prop_id = index,
                     drawable = actualDrawable,
@@ -254,12 +344,7 @@ function clothes.check()
                         clothes.data[name].texture, 0)
                 end
             else
-                local defaultData = defaultClothes[name]
-                if defaultData then
-                    SetPedComponentVariation(PlayerPedId(), index, defaultData.drawable, defaultData.texture, 0)
-                else
-                    SetPedComponentVariation(PlayerPedId(), index, 0, 0, 0)
-                end
+                applyDefaultComponentToPed(ped, index, defaultClothes[name])
             end
         end
 
@@ -277,16 +362,7 @@ function clothes.check()
                     end
                 end
             else
-                local defaultData = defaultClothes[name]
-                if defaultData then
-                    if defaultData.drawable == -1 then
-                        ClearPedProp(PlayerPedId(), index)
-                    else
-                        SetPedPropIndex(PlayerPedId(), index, defaultData.drawable, defaultData.texture, true)
-                    end
-                else
-                    ClearPedProp(PlayerPedId(), index)
-                end
+                    applyDefaultPropToPed(ped, index, defaultClothes[name])
             end
         end
 
@@ -399,23 +475,11 @@ function clothes.applyChangesToPlayer()
                 if clothes.data[name].component_id then
                     local componentId = clothes.data[name].component_id
                     local defaultData = defaultClothes and defaultClothes[name]
-                    if defaultData then
-                        SetPedComponentVariation(PlayerPedId(), componentId, defaultData.drawable, defaultData.texture, 0)
-                    else
-                        SetPedComponentVariation(PlayerPedId(), componentId, 0, 0, 0)
-                    end
+                    applyDefaultComponentToPed(PlayerPedId(), componentId, defaultData)
                 elseif clothes.data[name].prop_id then
                     local propId = clothes.data[name].prop_id
                     local defaultData = defaultClothes and defaultClothes[name]
-                    if defaultData then
-                        if defaultData.drawable == -1 then
-                            ClearPedProp(PlayerPedId(), propId)
-                        else
-                            SetPedPropIndex(PlayerPedId(), propId, defaultData.drawable, defaultData.texture, true)
-                        end
-                    else
-                        ClearPedProp(PlayerPedId(), propId)
-                    end
+                    applyDefaultPropToPed(PlayerPedId(), propId, defaultData)
                 end
                 clothes.data[name] = nil
             end
@@ -627,7 +691,7 @@ lib.callback.register('ox_inventory:removeComponent', function(componentIds)
                     clothes.data[name] = nil
                 end
 
-                SetPedComponentVariation(targetPed, componentId, defaultClothes.drawable, defaultClothes.texture, 0)
+                applyDefaultComponentToPed(targetPed, componentId, defaultClothes)
             end
         end
     end
@@ -661,11 +725,7 @@ lib.callback.register('ox_inventory:removeProp', function(propIds)
                     clothes.data[name] = nil
                 end
 
-                if defaultClothes.drawable == -1 then
-                    ClearPedProp(targetPed, propId)
-                else
-                    SetPedPropIndex(targetPed, propId, defaultClothes.drawable, defaultClothes.texture, true)
-                end
+                applyDefaultPropToPed(targetPed, propId, defaultClothes)
             end
         end
     end
@@ -881,7 +941,7 @@ exports('RemoveComponent', function(componentIds)
 
             if defaultClothes then
                 clothes.data[name] = nil
-                SetPedComponentVariation(targetPed, componentId, defaultClothes.drawable, defaultClothes.texture, 0)
+                applyDefaultComponentToPed(targetPed, componentId, defaultClothes)
             end
         end
     end
@@ -910,11 +970,7 @@ exports('RemoveProp', function(propIds)
             if defaultClothes then
                 clothes.data[name] = nil
 
-                if defaultClothes.drawable == -1 then
-                    ClearPedProp(targetPed, propId)
-                else
-                    SetPedPropIndex(targetPed, propId, defaultClothes.drawable, defaultClothes.texture, true)
-                end
+                applyDefaultPropToPed(targetPed, propId, defaultClothes)
             end
         end
     end
