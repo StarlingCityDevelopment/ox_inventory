@@ -23,7 +23,8 @@ return {
     ["orango_tang"] = {
         label = "Tang Orange",
         weight = 350,
-        stack = false
+        stack = true,
+        close = true,
     },
 
     ["junk"] = {
