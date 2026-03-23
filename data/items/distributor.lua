@@ -1,59 +1,64 @@
 return {
     ["water_bottle"] = {
         label = "Bouteille d'eau",
-        weight = 250,
+        weight = 200,
         stack = true,
         close = true,
     },
 
     ["sprunk"] = {
         label = "Sprunk",
-        weight = 350,
+        weight = 250,
         stack = true,
         close = true,
     },
 
     ["ecola"] = {
         label = "eCola",
-        weight = 350,
+        weight = 250,
         stack = true,
         close = true,
     },
 
     ["orango_tang"] = {
         label = "Tang Orange",
-        weight = 350,
+        weight = 250,
         stack = true,
         close = true,
     },
 
     ["junk"] = {
         label = "Junk",
-        weight = 350,
-        stack = false
+        weight = 250,
+        stack = true,
+        close = true,
     },
 
     ["phatchips_bigcheese"] = {
         label = "Big Cheese",
-        weight = 220,
-        stack = false
+        weight = 120,
+        stack = true,
+        close = true,
     },
 
     ["phatchips_habernero"] = {
         label = "Habernero",
-        weight = 220,
-        stack = false
+        weight = 120,
+        stack = true,
+        close = true,
     },
 
     ["coffee"] = {
         label = "Coffee",
         weight = 250,
-        stack = false
+        stack = true,
+        close = true,
     },
 
     ["meteorite_bar"] = {
         label = "Meteorite Bar",
-        weight = 200,
-        stack = false
+        weight = 100,
+        stack = true,
+        close = true,
     },
 }
