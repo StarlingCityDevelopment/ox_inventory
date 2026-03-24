@@ -12,6 +12,7 @@ shared.clothing = {
         ["decals"] = { collection = "", drawable = 0, texture = 0 },
         ["jackets"] = { collection = "", drawable = 15, texture = 0 },
         -- Props
+        ["hats"] = { collection = nil, drawable = -1, texture = 0 },
         ["glasses"] = { collection = nil, drawable = -1, texture = 0 },
         ["earrings"] = { collection = nil, drawable = -1, texture = 0 },
         ["watches"] = { collection = nil, drawable = -1, texture = 0 },
