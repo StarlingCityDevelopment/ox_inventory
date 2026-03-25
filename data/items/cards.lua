@@ -38,7 +38,7 @@ return {
         }
     },
 
-    ["weapon_license"] = {
+    ["weaponlicense"] = {
         label = "PPA",
         weight = 10,
         stack = false,
