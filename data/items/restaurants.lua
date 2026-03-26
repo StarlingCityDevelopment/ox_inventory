@@ -445,6 +445,14 @@ return {
         description = '',
     },
 
+    ['cutted_rice'] = {
+        label = 'Riz cuit',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
     ['cutted_mint'] = {
         label = 'Feuille de Menthe',
         weight = 20,
