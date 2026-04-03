@@ -75,76 +75,104 @@ return {
         stack = false,
         close = false,
     },
+
     ["bs_10p"] = {
         label = "Réduction 10% Burger Shot",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["ts_10p"] = {
         label = "Réduction 10% Tsubaki Sushi",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["vu_10p"] = {
         label = "Réduction 10% Vanilla Unicorn",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["cn_10p"] = {
         label = "Réduction 10% Coffee Noir",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["cc_10p"] = {
         label = "Réduction 10% Cruisin Craftsmen",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["lsc_10p"] = {
         label = "Réduction 10% Los Santos Customs",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["bs_15p"] = {
         label = "Réduction 15% Burger Shot",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["ts_15p"] = {
         label = "Réduction 15% Tsubaki Sushi",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["vu_15p"] = {
         label = "Réduction 15% Vanilla Unicorn",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["cn_15p"] = {
         label = "Réduction 15% Coffee Noir",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["cc_15p"] = {
         label = "Réduction 15% Cruisin Craftsmen",
         weight = 1,
         stack = true,
         close = false,
     },
+
     ["lsc_15p"] = {
         label = "Réduction 15% Los Santos Customs",
         weight = 1,
         stack = true,
         close = false,
+    },
+
+    -- EVENT
+
+    ["easteregg"] = {
+        label = "Oeuf de Pâques",
+        weight = 50,
+        stack = true,
+        close = true,
+    },
+
+    ["easterrabbit"] = {
+        label = "Oeuf de Pâques",
+        weight = 200,
+        stack = true,
+        close = true,
     },
 }
