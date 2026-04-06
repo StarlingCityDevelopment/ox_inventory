@@ -1832,7 +1832,7 @@ exports.ox_target:addGlobalPlayer({
 		isGivingItem = false
 	end,
 	canInteract = function(entity, distance, coords, name, bone)
-		return isGivingItem and isGiveTargetValid(entity, coords)
+		return isGivingItem -- and isGiveTargetValid(entity, coords)
 	end
 })
 

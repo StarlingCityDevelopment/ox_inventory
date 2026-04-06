@@ -1,6 +1,8 @@
-if not lib then return end
+if not lib then
+    return
+end
 
-local Inventory = require 'modules.inventory.server'
+local Inventory = require("modules.inventory.server")
 
 local clothing = {}
 local disabled = {}
@@ -17,28 +19,176 @@ local function countItems(inv)
     return count
 end
 
+local function getSlotId(slot)
+    return type(slot) == "number" and slot or slot and slot.slot
+end
+
+local function isFiniteNumber(value)
+    return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+end
+
+local function sanitizeClothingData(name, data)
+    if type(name) ~= "string" or name == "outfits" then
+        return nil
+    end
+
+    if type(data) ~= "table" then
+        return nil
+    end
+
+    local hasComponent = data.component_id ~= nil
+    local hasProp = data.prop_id ~= nil
+
+    if hasComponent == hasProp then
+        return nil
+    end
+
+    local drawable = tonumber(data.drawable)
+    local texture = tonumber(data.texture)
+
+    if not drawable or not texture then
+        return nil
+    end
+
+    if not isFiniteNumber(drawable) or not isFiniteNumber(texture) then
+        return nil
+    end
+
+    drawable = math.floor(drawable)
+    texture = math.floor(texture)
+
+    if drawable < -1 or drawable > 4095 or texture < 0 or texture > 255 then
+        return nil
+    end
+
+    local sanitized = {
+        drawable = drawable,
+        texture = texture,
+        collection = data.collection,
+    }
+
+    if sanitized.collection ~= nil and type(sanitized.collection) ~= "string" then
+        return nil
+    end
+
+    if sanitized.collection and #sanitized.collection > 64 then
+        return nil
+    end
+
+    if data.localIndex ~= nil then
+        local localIndex = tonumber(data.localIndex)
+        if not localIndex then
+            return nil
+        end
+
+        if not isFiniteNumber(localIndex) or localIndex < 0 or localIndex > 4095 then
+            return nil
+        end
+
+        sanitized.localIndex = math.floor(localIndex)
+    end
+
+    if hasComponent then
+        local componentId = tonumber(data.component_id)
+        if not isFiniteNumber(componentId) then
+            return nil
+        end
+
+        componentId = math.floor(componentId)
+
+        if shared.componentMap[componentId] ~= name then
+            return nil
+        end
+
+        sanitized.component_id = componentId
+        sanitized.prop_id = nil
+    else
+        local propId = tonumber(data.prop_id)
+        if not isFiniteNumber(propId) then
+            return nil
+        end
+
+        propId = math.floor(propId)
+
+        if shared.propMap[propId] ~= name then
+            return nil
+        end
+
+        sanitized.prop_id = propId
+        sanitized.component_id = nil
+    end
+
+    return sanitized
+end
+
+local function sanitizeClothesPayload(input)
+    if type(input) ~= "table" then
+        return nil
+    end
+
+    local sanitized = {}
+    local count = 0
+
+    for name, data in pairs(input) do
+        local clean = sanitizeClothingData(name, data)
+        if not clean then
+            return nil
+        end
+
+        sanitized[name] = clean
+        count = count + 1
+
+        if count > 16 then
+            return nil
+        end
+    end
+
+    if count == 0 then
+        return nil
+    end
+
+    return sanitized
+end
+
+local function getPaymentBalance(src, payment)
+    local balance = exports.qbx_core:GetMoney(src, payment)
+    if type(balance) == "number" then
+        return balance
+    end
+
+    local coerced = tonumber(balance)
+    if coerced then
+        return coerced
+    end
+
+    return 0
+end
+
 local function handleClothingHook(payload)
     if disabled[payload.source] then
         return false
     end
 
     local action = payload.action
-    if action ~= 'move' and action ~= 'swap' then
+    if action ~= "move" and action ~= "swap" then
         return false
     end
 
     local toType = payload.toType
     local fromType = payload.fromType
 
-    local toSlot = type(payload.toSlot) == 'number' and payload.toSlot or payload.toSlot.slot
+    local toSlot = getSlotId(payload.toSlot)
 
-    if toType == 'clothes' or fromType == 'clothes' then
-        if toType == 'clothes' and not ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name then
-            return false
+    if toType == "clothes" or fromType == "clothes" then
+        if toType == "clothes" then
+            local slotName = toSlot and shared.clothing.slotToName[toSlot]
+            if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
+                return false
+            end
         end
 
-        if action == 'move' then
-            return toType == 'clothes' and clothing.addClothing(payload) or clothing.removeClothing(payload)
+        if action == "move" then
+            return toType == "clothes" and clothing.addClothing(payload) or clothing.removeClothing(payload)
         else
             return clothing.addClothing(payload)
         end
@@ -55,19 +205,22 @@ local function handleOutfitHook(payload)
     local action = payload.action
     local toType = payload.toType
     local fromType = payload.fromType
-    local toSlot = type(payload.toSlot) == 'number' and payload.toSlot or payload.toSlot.slot
+    local toSlot = getSlotId(payload.toSlot)
 
-    if action == 'move' then
-        if toType == 'clothes' and not ('clothes_' .. shared.clothing.slotToName[toSlot]) == payload.fromSlot.name then
-            return false
+    if action == "move" then
+        if toType == "clothes" then
+            local slotName = toSlot and shared.clothing.slotToName[toSlot]
+            if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
+                return false
+            end
         end
-        return toType == 'clothes' and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
-    elseif action == 'swap' then
-        if toType == 'clothes' or fromType == 'clothes' then
+        return toType == "clothes" and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
+    elseif action == "swap" then
+        if toType == "clothes" or fromType == "clothes" then
             lib.notify(payload.source, {
-                title = 'Vêtements',
-                description = 'Vous ne pouvez pas échanger de tenues directement pour le moment.',
-                type = 'error',
+                title = "Vêtements",
+                description = "Vous ne pouvez pas échanger de tenues directement pour le moment.",
+                type = "error",
                 duration = 7500,
             })
             return false
@@ -92,7 +245,7 @@ function clothing.addClothing(payload)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
@@ -105,13 +258,13 @@ function clothing.addClothing(payload)
     end
 
     if item.metadata.component_id then
-        local result = lib.callback.await('ox_inventory:applyComponent', src, item.metadata)
+        local result = lib.callback.await("ox_inventory:applyComponent", src, item.metadata)
         if not result then
             disabled[src] = false
             return false
         end
     elseif item.metadata.prop_id then
-        local result = lib.callback.await('ox_inventory:applyProp', src, item.metadata)
+        local result = lib.callback.await("ox_inventory:applyProp", src, item.metadata)
         if not result then
             disabled[src] = false
             return false
@@ -143,7 +296,7 @@ function clothing.removeClothing(payload)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
@@ -161,13 +314,13 @@ function clothing.removeClothing(payload)
     end
 
     if item.metadata.component_id then
-        local result = lib.callback.await('ox_inventory:removeComponent', src, item.metadata.component_id)
+        local result = lib.callback.await("ox_inventory:removeComponent", src, item.metadata.component_id)
         if not result then
             disabled[src] = false
             return false
         end
     elseif item.metadata.prop_id then
-        local result = lib.callback.await('ox_inventory:removeProp', src, item.metadata.prop_id)
+        local result = lib.callback.await("ox_inventory:removeProp", src, item.metadata.prop_id)
         if not result then
             disabled[src] = false
             return false
@@ -199,7 +352,7 @@ function clothing.addOutfit(payload)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
@@ -211,7 +364,7 @@ function clothing.addOutfit(payload)
         return false
     end
 
-    local outfit = item.metadata.outfit
+    local outfit = sanitizeClothesPayload(item.metadata.outfit)
     if not outfit or next(outfit) == nil then
         disabled[src] = false
         return false
@@ -236,7 +389,7 @@ function clothing.addOutfit(payload)
                 return false
             end
 
-            success = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+            success = Inventory.AddItem(player, "clothes_" .. name, 1, {
                 label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                 component_id = actuelItem.metadata.component_id or nil,
                 prop_id = actuelItem.metadata.prop_id or nil,
@@ -275,7 +428,7 @@ function clothing.addOutfit(payload)
     end
 
     if #componentsToApply > 0 then
-        local result = lib.callback.await('ox_inventory:applyComponent', src, componentsToApply)
+        local result = lib.callback.await("ox_inventory:applyComponent", src, componentsToApply)
         if not result then
             disabled[src] = false
             return false
@@ -285,7 +438,7 @@ function clothing.addOutfit(payload)
             local name = shared.componentMap[data.component_id]
             if name then
                 local slot = shared.clothing.nameToSlots[name]
-                local success = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
                     component_id = data.component_id,
                     drawable = data.drawable,
                     texture = data.texture,
@@ -301,7 +454,7 @@ function clothing.addOutfit(payload)
     end
 
     if #propsToApply > 0 then
-        local result = lib.callback.await('ox_inventory:applyProp', src, propsToApply)
+        local result = lib.callback.await("ox_inventory:applyProp", src, propsToApply)
         if not result then
             disabled[src] = false
             return false
@@ -311,7 +464,7 @@ function clothing.addOutfit(payload)
             local name = shared.propMap[data.prop_id]
             if name then
                 local slot = shared.clothing.nameToSlots[name]
-                local success = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
                     prop_id = data.prop_id,
                     drawable = data.drawable,
                     texture = data.texture,
@@ -346,7 +499,7 @@ function clothing.removeOutfit(payload)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
@@ -358,7 +511,7 @@ function clothing.removeOutfit(payload)
         return false
     end
 
-    local outfit = item.metadata.outfit
+    local outfit = sanitizeClothesPayload(item.metadata.outfit)
     if not outfit or next(outfit) == nil then
         disabled[src] = false
         return false
@@ -369,7 +522,7 @@ function clothing.removeOutfit(payload)
     local propsToRemove = {}
 
     for index, data in pairs(clothes.items) do
-        if index ~= 8 then
+        if index ~= 8 and data and data.metadata then
             if data.metadata.component_id then
                 table.insert(componentsToRemove, data.metadata.component_id)
             elseif data.metadata.prop_id then
@@ -389,7 +542,7 @@ function clothing.removeOutfit(payload)
     end
 
     if #componentsToRemove > 0 then
-        local result = lib.callback.await('ox_inventory:removeComponent', src, componentsToRemove)
+        local result = lib.callback.await("ox_inventory:removeComponent", src, componentsToRemove)
         if not result then
             disabled[src] = false
             return false
@@ -397,7 +550,7 @@ function clothing.removeOutfit(payload)
     end
 
     if #propsToRemove > 0 then
-        local result = lib.callback.await('ox_inventory:removeProp', src, propsToRemove)
+        local result = lib.callback.await("ox_inventory:removeProp", src, propsToRemove)
         if not result then
             disabled[src] = false
             return false
@@ -415,7 +568,7 @@ function clothing.removeOutfit(payload)
 end
 
 CreateThread(function()
-    exports.ox_inventory:registerHook('swapItems', handleClothingHook, {
+    exports.ox_inventory:registerHook("swapItems", handleClothingHook, {
         disableCheck = true,
         itemFilter = {
             clothes_jackets = true,
@@ -434,60 +587,69 @@ CreateThread(function()
             clothes_bracelets = true,
             clothes_decals = true,
         },
-        inventoryFilter = { '^clothes-[%w]+' }
+        inventoryFilter = { "^clothes-[%w]+" },
     })
 
-    exports.ox_inventory:registerHook('swapItems', handleOutfitHook, {
+    exports.ox_inventory:registerHook("swapItems", handleOutfitHook, {
         disableCheck = true,
         itemFilter = { clothes_outfits = true },
-        inventoryFilter = { '^clothes-[%w]+' }
+        inventoryFilter = { "^clothes-[%w]+" },
     })
 
-    exports.ox_inventory:registerHook('swappedItems', function(payload)
+    exports.ox_inventory:registerHook("swappedItems", function(payload)
         local src = payload.source
 
         if not removed[src] and not added[src] then
             return
         end
 
-        local player = Inventory(src)
-        if not player then
-            disabled[src] = false
+        local removedOutfit = removed[src]
+        local shouldUpdateClothes = removedOutfit ~= nil or added[src] ~= nil
+
+        removed[src] = nil
+        added[src] = nil
+
+        if not shouldUpdateClothes then
             return
         end
 
-        local clothes = Inventory('clothes-' .. player.owner)
-        if not clothes then
+        local toSlot = getSlotId(payload.toSlot)
+
+        CreateThread(function()
+            Wait(0)
+
+            local player = Inventory(src)
+            if not player then
+                disabled[src] = false
+                return
+            end
+
+            local clothes = Inventory("clothes-" .. player.owner)
+            if not clothes then
+                disabled[src] = false
+                return
+            end
+
+            if removedOutfit and toSlot then
+                Inventory.SetMetadata(player, toSlot, {
+                    label = removedOutfit.label or nil,
+                    outfit = removedOutfit.outfit,
+                })
+                Inventory.Save(player)
+            end
+
+            lib.callback.await("ox_inventory:setCurrentClothes", src, clothes)
+            Inventory.Save(clothes)
             disabled[src] = false
-            return
-        end
-
-        if removed[src] then
-            local outfitData = removed[src]
-            removed[src] = nil
-
-            Inventory.SetMetadata(player, payload.toSlot, {
-                label = outfitData.label or nil,
-                outfit = outfitData.outfit
-            })
-            Inventory.Save(player)
-        end
-
-        if added[src] then
-            added[src] = nil
-        end
-
-        lib.callback.await('ox_inventory:setCurrentClothes', src, clothes)
-        Inventory.Save(clothes)
-        disabled[src] = false
+        end)
     end, {
         disableCheck = true,
         itemFilter = { clothes_outfits = true },
-        inventoryFilter = { '^clothes-[%w]+' }
+        inventoryFilter = { "^clothes-[%w]+" },
     })
 end)
 
-lib.callback.register('ox_inventory:getClothesInventory', function(source)
+lib.callback.register("ox_inventory:getClothesInventory", function(source)
     local src = source
 
     if disabled[src] then
@@ -499,7 +661,7 @@ lib.callback.register('ox_inventory:getClothesInventory', function(source)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -507,7 +669,7 @@ lib.callback.register('ox_inventory:getClothesInventory', function(source)
     return clothes
 end)
 
-lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes, save)
+lib.callback.register("ox_inventory:syncClothes", function(source, playerClothes, save)
     local src = source
 
     if save ~= nil then
@@ -530,7 +692,7 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
@@ -542,7 +704,7 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
 
             if playerClothes[name] then
                 if not actuelItem then
-                    local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                    local success, response = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
                         component_id = playerClothes[name].component_id or nil,
                         prop_id = playerClothes[name].prop_id or nil,
                         drawable = playerClothes[name].drawable,
@@ -556,8 +718,10 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
                     end
                 else
                     local metadata = actuelItem.metadata or {}
-                    if metadata.drawable ~= playerClothes[name].drawable or
-                        metadata.texture ~= playerClothes[name].texture then
+                    if
+                        metadata.drawable ~= playerClothes[name].drawable
+                        or metadata.texture ~= playerClothes[name].texture
+                    then
                         Inventory.SetMetadata(clothes, slot, {
                             component_id = playerClothes[name].component_id or nil,
                             prop_id = playerClothes[name].prop_id or nil,
@@ -584,7 +748,7 @@ lib.callback.register('ox_inventory:syncClothes', function(source, playerClothes
     return true
 end)
 
-lib.callback.register('ox_inventory:setClothes', function(source, changedClothes)
+lib.callback.register("ox_inventory:setClothes", function(source, changedClothes)
     local src = source
 
     if disabled[src] then
@@ -600,7 +764,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -631,7 +795,7 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
                 })
             end
         else
-            local success, response = Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+            local success, response = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
                 label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                 component_id = data.component_id or nil,
                 prop_id = data.prop_id or nil,
@@ -651,32 +815,38 @@ lib.callback.register('ox_inventory:setClothes', function(source, changedClothes
     return true
 end)
 
-lib.callback.register('ox_inventory:checkClothes', function(source, changedClothes, payment, type)
+lib.callback.register("ox_inventory:checkClothes", function(source, changedClothes, payment, type)
     local src = source
 
     if disabled[src] then
         return false
     end
 
-    if not changedClothes or next(changedClothes) == nil then
+    local sanitizedClothes = sanitizeClothesPayload(changedClothes)
+    if not sanitizedClothes then
         return false
     end
 
-    if payment ~= 'cash' and payment ~= 'bank' then
+    if payment ~= "cash" and payment ~= "bank" then
+        return false
+    end
+
+    if type ~= "clothes" and type ~= "outfit" then
         return false
     end
 
     local amount = 0
 
-    for name, value in pairs(changedClothes) do
+    for name in pairs(sanitizedClothes) do
         amount = amount + (shared.clothing.nameToPrice[name] or 0)
     end
 
-    if amount > 0 and not exports.qbx_core:GetMoney(src, payment) then
+    local balance = getPaymentBalance(src, payment)
+    if amount > 0 and balance < amount then
         lib.notify(src, {
-            title = 'Vêtements',
-            description = 'Vous n\'avez pas assez d\'argent',
-            type = 'error',
+            title = "Vêtements",
+            description = "Vous n'avez pas assez d'argent",
+            type = "error",
             duration = 7500,
         })
         return false
@@ -690,14 +860,14 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         disabled[src] = false
         return false
     end
 
-    if type == 'clothes' then
-        for name, data in pairs(changedClothes) do
+    if type == "clothes" then
+        for name, data in pairs(sanitizedClothes) do
             local slot = shared.clothing.nameToSlots[name]
             if not slot then
                 disabled[src] = false
@@ -708,7 +878,7 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
             if actuelItem then
                 local metadata = actuelItem.metadata or {}
                 if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
-                    local success, response = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+                    local success, response = Inventory.AddItem(player, "clothes_" .. name, 1, {
                         label = metadata.label or nil,
                         component_id = data.component_id or nil,
                         prop_id = data.prop_id or nil,
@@ -723,7 +893,7 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
                     end
                 end
             else
-                local success, response = Inventory.AddItem(player, 'clothes_' .. name, 1, {
+                local success, response = Inventory.AddItem(player, "clothes_" .. name, 1, {
                     label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
@@ -739,8 +909,8 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
             end
         end
     else
-        local success, response = Inventory.AddItem(player, 'clothes_outfits', 1, {
-            outfit = changedClothes
+        local success, response = Inventory.AddItem(player, "clothes_outfits", 1, {
+            outfit = sanitizedClothes,
         })
         if not success then
             disabled[src] = false
@@ -749,18 +919,18 @@ lib.callback.register('ox_inventory:checkClothes', function(source, changedCloth
     end
 
     disabled[src] = false
-    return exports.qbx_core:RemoveMoney(src, payment, amount, 'Achat de vêtements')
+    return exports.qbx_core:RemoveMoney(src, payment, amount, "Achat de vêtements")
 end)
 
-exports('EnableClothing', function(source)
+exports("EnableClothing", function(source)
     disabled[source] = false
 end)
 
-exports('DisableClothing', function(source)
+exports("DisableClothing", function(source)
     disabled[source] = true
 end)
 
-exports('GetPlayerClothes', function(source)
+exports("GetPlayerClothes", function(source)
     if disabled[source] then
         return false
     end
@@ -770,7 +940,7 @@ exports('GetPlayerClothes', function(source)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -795,7 +965,7 @@ exports('GetPlayerClothes', function(source)
     return playerClothes
 end)
 
-exports('SetPlayerClothes', function(source, clothesData)
+exports("SetPlayerClothes", function(source, clothesData)
     if disabled[source] then
         return false
     end
@@ -809,7 +979,7 @@ exports('SetPlayerClothes', function(source, clothesData)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -831,7 +1001,7 @@ exports('SetPlayerClothes', function(source, clothesData)
                     localIndex = data.localIndex,
                 })
             else
-                Inventory.AddItem(clothes, 'clothes_' .. name, 1, {
+                Inventory.AddItem(clothes, "clothes_" .. name, 1, {
                     label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
                     component_id = data.component_id or nil,
                     prop_id = data.prop_id or nil,
@@ -849,11 +1019,11 @@ exports('SetPlayerClothes', function(source, clothesData)
     return true
 end)
 
-exports('IsClothingDisabled', function(source)
+exports("IsClothingDisabled", function(source)
     return disabled[source] == true
 end)
 
-exports('SyncPlayerClothes', function(source, playerClothes, save)
+exports("SyncPlayerClothes", function(source, playerClothes, save)
     if disabled[source] then
         return false
     end
@@ -863,10 +1033,10 @@ exports('SyncPlayerClothes', function(source, playerClothes, save)
         return false
     end
 
-    return lib.callback.await('ox_inventory:syncClothes', source, playerClothes, save)
+    return lib.callback.await("ox_inventory:syncClothes", source, playerClothes, save)
 end)
 
-exports('GetClothesInventory', function(source)
+exports("GetClothesInventory", function(source)
     if disabled[source] then
         return false
     end
@@ -876,7 +1046,7 @@ exports('GetClothesInventory', function(source)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -884,7 +1054,7 @@ exports('GetClothesInventory', function(source)
     return clothes
 end)
 
-exports('ClearPlayerClothes', function(source)
+exports("ClearPlayerClothes", function(source)
     if disabled[source] then
         return false
     end
@@ -894,7 +1064,7 @@ exports('ClearPlayerClothes', function(source)
         return false
     end
 
-    local clothes = Inventory('clothes-' .. player.owner)
+    local clothes = Inventory("clothes-" .. player.owner)
     if not clothes then
         return false
     end
@@ -915,44 +1085,51 @@ exports('ClearPlayerClothes', function(source)
     return true
 end)
 
-exports('ApplyClothingComponent', function(source, metadata)
+exports("ApplyClothingComponent", function(source, metadata)
     if disabled[source] then
         return false
     end
 
-    return lib.callback.await('ox_inventory:applyComponent', source, metadata)
+    return lib.callback.await("ox_inventory:applyComponent", source, metadata)
 end)
 
-exports('ApplyClothingProp', function(source, metadata)
+exports("ApplyClothingProp", function(source, metadata)
     if disabled[source] then
         return false
     end
 
-    return lib.callback.await('ox_inventory:applyProp', source, metadata)
+    return lib.callback.await("ox_inventory:applyProp", source, metadata)
 end)
 
-exports('RemoveClothingComponent', function(source, componentIds)
+exports("RemoveClothingComponent", function(source, componentIds)
     if disabled[source] then
         return false
     end
 
-    return lib.callback.await('ox_inventory:removeComponent', source, componentIds)
+    return lib.callback.await("ox_inventory:removeComponent", source, componentIds)
 end)
 
-exports('RemoveClothingProp', function(source, propIds)
+exports("RemoveClothingProp", function(source, propIds)
     if disabled[source] then
         return false
     end
 
-    return lib.callback.await('ox_inventory:removeProp', source, propIds)
+    return lib.callback.await("ox_inventory:removeProp", source, propIds)
 end)
 
-RegisterNetEvent('ox_inventory:enableClothings', function()
+RegisterNetEvent("ox_inventory:enableClothings", function()
     local src = source
     disabled[src] = false
 end)
 
-RegisterNetEvent('ox_inventory:disableClothings', function()
+RegisterNetEvent("ox_inventory:disableClothings", function()
     local src = source
     disabled[src] = true
+end)
+
+AddEventHandler("playerDropped", function()
+    local src = source
+    disabled[src] = nil
+    removed[src] = nil
+    added[src] = nil
 end)
