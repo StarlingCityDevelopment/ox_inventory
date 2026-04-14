@@ -208,12 +208,23 @@ local function handleOutfitHook(payload)
     local toSlot = getSlotId(payload.toSlot)
 
     if action == "move" then
+        if payload.toInventory == "newdrop" then
+            lib.notify(payload.source, {
+                title = "Vêtements",
+                description = "Vous ne pouvez pas directement déposer de tenues pour le moment.",
+                type = "error",
+                duration = 7500,
+            })
+            return false
+        end
+
         if toType == "clothes" then
             local slotName = toSlot and shared.clothing.slotToName[toSlot]
             if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
                 return false
             end
         end
+
         return toType == "clothes" and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
     elseif action == "swap" then
         if toType == "clothes" or fromType == "clothes" then
