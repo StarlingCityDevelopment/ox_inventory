@@ -277,6 +277,86 @@ return {
         description = '',
     },
 
+    ['tortilla'] = {
+        label = 'Tortilla',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['noodles'] = {
+        label = 'Nouilles',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['avocado'] = {
+        label = 'Avocat',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['chocolate'] = {
+        label = 'Chocolat',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['vanilla'] = {
+        label = 'Vanille',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['coconut'] = {
+        label = 'Coco',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['matcha'] = {
+        label = 'Matcha',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['caramel'] = {
+        label = 'Caramel',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['tapioca'] = {
+        label = 'Tapioca',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['curry'] = {
+        label = 'Curry',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
     ['cutted_meat'] = {
         label = 'Tranche de Viande',
         weight = 20,
@@ -606,6 +686,69 @@ return {
     },
     ['cutted_kitchenoil'] = {
         label = 'Portion Huile',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+    ['cutted_avocado'] = {
+        label = 'Tranche d\'Avocat',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_chocolate'] = {
+        label = 'Carré Chocolat',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_vanilla'] = {
+        label = 'Extrait de Vanille',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_coconut'] = {
+        label = 'Tranche de Coco',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_matcha'] = {
+        label = 'Matcha Préparé',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_caramel'] = {
+        label = 'Morceau de Caramel',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_tapioca'] = {
+        label = 'Tapioca Préparé',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
+    ['cutted_curry'] = {
+        label = 'Curry Préparé',
         weight = 20,
         stack = true,
         close = true,
