@@ -357,6 +357,14 @@ return {
         description = '',
     },
 
+    ['sugar'] = {
+        label = 'Sucre',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+
     ['cutted_meat'] = {
         label = 'Tranche de Viande',
         weight = 20,
@@ -749,6 +757,13 @@ return {
 
     ['cutted_curry'] = {
         label = 'Curry Préparé',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
+    ['cutted_sugar'] = {
+        label = 'Sucre en Poudre',
         weight = 20,
         stack = true,
         close = true,
