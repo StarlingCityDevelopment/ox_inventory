@@ -604,4 +604,11 @@ return {
         close = true,
         description = '',
     },
+    ['cutted_kitchenoil'] = {
+        label = 'Portion Huile',
+        weight = 20,
+        stack = true,
+        close = true,
+        description = '',
+    },
 }
