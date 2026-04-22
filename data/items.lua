@@ -4,6 +4,7 @@ local files = {
     'ambulance',
     'ammos',
     'cards',
+    'casinos',
     'clothes',
     'distributor',
     'drugs',

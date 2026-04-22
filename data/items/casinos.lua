@@ -1,4 +1,12 @@
 return {
+    ["diamond_chip"] = {
+        label = "Chip du Diamond",
+        weight = 0,
+        stack = true,
+        close = true,
+        description = nil,
+    },
+
     ["blackjack_table"] = {
         label = "Table de Blackjack",
         weight = 1,
