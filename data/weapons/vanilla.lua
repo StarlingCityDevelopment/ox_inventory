@@ -1,6 +1,6 @@
 return {
     ['WEAPON_DIGISCANNER'] = {
-        label = 'DigiScanner',
+        label = 'Detecteur de signaux',
         weight = 225,
     },
 
