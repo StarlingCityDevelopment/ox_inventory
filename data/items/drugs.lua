@@ -1,6 +1,6 @@
 return {
-    ['trap_phone'] = {
-        label = 'Trap Phone',
+    ["trap_phone"] = {
+        label = "Trap Phone",
         weight = 200,
     },
 
@@ -43,8 +43,8 @@ return {
         close = true,
         description = "Une hybride connue pour son arôme puissant et ses effets équilibrés entre relaxation et euphorie.",
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["weed_ak47"] = {
@@ -56,11 +56,11 @@ return {
     },
 
     ["baggie_ak47"] = {
-        label = "Pochon de Weed \"AK47\"",
+        label = 'Pochon de Weed "AK47"',
         weight = 2,
         stack = true,
         close = false,
-        description = "Un pochon qui contient de la weed \"AK47\"",
+        description = 'Un pochon qui contient de la weed "AK47"',
     },
 
     ["weed_purplekush_seed"] = {
@@ -70,8 +70,8 @@ return {
         close = true,
         description = "Une indica pure réputée pour ses saveurs sucrées et ses effets profondément relaxants et apaisants.",
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["weed_purplekush"] = {
@@ -83,11 +83,11 @@ return {
     },
 
     ["baggie_purplekush"] = {
-        label = "Pochon de Weed \"Purple Kush\"",
+        label = 'Pochon de Weed "Purple Kush"',
         weight = 2,
         stack = true,
         close = false,
-        description = "Un pochon qui contient de la weed \"Purple Kush\"",
+        description = 'Un pochon qui contient de la weed "Purple Kush"',
     },
 
     ["weed_creamcaramel_seed"] = {
@@ -97,8 +97,8 @@ return {
         close = true,
         description = "Une hybride célèbre pour sa résine abondante et ses effets puissants, à la fois énergisants et cérébraux.",
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["weed_creamcaramel"] = {
@@ -110,11 +110,11 @@ return {
     },
 
     ["baggie_creamcaramel"] = {
-        label = "Pochon de Weed \"Cream Caramel\"",
+        label = 'Pochon de Weed "Cream Caramel"',
         weight = 2,
         stack = true,
         close = false,
-        description = "Un pochon qui contient de la weed \"\"",
+        description = 'Un pochon qui contient de la weed ""',
     },
 
     ["weed_mooncookies_seed"] = {
@@ -124,8 +124,8 @@ return {
         close = true,
         description = "Une hybride gourmande aux saveurs sucrées et terreuses, offrant des effets relaxants et légèrement euphoriques.",
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["weed_mooncookies"] = {
@@ -137,11 +137,11 @@ return {
     },
 
     ["baggie_mooncookies"] = {
-        label = "Pochon de Weed \"Moon Cookies\"",
+        label = 'Pochon de Weed "Moon Cookies"',
         weight = 2,
         stack = true,
         close = false,
-        description = "Un pochon qui contient de la weed \"Moon Cookies\"",
+        description = 'Un pochon qui contient de la weed "Moon Cookies"',
     },
 
     ["weed_sweetcheese_seed"] = {
@@ -151,8 +151,8 @@ return {
         close = true,
         description = "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["weed_sweetcheese"] = {
@@ -163,15 +163,15 @@ return {
         description = "Une hybride au profil aromatique unique mêlant fromage et notes sucrées, avec des effets stimulants et créatifs.",
         client = {
             image = "weed_sweetcheese.webp",
-        }
+        },
     },
 
     ["baggie_sweetcheese"] = {
-        label = "Pochon de Weed \"Sweet Cheese\"",
+        label = 'Pochon de Weed "Sweet Cheese"',
         weight = 2,
         stack = true,
         close = false,
-        description = "Un pochon qui contient de la weed \"Sweet Cheese\"",
+        description = 'Un pochon qui contient de la weed "Sweet Cheese"',
     },
 
     ["coca_seed"] = {
@@ -179,10 +179,10 @@ return {
         weight = 20,
         stack = true,
         close = true,
-        description = "Une plante \"thérapeuthique\"",
+        description = 'Une plante "thérapeuthique"',
         server = {
-            export = "it-drugs.useSeed"
-        }
+            export = "it-drugs.useSeed",
+        },
     },
 
     ["coca"] = {
@@ -216,8 +216,8 @@ return {
         close = true,
         description = "Pour traiter de la verte",
         server = {
-            export = "it-drugs.placeProcessingTable"
-        }
+            export = "it-drugs.placeProcessingTable",
+        },
     },
 
     ["cocaine_processing_table"] = {
@@ -227,8 +227,8 @@ return {
         close = true,
         description = "La traite des blanches",
         server = {
-            export = "it-drugs.placeProcessingTable"
-        }
+            export = "it-drugs.placeProcessingTable",
+        },
     },
 
     ["cocaine"] = {
@@ -238,7 +238,7 @@ return {
         close = true,
         description = "Blanche-neige t'emmène au pays des merveilles",
         server = {
-            export = "it-drugs.takeDrug"
+            export = "it-drugs.takeDrug",
         },
     },
 
@@ -391,8 +391,7 @@ return {
         weight = 1,
         stack = true,
         close = false,
-        description =
-        "Est-ce que parfois vous vous sentez irritable, fatigué, mal à l'aise, normal, ou juste pas assez défoncé ? Il est peut-être temps d'essayer le Crack™",
+        description = "Est-ce que parfois vous vous sentez irritable, fatigué, mal à l'aise, normal, ou juste pas assez défoncé ? Il est peut-être temps d'essayer le Crack™",
     },
 
     ["heroine"] = {
@@ -441,5 +440,365 @@ return {
         stack = true,
         close = false,
         description = "Ceci n'est pas une pipe",
+    },
+
+    ["ammonia"] = {
+        label = "Ammoniaque",
+        weight = 500,
+        stack = true,
+    },
+
+    ["sodium_benzoate"] = {
+        label = "Benzoate de sodium",
+        weight = 750,
+        stack = true,
+    },
+
+    ["meth_tray"] = {
+        label = "Plateau à meth",
+        weight = 1000,
+        stack = true,
+    },
+
+    ["meth_bag"] = {
+        label = "Pochon de meth",
+        weight = 50,
+        stack = true,
+    },
+
+    ["plastic_bag"] = {
+        label = "Sac en plastique",
+        weight = 40,
+        stack = true,
+    },
+
+    ["meth_syringe"] = {
+        label = "Seringue de meth",
+        weight = 75,
+        stack = true,
+    },
+
+    ["coke_seed"] = {
+        label = "Graine de cocaïne",
+        weight = 10,
+        stack = true,
+    },
+
+    ["coke_leaf"] = {
+        label = "Feuille de cocaïne",
+        weight = 50,
+        stack = true,
+    },
+
+    ["coke_paste"] = {
+        label = "Pâte de cocaïne",
+        weight = 150,
+        stack = true,
+    },
+
+    ["coke"] = {
+        label = "Cocaïne",
+        weight = 1,
+        stack = true,
+    },
+
+    ["coke_bag"] = {
+        label = "Pochon de cocaïne",
+        weight = 50,
+        stack = true,
+    },
+
+    ["coke_brick"] = {
+        label = "Brique de cocaïne",
+        weight = 200,
+        stack = true,
+    },
+
+    ["coke_doll"] = {
+        label = "Poupée de cocaïne",
+        weight = 500,
+        stack = true,
+    },
+
+    ["weed_seed"] = {
+        label = "Graine de weed",
+        weight = 5,
+        stack = true,
+    },
+
+    ["weed_pot"] = {
+        label = "Pot de fleur",
+        weight = 500,
+        stack = true,
+    },
+
+    ["trowel"] = {
+        label = "Pelle de jardinage",
+        weight = 150,
+        stack = true,
+    },
+
+    ["weed_bud"] = {
+        label = "Tête de weed",
+        weight = 25,
+        stack = true,
+    },
+
+    ["clean_weed_bud"] = {
+        label = "Tête de weed propre",
+        weight = 20,
+        stack = true,
+    },
+
+    ["cookie_dough"] = {
+        label = "Pâte à cookie",
+        weight = 200,
+        stack = true,
+    },
+
+    ["weed_cookie"] = {
+        label = "Cookie à la weed",
+        weight = 50,
+        stack = true,
+    },
+
+    ["weed_bag"] = {
+        label = "Pochon de weed",
+        weight = 50,
+        stack = true,
+    },
+
+    ["weed_joint"] = {
+        label = "Joint de weed",
+        weight = 15,
+        stack = true,
+    },
+
+    ["weed_papers"] = {
+        label = "Feuilles à rouler",
+        weight = 5,
+        stack = true,
+    },
+
+    ["poppy_seeds"] = {
+        label = "Graines de pavot",
+        weight = 5,
+        stack = true,
+    },
+
+    ["poppy_plant"] = {
+        label = "Plant de pavot",
+        weight = 100,
+        stack = true,
+    },
+
+    ["opium"] = {
+        label = "Opium",
+        weight = 1,
+        stack = true,
+    },
+
+    ["heroin"] = {
+        label = "Héroïne",
+        weight = 1,
+        stack = true,
+    },
+
+    ["heroin_bag"] = {
+        label = "Pochon d'héroïne",
+        weight = 50,
+        stack = true,
+    },
+
+    ["heroin_syringe"] = {
+        label = "Seringue d'héroïne",
+        weight = 75,
+        stack = true,
+    },
+
+    ["ergot_fungus"] = {
+        label = "Ergot de seigle",
+        weight = 50,
+        stack = true,
+    },
+
+    ["generic_leaf"] = {
+        label = "Feuille",
+        weight = 20,
+        stack = true,
+    },
+
+    ["lsd_liquid"] = {
+        label = "LSD liquide",
+        weight = 25,
+        stack = true,
+    },
+
+    ["lsd"] = {
+        label = "LSD",
+        weight = 1,
+        stack = true,
+    },
+
+    ["art_papers"] = {
+        label = "Papier buvard",
+        weight = 5,
+        stack = true,
+    },
+
+    ["safrole_oil"] = {
+        label = "Huile de safrole",
+        weight = 300,
+        stack = true,
+    },
+
+    ["ecstasy_crystals"] = {
+        label = "Cristaux d'ecstasy",
+        weight = 1,
+        stack = true,
+    },
+
+    ["ecstasy_pill"] = {
+        label = "Pilule d'ecstasy",
+        weight = 15,
+        stack = true,
+    },
+
+    ["mushrooms"] = {
+        label = "Champignons",
+        weight = 1,
+        stack = true,
+    },
+
+    ["mushroom_powder"] = {
+        label = "Poudre de champignon",
+        weight = 1,
+        stack = true,
+    },
+
+    ["chocolate_chips"] = {
+        label = "Pépites de chocolat",
+        weight = 30,
+        stack = true,
+    },
+
+    ["mushroom_chocolate"] = {
+        label = "Chocolat aux champignons",
+        weight = 45,
+        stack = true,
+    },
+
+    ["anesthetic"] = {
+        label = "Anesthésiant",
+        weight = 200,
+        stack = true,
+    },
+
+    ["ketamine"] = {
+        label = "Kétamine",
+        weight = 1,
+        stack = true,
+    },
+
+    ["ketamine_bag"] = {
+        label = "Pochon de kétamine",
+        weight = 50,
+        stack = true,
+    },
+
+    ["baking_soda"] = {
+        label = "Bicarbonate de soude",
+        weight = 100,
+        stack = true,
+    },
+
+    ["crack_bag"] = {
+        label = "Pochon de crack",
+        weight = 50,
+        stack = true,
+    },
+
+    ["crack_syringe"] = {
+        label = "Seringue de crack",
+        weight = 75,
+        stack = true,
+    },
+
+    ["pipe"] = {
+        label = "Pipe",
+        weight = 100,
+        stack = true,
+    },
+
+    ["npp_chemical"] = {
+        label = "Produit chimique NPP",
+        weight = 300,
+        stack = true,
+    },
+
+    ["aniline_solution"] = {
+        label = "Solution d'aniline",
+        weight = 250,
+        stack = true,
+    },
+
+    ["fentanyl"] = {
+        label = "Fentanyl",
+        weight = 1,
+        stack = true,
+    },
+
+    ["fentanyl_bag"] = {
+        label = "Pochon de fentanyl",
+        weight = 25,
+        stack = true,
+    },
+
+    ["meth_table"] = {
+        label = "Table de meth",
+        weight = 2250,
+        stack = false,
+    },
+
+    ["coke_table"] = {
+        label = "Table de cocaïne",
+        weight = 2250,
+        stack = false,
+    },
+
+    ["weed_table"] = {
+        label = "Table de weed",
+        weight = 2250,
+        stack = false,
+    },
+
+    ["chem_table"] = {
+        label = "Table de chimie",
+        weight = 2250,
+        stack = false,
+    },
+
+    ["burner_phone"] = {
+        label = "Téléphone jetable",
+        weight = 200,
+        stack = true,
+    },
+
+    ["light1"] = {
+        label = "Lampe portable",
+        weight = 2000,
+        stack = true,
+    },
+
+    ["light2"] = {
+        label = "Lampe portable",
+        weight = 2000,
+        stack = true,
+    },
+
+    ["water_can"] = {
+        label = "Arrosoir",
+        weight = 250,
+        stack = true,
     },
 }
