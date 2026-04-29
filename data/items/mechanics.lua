@@ -301,4 +301,32 @@ return {
             export = "vehiclehandler.cleaningkit",
         },
     },
+
+    ["mov_basic_wax"] = {
+        label = "Cire basique",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
+
+    ["mov_advanced_ceramic"] = {
+        label = "Céramique premium",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
+
+    ["mov_advanced_wax"] = {
+        label = "Cire premium",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
+
+    ["mov_basic_ceramic"] = {
+        label = "Céramique basique",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
 }
