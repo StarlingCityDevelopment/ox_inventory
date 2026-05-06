@@ -1,4 +1,11 @@
 return {
+    ['mdt'] = {
+        label = 'MDT',
+        weight = 1500,
+        stack = false,
+        close = true,
+    },
+
     ['handcuffs'] = {
         label = 'Menottes',
         weight = 2,
@@ -30,7 +37,7 @@ return {
             event = "spy-bodycam:bodycamstatus"
         }
     },
-    
+
     ["dashcam"] = {
         label = "dashcam",
         weight = 150,
