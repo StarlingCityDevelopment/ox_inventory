@@ -1,1146 +1,1103 @@
 if not lib then
-    return
+	return
 end
 
 local Inventory = require("modules.inventory.server")
 
 local clothing = {}
-local disabled = {}
-local removed = {}
-local added = {}
 
-local function countItems(inv)
-    local count = 0
-    for _, item in pairs(inv.items) do
-        if item and item.metadata then
-            count = count + 1
-        end
-    end
-    return count
+local locks = {}
+local disabled = {}
+
+local pendingRemoved = {}
+local pendingAdded = {}
+
+local lastPurchase = {}
+local PURCHASE_COOLDOWN_MS = 1000
+
+local function isFiniteNumber(value)
+	return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+end
+
+local function isLocked(src)
+	return locks[src] == true or disabled[src] == true
+end
+
+local function lock(src)
+	locks[src] = true
+end
+
+local function unlock(src)
+	locks[src] = nil
+end
+
+local function getPlayerAndClothes(src)
+	local player = Inventory(src)
+	if not player then
+		return nil, nil
+	end
+
+	local clothes = Inventory("clothes-" .. player.owner)
+	if not clothes then
+		return nil, nil
+	end
+
+	return player, clothes
+end
+
+local function countWornItems(clothes)
+	local outfitSlot = shared.clothing.nameToSlots.outfits
+	local count = 0
+	for slot, item in pairs(clothes.items) do
+		if slot ~= outfitSlot and item and item.metadata then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 local function getSlotId(slot)
-    return type(slot) == "number" and slot or slot and slot.slot
+	return type(slot) == "number" and slot or (slot and slot.slot)
 end
 
-local function isFiniteNumber(value)
-    return type(value) == "number" and value == value and value ~= math.huge and value ~= -math.huge
+local function isPurchaseRateLimited(src)
+	local now = GetGameTimer()
+	local last = lastPurchase[src]
+	if last and (now - last) < PURCHASE_COOLDOWN_MS then
+		return true
+	end
+	lastPurchase[src] = now
+	return false
 end
 
 local function sanitizeClothingData(name, data)
-    if type(name) ~= "string" or name == "outfits" then
-        return nil
-    end
+	if type(name) ~= "string" or name == "outfits" then
+		return nil
+	end
+	if type(data) ~= "table" then
+		return nil
+	end
 
-    if type(data) ~= "table" then
-        return nil
-    end
+	local hasComponent = data.component_id ~= nil
+	local hasProp = data.prop_id ~= nil
 
-    local hasComponent = data.component_id ~= nil
-    local hasProp = data.prop_id ~= nil
+	if hasComponent == hasProp then
+		return nil
+	end
 
-    if hasComponent == hasProp then
-        return nil
-    end
+	local drawable = tonumber(data.drawable)
+	local texture = tonumber(data.texture)
 
-    local drawable = tonumber(data.drawable)
-    local texture = tonumber(data.texture)
+	if not drawable or not texture then
+		return nil
+	end
+	if not isFiniteNumber(drawable) or not isFiniteNumber(texture) then
+		return nil
+	end
 
-    if not drawable or not texture then
-        return nil
-    end
+	drawable = math.floor(drawable)
+	texture = math.floor(texture)
 
-    if not isFiniteNumber(drawable) or not isFiniteNumber(texture) then
-        return nil
-    end
+	if drawable < -1 or drawable > 4095 then
+		return nil
+	end
+	if texture < 0 or texture > 255 then
+		return nil
+	end
 
-    drawable = math.floor(drawable)
-    texture = math.floor(texture)
+	local sanitized = { drawable = drawable, texture = texture }
 
-    if drawable < -1 or drawable > 4095 or texture < 0 or texture > 255 then
-        return nil
-    end
+	if data.collection ~= nil then
+		if type(data.collection) ~= "string" or #data.collection > 64 then
+			return nil
+		end
+		sanitized.collection = data.collection
+	end
 
-    local sanitized = {
-        drawable = drawable,
-        texture = texture,
-        collection = data.collection,
-    }
+	if data.localIndex ~= nil then
+		local li = tonumber(data.localIndex)
+		if not li or not isFiniteNumber(li) or li < 0 or li > 4095 then
+			return nil
+		end
+		sanitized.localIndex = math.floor(li)
+	end
 
-    if sanitized.collection ~= nil and type(sanitized.collection) ~= "string" then
-        return nil
-    end
+	if hasComponent then
+		local cid = tonumber(data.component_id)
+		if not cid or not isFiniteNumber(cid) then
+			return nil
+		end
+		cid = math.floor(cid)
 
-    if sanitized.collection and #sanitized.collection > 64 then
-        return nil
-    end
+		if shared.componentMap[cid] ~= name then
+			return nil
+		end
+		sanitized.component_id = cid
+	else
+		local pid = tonumber(data.prop_id)
+		if not pid or not isFiniteNumber(pid) then
+			return nil
+		end
+		pid = math.floor(pid)
+		if shared.propMap[pid] ~= name then
+			return nil
+		end
+		sanitized.prop_id = pid
+	end
 
-    if data.localIndex ~= nil then
-        local localIndex = tonumber(data.localIndex)
-        if not localIndex then
-            return nil
-        end
-
-        if not isFiniteNumber(localIndex) or localIndex < 0 or localIndex > 4095 then
-            return nil
-        end
-
-        sanitized.localIndex = math.floor(localIndex)
-    end
-
-    if hasComponent then
-        local componentId = tonumber(data.component_id)
-        if not isFiniteNumber(componentId) then
-            return nil
-        end
-
-        componentId = math.floor(componentId)
-
-        if shared.componentMap[componentId] ~= name then
-            return nil
-        end
-
-        sanitized.component_id = componentId
-        sanitized.prop_id = nil
-    else
-        local propId = tonumber(data.prop_id)
-        if not isFiniteNumber(propId) then
-            return nil
-        end
-
-        propId = math.floor(propId)
-
-        if shared.propMap[propId] ~= name then
-            return nil
-        end
-
-        sanitized.prop_id = propId
-        sanitized.component_id = nil
-    end
-
-    return sanitized
+	return sanitized
 end
 
 local function sanitizeClothesPayload(input)
-    if type(input) ~= "table" then
-        return nil
-    end
+	if type(input) ~= "table" then
+		return nil
+	end
 
-    local sanitized = {}
-    local count = 0
+	local sanitized = {}
+	local count = 0
 
-    for name, data in pairs(input) do
-        local clean = sanitizeClothingData(name, data)
-        if not clean then
-            return nil
-        end
+	for name, data in pairs(input) do
+		local clean = sanitizeClothingData(name, data)
+		if not clean then
+			return nil
+		end
 
-        sanitized[name] = clean
-        count = count + 1
+		sanitized[name] = clean
+		count = count + 1
+		if count > 16 then
+			return nil
+		end
+	end
 
-        if count > 16 then
-            return nil
-        end
-    end
-
-    if count == 0 then
-        return nil
-    end
-
-    return sanitized
+	if count == 0 then
+		return nil
+	end
+	return sanitized
 end
 
 local function getPaymentBalance(src, payment)
-    local balance = exports.qbx_core:GetMoney(src, payment)
-    if type(balance) == "number" then
-        return balance
-    end
-
-    local coerced = tonumber(balance)
-    if coerced then
-        return coerced
-    end
-
-    return 0
-end
-
-local function handleClothingHook(payload)
-    if disabled[payload.source] then
-        return false
-    end
-
-    local action = payload.action
-    if action ~= "move" and action ~= "swap" then
-        return false
-    end
-
-    local toType = payload.toType
-    local fromType = payload.fromType
-
-    local toSlot = getSlotId(payload.toSlot)
-
-    if toType == "clothes" or fromType == "clothes" then
-        if toType == "clothes" then
-            local slotName = toSlot and shared.clothing.slotToName[toSlot]
-            if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
-                return false
-            end
-        end
-
-        if action == "move" then
-            return toType == "clothes" and clothing.addClothing(payload) or clothing.removeClothing(payload)
-        else
-            return clothing.addClothing(payload)
-        end
-    end
-
-    return false
-end
-
-local function handleOutfitHook(payload)
-    if disabled[payload.source] then
-        return false
-    end
-
-    local action = payload.action
-    local toType = payload.toType
-    local fromType = payload.fromType
-    local toSlot = getSlotId(payload.toSlot)
-
-    if action == "move" then
-        if payload.toInventory == "newdrop" then
-            lib.notify(payload.source, {
-                title = "Vêtements",
-                description = "Vous ne pouvez pas directement déposer de tenues pour le moment.",
-                type = "error",
-                duration = 7500,
-            })
-            return false
-        end
-
-        if toType == "clothes" then
-            local slotName = toSlot and shared.clothing.slotToName[toSlot]
-            if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
-                return false
-            end
-        end
-
-        return toType == "clothes" and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
-    elseif action == "swap" then
-        if toType == "clothes" or fromType == "clothes" then
-            lib.notify(payload.source, {
-                title = "Vêtements",
-                description = "Vous ne pouvez pas échanger de tenues directement pour le moment.",
-                type = "error",
-                duration = 7500,
-            })
-            return false
-        end
-    end
-
-    return true
+	local balance = exports.qbx_core:GetMoney(src, payment)
+	return tonumber(balance) or 0
 end
 
 function clothing.addClothing(payload)
-    local src = payload.source
+	local src = payload.source
+	if isLocked(src) then
+		return false
+	end
+	lock(src)
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
 
-    disabled[src] = true
+	local item = payload.fromSlot
+	if not item or not item.metadata then
+		unlock(src)
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	local meta = item.metadata
+	if meta.component_id then
+		TriggerClientEvent("ox_inventory:applyComponent", src, meta)
+	elseif meta.prop_id then
+		TriggerClientEvent("ox_inventory:applyProp", src, meta)
+	else
+		unlock(src)
+		return false
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
-
-    local item = payload.fromSlot
-    if not item or not item.metadata then
-        disabled[src] = false
-        return false
-    end
-
-    if item.metadata.component_id then
-        local result = lib.callback.await("ox_inventory:applyComponent", src, item.metadata)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    elseif item.metadata.prop_id then
-        local result = lib.callback.await("ox_inventory:applyProp", src, item.metadata)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    else
-        disabled[src] = false
-        return false
-    end
-
-    Inventory.Save(player)
-    Inventory.Save(clothes)
-
-    disabled[src] = false
-    return true
+	unlock(src)
+	return true
 end
 
 function clothing.removeClothing(payload)
-    local src = payload.source
+	local src = payload.source
+	if isLocked(src) then
+		return false
+	end
+	lock(src)
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
 
-    disabled[src] = true
+	local item = payload.fromSlot
+	if not item or not item.metadata then
+		unlock(src)
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	local outfitSlot = shared.clothing.nameToSlots.outfits
+	local outfitItem = Inventory.GetSlot(clothes, outfitSlot)
+	if outfitItem and countWornItems(clothes) == 1 then
+		Inventory.RemoveItem(clothes, outfitItem.name, 1, nil, outfitSlot)
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
+	local meta = item.metadata
+	if meta.component_id then
+		TriggerClientEvent("ox_inventory:removeComponent", src, meta.component_id)
+	elseif meta.prop_id then
+		TriggerClientEvent("ox_inventory:removeProp", src, meta.prop_id)
+	else
+		unlock(src)
+		return false
+	end
 
-    local item = payload.fromSlot
-    if not item or not item.metadata then
-        disabled[src] = false
-        return false
-    end
-
-    local outfitItem = Inventory.GetSlot(clothes, shared.clothing.nameToSlots.outfits)
-    if outfitItem and countItems(clothes) == 2 then
-        Inventory.RemoveItem(clothes, outfitItem.name, 1, nil, shared.clothing.nameToSlots.outfits)
-    end
-
-    if item.metadata.component_id then
-        local result = lib.callback.await("ox_inventory:removeComponent", src, item.metadata.component_id)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    elseif item.metadata.prop_id then
-        local result = lib.callback.await("ox_inventory:removeProp", src, item.metadata.prop_id)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    else
-        disabled[src] = false
-        return false
-    end
-
-    Inventory.Save(player)
-    Inventory.Save(clothes)
-
-    disabled[src] = false
-    return true
+	unlock(src)
+	return true
 end
 
 function clothing.addOutfit(payload)
-    local src = payload.source
+	local src = payload.source
+	if isLocked(src) then
+		return false
+	end
+	lock(src)
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
 
-    disabled[src] = true
+	local item = payload.fromSlot
+	if not item or not item.metadata then
+		unlock(src)
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	local outfit = sanitizeClothesPayload(item.metadata.outfit)
+	if not outfit or next(outfit) == nil then
+		unlock(src)
+		return false
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
+	for name in pairs(outfit) do
+		if not shared.clothing.nameToSlots[name] then
+			unlock(src)
+			return false
+		end
+	end
 
-    local item = payload.fromSlot
-    if not item or not item.metadata then
-        disabled[src] = false
-        return false
-    end
+	local componentsToApply = {}
+	local propsToApply = {}
 
-    local outfit = sanitizeClothesPayload(item.metadata.outfit)
-    if not outfit or next(outfit) == nil then
-        disabled[src] = false
-        return false
-    end
+	local displaced = {}
 
-    local componentsToApply = {}
-    local propsToApply = {}
+	for name, data in pairs(outfit) do
+		local slot = shared.clothing.nameToSlots[name]
+		local currentItem = Inventory.GetSlot(clothes, slot)
 
-    for name, data in pairs(outfit) do
-        local slot = shared.clothing.nameToSlots[name]
-        if not slot then
-            disabled[src] = false
-            return false
-        end
+		if currentItem then
+			if not Inventory.RemoveItem(clothes, currentItem.name, 1, nil, slot) then
+				for _, d in ipairs(displaced) do
+					Inventory.RemoveItem(player, d.name, 1, nil, nil)
+					Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
+				end
+				unlock(src)
+				return false
+			end
 
-        local actuelItem = Inventory.GetSlot(clothes, slot)
-        if actuelItem then
-            local success = Inventory.RemoveItem(clothes, actuelItem.name, 1, nil, slot)
+			if not Inventory.AddItem(player, "clothes_" .. name, 1, currentItem.metadata) then
+				Inventory.AddItem(clothes, currentItem.name, 1, currentItem.metadata, slot)
+				for _, d in ipairs(displaced) do
+					Inventory.RemoveItem(player, d.name, 1, nil, nil)
+					Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
+				end
+				unlock(src)
+				return false
+			end
 
-            if not success then
-                disabled[src] = false
-                return false
-            end
+			table.insert(displaced, { name = "clothes_" .. name, metadata = currentItem.metadata, slot = slot })
+		end
 
-            success = Inventory.AddItem(player, "clothes_" .. name, 1, {
-                label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                component_id = actuelItem.metadata.component_id or nil,
-                prop_id = actuelItem.metadata.prop_id or nil,
-                drawable = actuelItem.metadata.drawable,
-                texture = actuelItem.metadata.texture,
-                collection = actuelItem.metadata.collection,
-                localIndex = actuelItem.metadata.localIndex,
-            })
+		if data.component_id then
+			table.insert(componentsToApply, data)
+		elseif data.prop_id then
+			table.insert(propsToApply, data)
+		else
+			for _, d in ipairs(displaced) do
+				Inventory.RemoveItem(player, d.name, 1, nil, nil)
+				Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
+			end
+			unlock(src)
+			return false
+		end
+	end
 
-            if not success then
-                success = Inventory.AddItem(clothes, actuelItem.name, 1, {
-                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                    component_id = actuelItem.metadata.component_id or nil,
-                    prop_id = actuelItem.metadata.prop_id or nil,
-                    drawable = actuelItem.metadata.drawable,
-                    texture = actuelItem.metadata.texture,
-                    collection = actuelItem.metadata.collection,
-                    localIndex = actuelItem.metadata.localIndex,
-                }, slot)
+	local addedItems = {}
 
-                if not success then
-                    disabled[src] = false
-                    return false
-                end
-            end
-        end
+	local function rollbackPhase2()
+		for _, a in ipairs(addedItems) do
+			Inventory.RemoveItem(clothes, a.name, 1, nil, a.slot)
+		end
+		for _, d in ipairs(displaced) do
+			Inventory.RemoveItem(player, d.name, 1, nil, nil)
+			Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
+		end
+		unlock(src)
+	end
 
-        if data.component_id then
-            table.insert(componentsToApply, data)
-        elseif data.prop_id then
-            table.insert(propsToApply, data)
-        else
-            disabled[src] = false
-            return false
-        end
-    end
+	for _, data in ipairs(componentsToApply) do
+		local name = shared.componentMap[data.component_id]
+		if not name then
+			rollbackPhase2()
+			return false
+		end
 
-    if #componentsToApply > 0 then
-        local result = lib.callback.await("ox_inventory:applyComponent", src, componentsToApply)
-        if not result then
-            disabled[src] = false
-            return false
-        end
+		local slot = shared.clothing.nameToSlots[name]
+		local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
+			component_id = data.component_id,
+			drawable = data.drawable,
+			texture = data.texture,
+			collection = data.collection,
+			localIndex = data.localIndex,
+		}, slot)
 
-        for _, data in ipairs(componentsToApply) do
-            local name = shared.componentMap[data.component_id]
-            if name then
-                local slot = shared.clothing.nameToSlots[name]
-                local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
-                    component_id = data.component_id,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                }, slot)
-                if not success then
-                    disabled[src] = false
-                    return false
-                end
-            end
-        end
-    end
+		if not success then
+			rollbackPhase2()
+			return false
+		end
+		table.insert(addedItems, { name = "clothes_" .. name, slot = slot })
+	end
 
-    if #propsToApply > 0 then
-        local result = lib.callback.await("ox_inventory:applyProp", src, propsToApply)
-        if not result then
-            disabled[src] = false
-            return false
-        end
+	for _, data in ipairs(propsToApply) do
+		local name = shared.propMap[data.prop_id]
+		if not name then
+			rollbackPhase2()
+			return false
+		end
 
-        for _, data in ipairs(propsToApply) do
-            local name = shared.propMap[data.prop_id]
-            if name then
-                local slot = shared.clothing.nameToSlots[name]
-                local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
-                    prop_id = data.prop_id,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                }, slot)
-                if not success then
-                    disabled[src] = false
-                    return false
-                end
-            end
-        end
-    end
+		local slot = shared.clothing.nameToSlots[name]
+		local success = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
+			prop_id = data.prop_id,
+			drawable = data.drawable,
+			texture = data.texture,
+			collection = data.collection,
+			localIndex = data.localIndex,
+		}, slot)
 
-    added[src] = true
+		if not success then
+			rollbackPhase2()
+			return false
+		end
+		table.insert(addedItems, { name = "clothes_" .. name, slot = slot })
+	end
 
-    return true
+	pendingAdded[src] = { components = componentsToApply, props = propsToApply }
+	return true
 end
 
 function clothing.removeOutfit(payload)
-    local src = payload.source
+	local src = payload.source
+	if isLocked(src) then
+		return false
+	end
+	lock(src)
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
 
-    disabled[src] = true
+	local item = payload.fromSlot
+	if not item or not item.metadata then
+		unlock(src)
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	local outfitSlot = shared.clothing.nameToSlots.outfits
+	local componentsToRemove = {}
+	local propsToRemove = {}
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
+	for slot, data in pairs(clothes.items) do
+		if slot ~= outfitSlot and data and data.metadata then
+			if data.metadata.component_id then
+				table.insert(componentsToRemove, data.metadata.component_id)
+			elseif data.metadata.prop_id then
+				table.insert(propsToRemove, data.metadata.prop_id)
+			end
+		end
+	end
 
-    local item = payload.fromSlot
-    if not item or not item.metadata then
-        disabled[src] = false
-        return false
-    end
+	for slot, data in pairs(clothes.items) do
+		if slot ~= outfitSlot and data then
+			Inventory.RemoveItem(clothes, data.name, 1, nil, slot)
+		end
+	end
 
-    local outfit = sanitizeClothesPayload(item.metadata.outfit)
-    if not outfit or next(outfit) == nil then
-        disabled[src] = false
-        return false
-    end
-
-    local current = {}
-    local componentsToRemove = {}
-    local propsToRemove = {}
-
-    for index, data in pairs(clothes.items) do
-        if index ~= 8 and data and data.metadata then
-            if data.metadata.component_id then
-                table.insert(componentsToRemove, data.metadata.component_id)
-            elseif data.metadata.prop_id then
-                table.insert(propsToRemove, data.metadata.prop_id)
-            end
-
-            local name = shared.clothing.slotToName[index]
-            current[name] = {
-                component_id = data.metadata.component_id or nil,
-                prop_id = data.metadata.prop_id or nil,
-                drawable = data.metadata.drawable,
-                texture = data.metadata.texture,
-                collection = data.metadata.collection,
-                localIndex = data.metadata.localIndex,
-            }
-        end
-    end
-
-    if #componentsToRemove > 0 then
-        local result = lib.callback.await("ox_inventory:removeComponent", src, componentsToRemove)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    end
-
-    if #propsToRemove > 0 then
-        local result = lib.callback.await("ox_inventory:removeProp", src, propsToRemove)
-        if not result then
-            disabled[src] = false
-            return false
-        end
-    end
-
-    Inventory.Clear(clothes)
-
-    removed[src] = {
-        outfit = current,
-        label = item.metadata.label or nil,
-    }
-
-    return true
+	pendingRemoved[src] = { components = componentsToRemove, props = propsToRemove }
+	return true
 end
 
+local function handleClothingHook(payload)
+	local src = payload.source
+	local action = payload.action
+
+	if isLocked(src) then
+		return false
+	end
+	if action ~= "move" and action ~= "swap" then
+		return false
+	end
+
+	local toType = payload.toType
+	local fromType = payload.fromType
+	local toSlot = getSlotId(payload.toSlot)
+
+	if toType ~= "clothes" and fromType ~= "clothes" then
+		return false
+	end
+
+	if toType == "clothes" then
+		local slotName = toSlot and shared.clothing.slotToName[toSlot]
+		if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
+			return false
+		end
+	end
+
+	if action == "move" then
+		return toType == "clothes" and clothing.addClothing(payload) or clothing.removeClothing(payload)
+	else
+		return clothing.addClothing(payload)
+	end
+end
+
+local function handleOutfitHook(payload)
+	local src = payload.source
+	local action = payload.action
+
+	if isLocked(src) then
+		return false
+	end
+
+	local toType = payload.toType
+	local fromType = payload.fromType
+	local toSlot = getSlotId(payload.toSlot)
+
+	if action == "move" then
+		if payload.toInventory == "newdrop" then
+			lib.notify(src, {
+				title = "Vêtements",
+				description = "Vous ne pouvez pas directement déposer de tenues pour le moment.",
+				type = "error",
+				duration = 7500,
+			})
+			return false
+		end
+
+		if toType == "clothes" then
+			local slotName = toSlot and shared.clothing.slotToName[toSlot]
+			if not slotName or ("clothes_" .. slotName) ~= payload.fromSlot.name then
+				return false
+			end
+		end
+
+		return toType == "clothes" and clothing.addOutfit(payload) or clothing.removeOutfit(payload)
+	elseif action == "swap" then
+		if toType == "clothes" or fromType == "clothes" then
+			lib.notify(src, {
+				title = "Vêtements",
+				description = "Vous ne pouvez pas échanger de tenues directement pour le moment.",
+				type = "error",
+				duration = 7500,
+			})
+			return false
+		end
+	end
+
+	return true
+end
+
+local CLOTHING_ITEM_FILTER = {
+	clothes_jackets = true,
+	clothes_shirts = true,
+	clothes_torsos = true,
+	clothes_bags = true,
+	clothes_vest = true,
+	clothes_legs = true,
+	clothes_shoes = true,
+	clothes_hats = true,
+	clothes_masks = true,
+	clothes_glasses = true,
+	clothes_earrings = true,
+	clothes_neck = true,
+	clothes_watches = true,
+	clothes_bracelets = true,
+	clothes_decals = true,
+}
+
+local CLOTHES_INV_FILTER = { "^clothes-[%w]+" }
+
 CreateThread(function()
-    exports.ox_inventory:registerHook("swapItems", handleClothingHook, {
-        disableCheck = true,
-        itemFilter = {
-            clothes_jackets = true,
-            clothes_shirts = true,
-            clothes_torsos = true,
-            clothes_bags = true,
-            clothes_vest = true,
-            clothes_legs = true,
-            clothes_shoes = true,
-            clothes_hats = true,
-            clothes_masks = true,
-            clothes_glasses = true,
-            clothes_earrings = true,
-            clothes_neck = true,
-            clothes_watches = true,
-            clothes_bracelets = true,
-            clothes_decals = true,
-        },
-        inventoryFilter = { "^clothes-[%w]+" },
-    })
+	exports.ox_inventory:registerHook("swapItems", handleClothingHook, {
+		disableCheck = true,
+		itemFilter = CLOTHING_ITEM_FILTER,
+		inventoryFilter = CLOTHES_INV_FILTER,
+	})
 
-    exports.ox_inventory:registerHook("swapItems", handleOutfitHook, {
-        disableCheck = true,
-        itemFilter = { clothes_outfits = true },
-        inventoryFilter = { "^clothes-[%w]+" },
-    })
+	exports.ox_inventory:registerHook("swapItems", handleOutfitHook, {
+		disableCheck = true,
+		itemFilter = { clothes_outfits = true },
+		inventoryFilter = CLOTHES_INV_FILTER,
+	})
 
-    exports.ox_inventory:registerHook("swappedItems", function(payload)
-        local src = payload.source
+	exports.ox_inventory:registerHook("swappedItems", function(payload)
+		local src = payload.source
+		local player, clothes = getPlayerAndClothes(src)
+		if not player then
+			return
+		end
 
-        if not removed[src] and not added[src] then
-            return
-        end
+		if pendingRemoved[src] or pendingAdded[src] then
+			return
+		end
 
-        local removedOutfit = removed[src]
-        local shouldUpdateClothes = removedOutfit ~= nil or added[src] ~= nil
+		local outfitSlot = shared.clothing.nameToSlots.outfits
+		local outfitItem = clothes.items[outfitSlot]
 
-        removed[src] = nil
-        added[src] = nil
+		if outfitItem and outfitItem.metadata then
+			local isLeaving = payload.action == "move"
+				and payload.fromType == "clothes"
+				and type(payload.fromSlot) == "table"
+			local isArriving = payload.action == "move"
+				and payload.toType == "clothes"
+				and type(payload.toSlot) == "number"
 
-        if not shouldUpdateClothes then
-            return
-        end
+			local current = {}
+			for slot, data in pairs(clothes.items) do
+				if slot ~= outfitSlot and data and data.metadata then
+					if not (isLeaving and payload.fromSlot and slot == payload.fromSlot.slot) then
+						local name = shared.clothing.slotToName[slot]
+						if name then
+							current[name] = {
+								component_id = data.metadata.component_id or nil,
+								prop_id = data.metadata.prop_id or nil,
+								drawable = data.metadata.drawable,
+								texture = data.metadata.texture,
+								collection = data.metadata.collection,
+								localIndex = data.metadata.localIndex,
+							}
+						end
+					end
+				end
+			end
 
-        local toSlot = getSlotId(payload.toSlot)
+			if isArriving and payload.fromSlot and payload.fromSlot.metadata then
+				local name = shared.clothing.slotToName[payload.toSlot]
+				if name then
+					current[name] = {
+						component_id = payload.fromSlot.metadata.component_id or nil,
+						prop_id = payload.fromSlot.metadata.prop_id or nil,
+						drawable = payload.fromSlot.metadata.drawable,
+						texture = payload.fromSlot.metadata.texture,
+						collection = payload.fromSlot.metadata.collection,
+						localIndex = payload.fromSlot.metadata.localIndex,
+					}
+				end
+			end
 
-        CreateThread(function()
-            Wait(0)
+			local newMeta = table.clone(outfitItem.metadata)
+			newMeta.outfit = current
+			Inventory.SetMetadata(clothes, outfitSlot, newMeta)
+			Inventory.Save(clothes)
+		end
+	end, {
+		disableCheck = true,
+		itemFilter = CLOTHING_ITEM_FILTER,
+		inventoryFilter = CLOTHES_INV_FILTER,
+	})
 
-            local player = Inventory(src)
-            if not player then
-                disabled[src] = false
-                return
-            end
+	exports.ox_inventory:registerHook("swappedItems", function(payload)
+		local src = payload.source
 
-            local clothes = Inventory("clothes-" .. player.owner)
-            if not clothes then
-                disabled[src] = false
-                return
-            end
+		local removedOutfit = pendingRemoved[src]
+		local addedOutfit = pendingAdded[src]
+		if not removedOutfit and not addedOutfit then
+			return
+		end
 
-            if removedOutfit and toSlot then
-                Inventory.SetMetadata(player, toSlot, {
-                    label = removedOutfit.label or nil,
-                    outfit = removedOutfit.outfit,
-                })
-                Inventory.Save(player)
-            end
+		pendingRemoved[src] = nil
+		pendingAdded[src] = nil
 
-            lib.callback.await("ox_inventory:setCurrentClothes", src, clothes)
-            Inventory.Save(clothes)
-            disabled[src] = false
-        end)
-    end, {
-        disableCheck = true,
-        itemFilter = { clothes_outfits = true },
-        inventoryFilter = { "^clothes-[%w]+" },
-    })
+		local player, clothes = getPlayerAndClothes(src)
+		if not player then
+			unlock(src)
+			return
+		end
+
+		if removedOutfit then
+			if removedOutfit.components and #removedOutfit.components > 0 then
+				TriggerClientEvent("ox_inventory:removeComponent", src, removedOutfit.components)
+			end
+			if removedOutfit.props and #removedOutfit.props > 0 then
+				TriggerClientEvent("ox_inventory:removeProp", src, removedOutfit.props)
+			end
+		elseif addedOutfit then
+			if addedOutfit.components and #addedOutfit.components > 0 then
+				TriggerClientEvent("ox_inventory:applyComponent", src, addedOutfit.components)
+			end
+			if addedOutfit.props and #addedOutfit.props > 0 then
+				TriggerClientEvent("ox_inventory:applyProp", src, addedOutfit.props)
+			end
+		end
+
+		CreateThread(function()
+			Wait(0)
+			local _, updatedClothes = getPlayerAndClothes(src)
+			if updatedClothes then
+				lib.callback.await("ox_inventory:setCurrentClothes", src, updatedClothes)
+				Inventory.Save(updatedClothes)
+			end
+			unlock(src)
+		end)
+	end, {
+		disableCheck = true,
+		itemFilter = { clothes_outfits = true },
+		inventoryFilter = CLOTHES_INV_FILTER,
+	})
 end)
 
 lib.callback.register("ox_inventory:getClothesInventory", function(source)
-    local src = source
+	local src = source
+	if isLocked(src) then
+		return false
+	end
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        return false
-    end
-
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
-
-    return clothes
+	return clothes
 end)
 
 lib.callback.register("ox_inventory:syncClothes", function(source, playerClothes, save)
-    local src = source
+	local src = source
 
-    if save ~= nil then
-        shared.saveAppearanceServer(src, save)
-    end
+	if save ~= nil then
+		shared.saveAppearanceServer(src, save)
+	end
 
-    if disabled[src] then
-        return false
-    end
+	if isLocked(src) then
+		return false
+	end
+	if not playerClothes or next(playerClothes) == nil then
+		return false
+	end
 
-    if not playerClothes or next(playerClothes) == nil then
-        return false
-    end
+	lock(src)
 
-    disabled[src] = true
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	for name, slot in pairs(shared.clothing.nameToSlots) do
+		if name ~= "outfits" then
+			local currentItem = Inventory.GetSlot(clothes, slot)
+			local clothData = playerClothes[name]
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
+			if clothData then
+				if not currentItem then
+					if
+						not Inventory.AddItem(clothes, "clothes_" .. name, 1, {
+							component_id = clothData.component_id or nil,
+							prop_id = clothData.prop_id or nil,
+							drawable = clothData.drawable,
+							texture = clothData.texture,
+							collection = clothData.collection,
+							localIndex = clothData.localIndex,
+						}, slot)
+					then
+						unlock(src)
+						return false
+					end
+				else
+					local meta = currentItem.metadata or {}
+					if meta.drawable ~= clothData.drawable or meta.texture ~= clothData.texture then
+						Inventory.SetMetadata(clothes, slot, {
+							component_id = clothData.component_id or nil,
+							prop_id = clothData.prop_id or nil,
+							drawable = clothData.drawable,
+							texture = clothData.texture,
+							collection = clothData.collection,
+							localIndex = clothData.localIndex,
+						})
+					end
+				end
+			else
+				if currentItem then
+					if not Inventory.RemoveItem(clothes, currentItem.name, 1, nil, slot) then
+						unlock(src)
+						return false
+					end
+				end
+			end
+		end
+	end
 
-    for name, slot in pairs(shared.clothing.nameToSlots) do
-        if name ~= "outfits" then
-            local actuelItem = Inventory.GetSlot(clothes, slot)
-
-            if playerClothes[name] then
-                if not actuelItem then
-                    local success, response = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
-                        component_id = playerClothes[name].component_id or nil,
-                        prop_id = playerClothes[name].prop_id or nil,
-                        drawable = playerClothes[name].drawable,
-                        texture = playerClothes[name].texture,
-                        collection = playerClothes[name].collection,
-                        localIndex = playerClothes[name].localIndex,
-                    }, slot)
-                    if not success then
-                        disabled[src] = false
-                        return false
-                    end
-                else
-                    local metadata = actuelItem.metadata or {}
-                    if
-                        metadata.drawable ~= playerClothes[name].drawable
-                        or metadata.texture ~= playerClothes[name].texture
-                    then
-                        Inventory.SetMetadata(clothes, slot, {
-                            component_id = playerClothes[name].component_id or nil,
-                            prop_id = playerClothes[name].prop_id or nil,
-                            drawable = playerClothes[name].drawable,
-                            texture = playerClothes[name].texture,
-                            collection = playerClothes[name].collection,
-                            localIndex = playerClothes[name].localIndex,
-                        })
-                    end
-                end
-            else
-                if actuelItem then
-                    local success, response = Inventory.RemoveItem(clothes, actuelItem.name, 1, nil, slot)
-                    if not success then
-                        disabled[src] = false
-                        return false
-                    end
-                end
-            end
-        end
-    end
-
-    disabled[src] = false
-    return true
+	unlock(src)
+	return true
 end)
 
 lib.callback.register("ox_inventory:setClothes", function(source, changedClothes)
-    local src = source
+	local src = source
+	if isLocked(src) then
+		return false
+	end
+	if not changedClothes or next(changedClothes) == nil then
+		return false
+	end
 
-    if disabled[src] then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		return false
+	end
 
-    if not changedClothes or next(changedClothes) == nil then
-        return false
-    end
+	local isEmpty = true
+	if clothes.items then
+		for _, item in pairs(clothes.items) do
+			if item then
+				isEmpty = false
+				break
+			end
+		end
+	end
 
-    local player = Inventory(src)
-    if not player then
-        return false
-    end
+	if not isEmpty then
+		print(("[ox_inventory] WARNING: Player %s attempted to use setClothes but inventory is not empty."):format(src))
+		return false
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
+	lock(src)
 
-    disabled[src] = true
+	for name, data in pairs(changedClothes) do
+		local slot = shared.clothing.nameToSlots[name]
+		if not slot then
+			unlock(src)
+			return false
+		end
 
-    for name, data in pairs(changedClothes) do
-        local slot = shared.clothing.nameToSlots[name]
+		local currentItem = Inventory.GetSlot(clothes, slot)
+		if currentItem then
+			local meta = currentItem.metadata or {}
+			if meta.drawable ~= data.drawable or meta.texture ~= data.texture then
+				Inventory.SetMetadata(clothes, slot, {
+					label = meta.label or nil,
+					component_id = data.component_id or nil,
+					prop_id = data.prop_id or nil,
+					drawable = data.drawable,
+					texture = data.texture,
+					collection = data.collection,
+					localIndex = data.localIndex,
+				})
+			end
+		else
+			if
+				not Inventory.AddItem(clothes, "clothes_" .. name, 1, {
+					component_id = data.component_id or nil,
+					prop_id = data.prop_id or nil,
+					drawable = data.drawable,
+					texture = data.texture,
+					collection = data.collection,
+					localIndex = data.localIndex,
+				}, slot)
+			then
+				unlock(src)
+				return false
+			end
+		end
+	end
 
-        if not slot then
-            disabled[src] = false
-            return false
-        end
-
-        local actuelItem = Inventory.GetSlot(clothes, slot)
-
-        if actuelItem then
-            local metadata = actuelItem.metadata or {}
-            if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
-                Inventory.SetMetadata(clothes, slot, {
-                    label = metadata.label or nil,
-                    component_id = data.component_id or nil,
-                    prop_id = data.prop_id or nil,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                })
-            end
-        else
-            local success, response = Inventory.AddItem(clothes, "clothes_" .. name, 1, {
-                label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                component_id = data.component_id or nil,
-                prop_id = data.prop_id or nil,
-                drawable = data.drawable,
-                texture = data.texture,
-                collection = data.collection,
-                localIndex = data.localIndex,
-            }, slot)
-            if not success then
-                disabled[src] = false
-                return false
-            end
-        end
-    end
-
-    disabled[src] = false
-    return true
+	unlock(src)
+	return true
 end)
 
-lib.callback.register("ox_inventory:checkClothes", function(source, changedClothes, payment, type)
-    local src = source
+lib.callback.register("ox_inventory:checkClothes", function(source, changedClothes, payment, clothingType)
+	local src = source
 
-    if disabled[src] then
-        return false
-    end
+	if isLocked(src) then
+		return false
+	end
+	if isPurchaseRateLimited(src) then
+		return false
+	end
 
-    local sanitizedClothes = sanitizeClothesPayload(changedClothes)
-    if not sanitizedClothes then
-        return false
-    end
+	local sanitizedClothes = sanitizeClothesPayload(changedClothes)
+	if not sanitizedClothes then
+		return false
+	end
 
-    if payment ~= "cash" and payment ~= "bank" then
-        return false
-    end
+	if payment ~= "cash" and payment ~= "bank" then
+		return false
+	end
+	if clothingType ~= "clothes" and clothingType ~= "outfit" then
+		return false
+	end
 
-    if type ~= "clothes" and type ~= "outfit" then
-        return false
-    end
+	local amount = 0
+	for name in pairs(sanitizedClothes) do
+		amount = amount + (shared.clothing.nameToPrice[name] or 0)
+	end
 
-    local amount = 0
+	if amount > 0 then
+		if getPaymentBalance(src, payment) < amount then
+			lib.notify(src, {
+				title = "Vêtements",
+				description = "Vous n'avez pas assez d'argent",
+				type = "error",
+				duration = 7500,
+			})
+			return false
+		end
 
-    for name in pairs(sanitizedClothes) do
-        amount = amount + (shared.clothing.nameToPrice[name] or 0)
-    end
+		if not exports.qbx_core:RemoveMoney(src, payment, amount, "Achat de vêtements") then
+			lib.notify(src, {
+				title = "Vêtements",
+				description = "Erreur lors du paiement",
+				type = "error",
+				duration = 7500,
+			})
+			return false
+		end
+	end
 
-    local balance = getPaymentBalance(src, payment)
-    if amount > 0 and balance < amount then
-        lib.notify(src, {
-            title = "Vêtements",
-            description = "Vous n'avez pas assez d'argent",
-            type = "error",
-            duration = 7500,
-        })
-        return false
-    end
+	lock(src)
 
-    disabled[src] = true
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		if amount > 0 then
+			exports.qbx_core:AddMoney(src, payment, amount, "Remboursement vêtements")
+		end
+		return false
+	end
 
-    local player = Inventory(src)
-    if not player then
-        disabled[src] = false
-        return false
-    end
+	if clothingType == "clothes" then
+		for name, data in pairs(sanitizedClothes) do
+			local slot = shared.clothing.nameToSlots[name]
+			if not slot then
+				unlock(src)
+				if amount > 0 then
+					exports.qbx_core:AddMoney(src, payment, amount, "Remboursement vêtements")
+				end
+				return false
+			end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        disabled[src] = false
-        return false
-    end
+			local currentItem = Inventory.GetSlot(clothes, slot)
+			local meta = currentItem and currentItem.metadata or {}
 
-    if type == "clothes" then
-        for name, data in pairs(sanitizedClothes) do
-            local slot = shared.clothing.nameToSlots[name]
-            if not slot then
-                disabled[src] = false
-                return false
-            end
+			if
+				not Inventory.AddItem(player, "clothes_" .. name, 1, {
+					label = meta.label or nil,
+					component_id = data.component_id or nil,
+					prop_id = data.prop_id or nil,
+					drawable = data.drawable,
+					texture = data.texture,
+					collection = data.collection,
+					localIndex = data.localIndex,
+				})
+			then
+				unlock(src)
+				if amount > 0 then
+					exports.qbx_core:AddMoney(src, payment, amount, "Remboursement vêtements")
+				end
+				return false
+			end
+		end
+	else
+		if not Inventory.AddItem(player, "clothes_outfits", 1, { outfit = sanitizedClothes }) then
+			unlock(src)
+			if amount > 0 then
+				exports.qbx_core:AddMoney(src, payment, amount, "Remboursement vêtements")
+			end
+			return false
+		end
+	end
 
-            local actuelItem = Inventory.GetSlot(clothes, slot)
-            if actuelItem then
-                local metadata = actuelItem.metadata or {}
-                if metadata.drawable ~= data.drawable or metadata.texture ~= data.texture then
-                    local success, response = Inventory.AddItem(player, "clothes_" .. name, 1, {
-                        label = metadata.label or nil,
-                        component_id = data.component_id or nil,
-                        prop_id = data.prop_id or nil,
-                        drawable = data.drawable,
-                        texture = data.texture,
-                        collection = data.collection,
-                        localIndex = data.localIndex,
-                    })
-                    if not success then
-                        disabled[src] = false
-                        return false
-                    end
-                end
-            else
-                local success, response = Inventory.AddItem(player, "clothes_" .. name, 1, {
-                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                    component_id = data.component_id or nil,
-                    prop_id = data.prop_id or nil,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                })
-                if not success then
-                    disabled[src] = false
-                    return false
-                end
-            end
-        end
-    else
-        local success, response = Inventory.AddItem(player, "clothes_outfits", 1, {
-            outfit = sanitizedClothes,
-        })
-        if not success then
-            disabled[src] = false
-            return false
-        end
-    end
-
-    disabled[src] = false
-    return exports.qbx_core:RemoveMoney(src, payment, amount, "Achat de vêtements")
+	unlock(src)
+	return true
 end)
 
 exports("EnableClothing", function(source)
-    disabled[source] = false
+	disabled[source] = nil
 end)
 
 exports("DisableClothing", function(source)
-    disabled[source] = true
-end)
-
-exports("GetPlayerClothes", function(source)
-    if disabled[source] then
-        return false
-    end
-
-    local player = Inventory(source)
-    if not player then
-        return false
-    end
-
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
-
-    local playerClothes = {}
-    for name, slot in pairs(shared.clothing.nameToSlots) do
-        if name ~= "outfits" then
-            local item = Inventory.GetSlot(clothes, slot)
-            if item and item.metadata then
-                playerClothes[name] = {
-                    component_id = item.metadata.component_id or nil,
-                    prop_id = item.metadata.prop_id or nil,
-                    drawable = item.metadata.drawable,
-                    texture = item.metadata.texture,
-                    collection = item.metadata.collection,
-                    localIndex = item.metadata.localIndex,
-                }
-            end
-        end
-    end
-
-    return playerClothes
-end)
-
-exports("SetPlayerClothes", function(source, clothesData)
-    if disabled[source] then
-        return false
-    end
-
-    if not clothesData or next(clothesData) == nil then
-        return false
-    end
-
-    local player = Inventory(source)
-    if not player then
-        return false
-    end
-
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
-
-    disabled[source] = true
-
-    for name, data in pairs(clothesData) do
-        local slot = shared.clothing.nameToSlots[name]
-        if slot then
-            local actuelItem = Inventory.GetSlot(clothes, slot)
-            if actuelItem then
-                Inventory.SetMetadata(clothes, slot, {
-                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                    component_id = data.component_id or nil,
-                    prop_id = data.prop_id or nil,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                })
-            else
-                Inventory.AddItem(clothes, "clothes_" .. name, 1, {
-                    label = actuelItem and actuelItem.metadata and actuelItem.metadata.label or nil,
-                    component_id = data.component_id or nil,
-                    prop_id = data.prop_id or nil,
-                    drawable = data.drawable,
-                    texture = data.texture,
-                    collection = data.collection,
-                    localIndex = data.localIndex,
-                }, slot)
-            end
-        end
-    end
-
-    Inventory.Save(clothes)
-    disabled[source] = false
-    return true
+	disabled[source] = true
 end)
 
 exports("IsClothingDisabled", function(source)
-    return disabled[source] == true
+	return disabled[source] == true
+end)
+
+exports("GetPlayerClothes", function(source)
+	if isLocked(source) then
+		return false
+	end
+
+	local player, clothes = getPlayerAndClothes(source)
+	if not player then
+		return false
+	end
+
+	local playerClothes = {}
+	for name, slot in pairs(shared.clothing.nameToSlots) do
+		if name ~= "outfits" then
+			local item = Inventory.GetSlot(clothes, slot)
+			if item and item.metadata then
+				playerClothes[name] = {
+					component_id = item.metadata.component_id or nil,
+					prop_id = item.metadata.prop_id or nil,
+					drawable = item.metadata.drawable,
+					texture = item.metadata.texture,
+					collection = item.metadata.collection,
+					localIndex = item.metadata.localIndex,
+				}
+			end
+		end
+	end
+
+	return playerClothes
+end)
+
+exports("SetPlayerClothes", function(source, clothesData)
+	if isLocked(source) then
+		return false
+	end
+	if not clothesData or next(clothesData) == nil then
+		return false
+	end
+
+	local player, clothes = getPlayerAndClothes(source)
+	if not player then
+		return false
+	end
+
+	lock(source)
+
+	for name, data in pairs(clothesData) do
+		local slot = shared.clothing.nameToSlots[name]
+		if slot then
+			local currentItem = Inventory.GetSlot(clothes, slot)
+			if currentItem then
+				Inventory.SetMetadata(clothes, slot, {
+					label = currentItem.metadata and currentItem.metadata.label or nil,
+					component_id = data.component_id or nil,
+					prop_id = data.prop_id or nil,
+					drawable = data.drawable,
+					texture = data.texture,
+					collection = data.collection,
+					localIndex = data.localIndex,
+				})
+			else
+				Inventory.AddItem(clothes, "clothes_" .. name, 1, {
+					component_id = data.component_id or nil,
+					prop_id = data.prop_id or nil,
+					drawable = data.drawable,
+					texture = data.texture,
+					collection = data.collection,
+					localIndex = data.localIndex,
+				}, slot)
+			end
+		end
+	end
+
+	Inventory.Save(clothes)
+	unlock(source)
+	return true
 end)
 
 exports("SyncPlayerClothes", function(source, playerClothes, save)
-    if disabled[source] then
-        return false
-    end
-
-    local player = Inventory(source)
-    if not player then
-        return false
-    end
-
-    return lib.callback.await("ox_inventory:syncClothes", source, playerClothes, save)
+	if isLocked(source) then
+		return false
+	end
+	if not Inventory(source) then
+		return false
+	end
+	return lib.callback.await("ox_inventory:syncClothes", source, playerClothes, save)
 end)
 
 exports("GetClothesInventory", function(source)
-    if disabled[source] then
-        return false
-    end
+	if isLocked(source) then
+		return false
+	end
 
-    local player = Inventory(source)
-    if not player then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(source)
+	if not player then
+		return false
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
-
-    return clothes
+	return clothes
 end)
 
 exports("ClearPlayerClothes", function(source)
-    if disabled[source] then
-        return false
-    end
+	if isLocked(source) then
+		return false
+	end
 
-    local player = Inventory(source)
-    if not player then
-        return false
-    end
+	local player, clothes = getPlayerAndClothes(source)
+	if not player then
+		return false
+	end
 
-    local clothes = Inventory("clothes-" .. player.owner)
-    if not clothes then
-        return false
-    end
+	lock(source)
 
-    disabled[source] = true
+	for name, slot in pairs(shared.clothing.nameToSlots) do
+		if name ~= "outfits" then
+			local currentItem = Inventory.GetSlot(clothes, slot)
+			if currentItem then
+				Inventory.RemoveItem(clothes, currentItem.name, 1, nil, slot)
+			end
+		end
+	end
 
-    for name, slot in pairs(shared.clothing.nameToSlots) do
-        if name ~= "outfits" then
-            local actuelItem = Inventory.GetSlot(clothes, slot)
-            if actuelItem then
-                Inventory.RemoveItem(clothes, actuelItem.name, 1, nil, slot)
-            end
-        end
-    end
-
-    Inventory.Save(clothes)
-    disabled[source] = false
-    return true
+	Inventory.Save(clothes)
+	unlock(source)
+	return true
 end)
 
 exports("ApplyClothingComponent", function(source, metadata)
-    if disabled[source] then
-        return false
-    end
-
-    return lib.callback.await("ox_inventory:applyComponent", source, metadata)
+	if isLocked(source) then
+		return false
+	end
+	return lib.callback.await("ox_inventory:applyComponent", source, metadata)
 end)
 
 exports("ApplyClothingProp", function(source, metadata)
-    if disabled[source] then
-        return false
-    end
-
-    return lib.callback.await("ox_inventory:applyProp", source, metadata)
+	if isLocked(source) then
+		return false
+	end
+	return lib.callback.await("ox_inventory:applyProp", source, metadata)
 end)
 
 exports("RemoveClothingComponent", function(source, componentIds)
-    if disabled[source] then
-        return false
-    end
-
-    return lib.callback.await("ox_inventory:removeComponent", source, componentIds)
+	if isLocked(source) then
+		return false
+	end
+	return lib.callback.await("ox_inventory:removeComponent", source, componentIds)
 end)
 
 exports("RemoveClothingProp", function(source, propIds)
-    if disabled[source] then
-        return false
-    end
-
-    return lib.callback.await("ox_inventory:removeProp", source, propIds)
-end)
-
-RegisterNetEvent("ox_inventory:enableClothings", function()
-    local src = source
-    disabled[src] = false
-end)
-
-RegisterNetEvent("ox_inventory:disableClothings", function()
-    local src = source
-    disabled[src] = true
+	if isLocked(source) then
+		return false
+	end
+	return lib.callback.await("ox_inventory:removeProp", source, propIds)
 end)
 
 AddEventHandler("playerDropped", function()
-    local src = source
-    disabled[src] = nil
-    removed[src] = nil
-    added[src] = nil
+	local src = source
+	locks[src] = nil
+	disabled[src] = nil
+	pendingRemoved[src] = nil
+	pendingAdded[src] = nil
+	lastPurchase[src] = nil
 end)

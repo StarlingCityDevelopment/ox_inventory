@@ -551,19 +551,19 @@ lib.callback.register('ox_inventory:setCurrentClothes', function(data)
     })
 end)
 
-lib.callback.register('ox_inventory:applyComponent', function(metadata)
+RegisterNetEvent('ox_inventory:applyComponent', function(metadata)
     if not metadata then
-        return false
+        return
     end
 
     local components = metadata.component_id and { metadata } or metadata
     if type(components) ~= "table" then
-        return false
+        return
     end
 
     local targetPed = clothes.isInventoryOpen and VPed.getClonedPed() or PlayerPedId()
     if not targetPed or targetPed == 0 then
-        return false
+        return
     end
 
     for _, component in pairs(components) do
@@ -604,23 +604,21 @@ lib.callback.register('ox_inventory:applyComponent', function(metadata)
             end
         end
     end
-
-    return true
 end)
 
-lib.callback.register('ox_inventory:applyProp', function(metadata)
+RegisterNetEvent('ox_inventory:applyProp', function(metadata)
     if not metadata then
-        return false
+        return
     end
 
     local props = metadata.prop_id and { metadata } or metadata
     if type(props) ~= "table" then
-        return false
+        return
     end
 
     local targetPed = clothes.isInventoryOpen and VPed.getClonedPed() or PlayerPedId()
     if not targetPed or targetPed == 0 then
-        return false
+        return
     end
 
     for _, prop in pairs(props) do
@@ -661,13 +659,11 @@ lib.callback.register('ox_inventory:applyProp', function(metadata)
             end
         end
     end
-
-    return true
 end)
 
-lib.callback.register('ox_inventory:removeComponent', function(componentIds)
+RegisterNetEvent('ox_inventory:removeComponent', function(componentIds)
     if not componentIds then
-        return false
+        return
     end
 
     local ids = type(componentIds) == "table" and componentIds or { componentIds }
@@ -676,7 +672,7 @@ lib.callback.register('ox_inventory:removeComponent', function(componentIds)
     local targetPed = clothes.isInventoryOpen and VPed.getClonedPed() or PlayerPedId()
 
     if not targetPed or targetPed == 0 then
-        return false
+        return
     end
 
     for _, componentId in pairs(ids) do
@@ -695,13 +691,11 @@ lib.callback.register('ox_inventory:removeComponent', function(componentIds)
             end
         end
     end
-
-    return true
 end)
 
-lib.callback.register('ox_inventory:removeProp', function(propIds)
+RegisterNetEvent('ox_inventory:removeProp', function(propIds)
     if not propIds then
-        return false
+        return
     end
 
     local ids = type(propIds) == "table" and propIds or { propIds }
@@ -710,7 +704,7 @@ lib.callback.register('ox_inventory:removeProp', function(propIds)
     local targetPed = clothes.isInventoryOpen and VPed.getClonedPed() or PlayerPedId()
 
     if not targetPed or targetPed == 0 then
-        return false
+        return
     end
 
     for _, propId in pairs(ids) do
@@ -729,8 +723,6 @@ lib.callback.register('ox_inventory:removeProp', function(propIds)
             end
         end
     end
-
-    return true
 end)
 
 RegisterNetEvent('ox_inventory:checkClothes', clothes.check)
