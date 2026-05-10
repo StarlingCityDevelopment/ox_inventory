@@ -289,31 +289,37 @@ function clothing.addOutfit(payload)
 
 	local displaced = {}
 
+	local function rollbackDisplaced()
+		for _, d in ipairs(displaced) do
+			Inventory.RemoveItem(player, d.name, 1, nil, d.playerSlot)
+			Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
+		end
+	end
+
 	for name, data in pairs(outfit) do
 		local slot = shared.clothing.nameToSlots[name]
 		local currentItem = Inventory.GetSlot(clothes, slot)
 
 		if currentItem then
 			if not Inventory.RemoveItem(clothes, currentItem.name, 1, nil, slot) then
-				for _, d in ipairs(displaced) do
-					Inventory.RemoveItem(player, d.name, 1, nil, nil)
-					Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
-				end
+				rollbackDisplaced()
+				pendingAdded[src] = nil
 				unlock(src)
 				return false
 			end
 
-			if not Inventory.AddItem(player, "clothes_" .. name, 1, currentItem.metadata) then
+			local addedSlot = Inventory.AddItem(player, "clothes_" .. name, 1, currentItem.metadata)
+			if not addedSlot then
 				Inventory.AddItem(clothes, currentItem.name, 1, currentItem.metadata, slot)
-				for _, d in ipairs(displaced) do
-					Inventory.RemoveItem(player, d.name, 1, nil, nil)
-					Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
-				end
+				rollbackDisplaced()
+				pendingAdded[src] = nil
 				unlock(src)
 				return false
 			end
 
-			table.insert(displaced, { name = "clothes_" .. name, metadata = currentItem.metadata, slot = slot })
+			local playerSlot = type(addedSlot) == "table" and addedSlot.slot or nil
+			table.insert(displaced,
+				{ name = "clothes_" .. name, metadata = currentItem.metadata, slot = slot, playerSlot = playerSlot })
 		end
 
 		if data.component_id then
@@ -321,10 +327,8 @@ function clothing.addOutfit(payload)
 		elseif data.prop_id then
 			table.insert(propsToApply, data)
 		else
-			for _, d in ipairs(displaced) do
-				Inventory.RemoveItem(player, d.name, 1, nil, nil)
-				Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
-			end
+			rollbackDisplaced()
+			pendingAdded[src] = nil
 			unlock(src)
 			return false
 		end
@@ -336,10 +340,8 @@ function clothing.addOutfit(payload)
 		for _, a in ipairs(addedItems) do
 			Inventory.RemoveItem(clothes, a.name, 1, nil, a.slot)
 		end
-		for _, d in ipairs(displaced) do
-			Inventory.RemoveItem(player, d.name, 1, nil, nil)
-			Inventory.AddItem(clothes, d.name, 1, d.metadata, d.slot)
-		end
+		rollbackDisplaced()
+		pendingAdded[src] = nil
 		unlock(src)
 	end
 
@@ -417,17 +419,14 @@ function clothing.removeOutfit(payload)
 	local propsToRemove = {}
 
 	for slot, data in pairs(clothes.items) do
-		if slot ~= outfitSlot and data and data.metadata then
-			if data.metadata.component_id then
-				table.insert(componentsToRemove, data.metadata.component_id)
-			elseif data.metadata.prop_id then
-				table.insert(propsToRemove, data.metadata.prop_id)
-			end
-		end
-	end
-
-	for slot, data in pairs(clothes.items) do
 		if slot ~= outfitSlot and data then
+			if data.metadata then
+				if data.metadata.component_id then
+					table.insert(componentsToRemove, data.metadata.component_id)
+				elseif data.metadata.prop_id then
+					table.insert(propsToRemove, data.metadata.prop_id)
+				end
+			end
 			Inventory.RemoveItem(clothes, data.name, 1, nil, slot)
 		end
 	end
@@ -515,25 +514,15 @@ local function handleOutfitHook(payload)
 	return true
 end
 
-local CLOTHING_ITEM_FILTER = {
-	clothes_jackets = true,
-	clothes_shirts = true,
-	clothes_torsos = true,
-	clothes_bags = true,
-	clothes_vest = true,
-	clothes_legs = true,
-	clothes_shoes = true,
-	clothes_hats = true,
-	clothes_masks = true,
-	clothes_glasses = true,
-	clothes_earrings = true,
-	clothes_neck = true,
-	clothes_watches = true,
-	clothes_bracelets = true,
-	clothes_decals = true,
-}
-
+local CLOTHING_ITEM_FILTER = {}
 local CLOTHES_INV_FILTER = { "^clothes-[%w]+" }
+
+for _, name in pairs(shared.componentMap) do
+	CLOTHING_ITEM_FILTER["clothes_" .. name] = true
+end
+for _, name in pairs(shared.propMap) do
+	CLOTHING_ITEM_FILTER["clothes_" .. name] = true
+end
 
 CreateThread(function()
 	exports.ox_inventory:registerHook("swapItems", handleClothingHook, {
@@ -681,15 +670,17 @@ end)
 lib.callback.register("ox_inventory:syncClothes", function(source, playerClothes, save)
 	local src = source
 
-	if save ~= nil then
-		shared.saveAppearanceServer(src, save)
-	end
-
 	if isLocked(src) then
 		return false
 	end
-	if not playerClothes or next(playerClothes) == nil then
+
+	local sanitizedClothes = sanitizeClothesPayload(playerClothes)
+	if not sanitizedClothes then
 		return false
+	end
+
+	if save ~= nil then
+		shared.saveAppearanceServer(src, save)
 	end
 
 	lock(src)
@@ -703,7 +694,7 @@ lib.callback.register("ox_inventory:syncClothes", function(source, playerClothes
 	for name, slot in pairs(shared.clothing.nameToSlots) do
 		if name ~= "outfits" then
 			local currentItem = Inventory.GetSlot(clothes, slot)
-			local clothData = playerClothes[name]
+			local clothData = sanitizedClothes[name]
 
 			if clothData then
 				if not currentItem then
@@ -753,7 +744,9 @@ lib.callback.register("ox_inventory:setClothes", function(source, changedClothes
 	if isLocked(src) then
 		return false
 	end
-	if not changedClothes or next(changedClothes) == nil then
+
+	changedClothes = sanitizeClothesPayload(changedClothes)
+	if not changedClothes then
 		return false
 	end
 
@@ -848,8 +841,17 @@ lib.callback.register("ox_inventory:checkClothes", function(source, changedCloth
 		amount = amount + (shared.clothing.nameToPrice[name] or 0)
 	end
 
+	lock(src)
+
+	local player, clothes = getPlayerAndClothes(src)
+	if not player then
+		unlock(src)
+		return false
+	end
+
 	if amount > 0 then
 		if getPaymentBalance(src, payment) < amount then
+			unlock(src)
 			lib.notify(src, {
 				title = "Vêtements",
 				description = "Vous n'avez pas assez d'argent",
@@ -860,6 +862,7 @@ lib.callback.register("ox_inventory:checkClothes", function(source, changedCloth
 		end
 
 		if not exports.qbx_core:RemoveMoney(src, payment, amount, "Achat de vêtements") then
+			unlock(src)
 			lib.notify(src, {
 				title = "Vêtements",
 				description = "Erreur lors du paiement",
@@ -868,17 +871,6 @@ lib.callback.register("ox_inventory:checkClothes", function(source, changedCloth
 			})
 			return false
 		end
-	end
-
-	lock(src)
-
-	local player, clothes = getPlayerAndClothes(src)
-	if not player then
-		unlock(src)
-		if amount > 0 then
-			exports.qbx_core:AddMoney(src, payment, amount, "Remboursement vêtements")
-		end
-		return false
 	end
 
 	if clothingType == "clothes" then
@@ -928,14 +920,17 @@ lib.callback.register("ox_inventory:checkClothes", function(source, changedCloth
 end)
 
 exports("EnableClothing", function(source)
+	if type(source) ~= "number" or source <= 0 then return end
 	disabled[source] = nil
 end)
 
 exports("DisableClothing", function(source)
+	if type(source) ~= "number" or source <= 0 then return end
 	disabled[source] = true
 end)
 
 exports("IsClothingDisabled", function(source)
+	if type(source) ~= "number" or source <= 0 then return false end
 	return disabled[source] == true
 end)
 
@@ -973,7 +968,9 @@ exports("SetPlayerClothes", function(source, clothesData)
 	if isLocked(source) then
 		return false
 	end
-	if not clothesData or next(clothesData) == nil then
+
+	clothesData = sanitizeClothesPayload(clothesData)
+	if not clothesData then
 		return false
 	end
 

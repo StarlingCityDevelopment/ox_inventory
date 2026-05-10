@@ -98,7 +98,8 @@ local function resolveDefaultPropDrawable(ped, propId, defaultData)
     return drawable
 end
 
-local function isDefaultComponent(ped, componentId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex, defaultData)
+local function isDefaultComponent(ped, componentId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+                                  defaultData)
     if not defaultData then
         return actualDrawable == 0 and actualTexture == 0
     end
@@ -107,13 +108,16 @@ local function isDefaultComponent(ped, componentId, actualDrawable, actualTextur
     local defaultTexture = defaultData.texture or 0
 
     if defaultData.collection ~= nil and defaultDrawable >= 0 then
-        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and actualTexture == defaultTexture
+        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and
+            actualTexture == defaultTexture
     end
 
-    return actualDrawable == resolveDefaultComponentDrawable(ped, componentId, defaultData) and actualTexture == defaultTexture
+    return actualDrawable == resolveDefaultComponentDrawable(ped, componentId, defaultData) and
+        actualTexture == defaultTexture
 end
 
-local function isDefaultProp(ped, propId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex, defaultData)
+local function isDefaultProp(ped, propId, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+                             defaultData)
     if not defaultData then
         return actualDrawable == -1
     end
@@ -126,7 +130,8 @@ local function isDefaultProp(ped, propId, actualDrawable, actualTexture, actualC
     end
 
     if defaultData.collection ~= nil and defaultDrawable >= 0 then
-        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and actualTexture == defaultTexture
+        return actualCollectionName == defaultData.collection and actualLocalIndex == defaultDrawable and
+            actualTexture == defaultTexture
     end
 
     return actualDrawable == resolveDefaultPropDrawable(ped, propId, defaultData) and actualTexture == defaultTexture
@@ -210,7 +215,6 @@ function clothes.init()
     end
 
     clothes.data = playerClothes
-    clothes.data = updateClothingDataWithCollections(clothes.data)
 end
 
 function clothes.setInitialCreation()
@@ -235,7 +239,8 @@ function clothes.check()
         local defaultData = defaultClothes[name]
 
         local storedData = clothes.data[name]
-        local isAtDefault = isDefaultComponent(ped, index, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+        local isAtDefault = isDefaultComponent(ped, index, actualDrawable, actualTexture, actualCollectionName,
+            actualLocalIndex,
             defaultData)
 
         if storedData then
@@ -270,7 +275,8 @@ function clothes.check()
         local defaultData = defaultClothes[name]
 
         local storedData = clothes.data[name]
-        local isAtDefault = isDefaultProp(ped, index, actualDrawable, actualTexture, actualCollectionName, actualLocalIndex,
+        local isAtDefault = isDefaultProp(ped, index, actualDrawable, actualTexture, actualCollectionName,
+            actualLocalIndex,
             defaultData)
 
         if storedData then
@@ -305,7 +311,11 @@ function clothes.check()
         if clothes.initial then
             clothes.initial = false
             clothes.init()
-            return lib.callback.await('ox_inventory:setClothes', 10000, changedClothes)
+            local success = lib.callback.await('ox_inventory:setClothes', 30000, changedClothes)
+            if not success then
+                return clothes.sync()
+            end
+            return success
         end
 
         local input = lib.inputDialog('Changement de vêtements',
@@ -315,7 +325,7 @@ function clothes.check()
                     label = 'Type de paiement',
                     options = {
                         { value = 'cash', label = 'Espèces' },
-                        { value = 'bank',  label = 'Banque' }
+                        { value = 'bank', label = 'Banque' }
                     },
                     default = 'cash',
                     clearable = false,
@@ -362,7 +372,7 @@ function clothes.check()
                     end
                 end
             else
-                    applyDefaultPropToPed(ped, index, defaultClothes[name])
+                applyDefaultPropToPed(ped, index, defaultClothes[name])
             end
         end
 
@@ -382,6 +392,7 @@ end
 function clothes.sync()
     local ok, saveOrErr = pcall(shared.saveAppearanceClient, PlayerPedId())
     if not ok then
+        print(('[ox_inventory] clothes.sync saveAppearance error: %s'):format(tostring(saveOrErr)))
         return false
     end
 
@@ -390,6 +401,7 @@ function clothes.sync()
     end)
 
     if not ok2 then
+        print(('[ox_inventory] clothes.sync syncClothes error: %s'):format(tostring(successOrErr)))
         return false
     end
 
@@ -453,11 +465,13 @@ function clothes.applyChangesToPlayer()
         return true
     end
 
-    if countStagedChanges() > 0 then
+    local numChanges = countStagedChanges()
+
+    if numChanges > 0 then
         LocalPlayer.state.invBusy = true
         lib.requestAnimDict(CLOTHING_ANIM_DICT, 2500)
         lib.progressCircle({
-            duration = math.max(2000, countStagedChanges() * 500),
+            duration = math.max(2000, numChanges * 500),
             position = 'middle',
             label = 'Application des changements...',
             useWhileDead = false,
@@ -507,9 +521,11 @@ function clothes.applyChangesToPlayer()
     end
 
     Wait(100)
+
+    local result = clothes.sync()
     LocalPlayer.state.invBusy = false
 
-    return clothes.sync()
+    return result
 end
 
 function clothes.applyStagedChangesToVPed()
@@ -733,11 +749,19 @@ exports('GetCurrentClothes', function()
 end)
 
 exports('SetClothesData', function(data)
-    if data and type(data) == "table" then
-        clothes.data = data
-        return true
+    if not data or type(data) ~= "table" then
+        return false
     end
-    return false
+    for name, entry in pairs(data) do
+        if type(name) ~= "string" or type(entry) ~= "table" then
+            return false
+        end
+        if not entry.component_id and not entry.prop_id then
+            return false
+        end
+    end
+    clothes.data = data
+    return true
 end)
 
 exports('InitClothes', function()
