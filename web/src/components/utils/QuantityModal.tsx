@@ -22,7 +22,6 @@ const QuantityModal: React.FC<QuantityModalProps> = ({
   onCancel,
   onConfirm,
 }) => {
-  const rangeRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const normalizedMax = useMemo(() => Math.max(1, Math.floor(max || 1)), [max]);
   const [value, setValue] = useState(1);
@@ -38,7 +37,10 @@ const QuantityModal: React.FC<QuantityModalProps> = ({
     const next = initialValue !== undefined ? initialValue : 1;
     const clamped = Math.max(1, Math.min(normalizedMax, Math.floor(next || 1)));
     setValue(Number.isFinite(clamped) ? clamped : 1);
-    queueMicrotask(() => rangeRef.current?.focus());
+    queueMicrotask(() => {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    });
   }, [open, initialValue, normalizedMax]);
 
   useEffect(() => {
@@ -51,6 +53,10 @@ const QuantityModal: React.FC<QuantityModalProps> = ({
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [open, onCancel]);
+
+  const changeValue = (nextValue: number) => {
+    setValue(Math.max(1, Math.min(normalizedMax, Math.floor(nextValue || 1))));
+  };
 
   if (!open) return null;
 
@@ -65,34 +71,47 @@ const QuantityModal: React.FC<QuantityModalProps> = ({
       >
         <div className="amount-modal" role="dialog" aria-modal="true">
           <div className="amount-modal-title">{title}</div>
-          <div className="amount-modal-value">
+          <div className="amount-modal-stepper">
+            <button
+              className="amount-modal-step-button"
+              type="button"
+              aria-label="Decrease quantity"
+              disabled={resolvedValue <= 1}
+              onClick={() => changeValue(resolvedValue - 1)}
+            >
+              -
+            </button>
             <input
               ref={inputRef}
               type="number"
               min={1}
               max={normalizedMax}
               value={resolvedValue}
-              onChange={(event) => setValue(Number(event.target.value))}
+              onChange={(event) => changeValue(Number(event.target.value))}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') onConfirm(resolvedValue);
+                if (event.key === 'ArrowUp') {
+                  event.preventDefault();
+                  changeValue(resolvedValue + 1);
+                }
+                if (event.key === 'ArrowDown') {
+                  event.preventDefault();
+                  changeValue(resolvedValue - 1);
+                }
               }}
               className="amount-modal-input"
             />
-            / {normalizedMax}
+            <span className="amount-modal-max">/ {normalizedMax}</span>
+            <button
+              className="amount-modal-step-button"
+              type="button"
+              aria-label="Increase quantity"
+              disabled={resolvedValue >= normalizedMax}
+              onClick={() => changeValue(resolvedValue + 1)}
+            >
+              +
+            </button>
           </div>
-          <input
-            className="amount-modal-range"
-            ref={rangeRef}
-            type="range"
-            min={1}
-            max={normalizedMax}
-            step={1}
-            value={resolvedValue}
-            onChange={(event) => setValue(Number(event.target.value))}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') onConfirm(resolvedValue);
-            }}
-          />
           <div className="amount-modal-actions">
             <button className="amount-modal-button" type="button" onMouseDown={onCancel}>
               {cancelLabel}

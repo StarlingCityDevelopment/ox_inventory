@@ -1,14 +1,19 @@
-import React, { useRef, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { selectLeftInventory, selectItemAmount, setItemAmount } from '../../store/inventory';
 import { DragSource } from '../../typings';
 import { onUse } from '../../dnd/onUse';
 import { onGive } from '../../dnd/onGive';
+import { fetchNui } from '../../utils/fetchNui';
 import { Locale } from '../../store/locale';
 import bag from '../../assets/bag.png';
 import { onRename } from '../../dnd/onRename';
 import QuantityModal from '../utils/QuantityModal';
+
+const formatAmount = (n: number) => (n > 0 ? n.toLocaleString('en-US') : '0');
+const digitsOnly = (s: string) => s.replace(/\D/g, '');
+const countDigitsBefore = (s: string, index: number) => digitsOnly(s.substring(0, index)).length;
 
 const InventoryControl: React.FC = () => {
   const itemAmount = useAppSelector(selectItemAmount);
@@ -19,6 +24,9 @@ const InventoryControl: React.FC = () => {
   const [amountModalItem, setAmountModalItem] = useState<DragSource['item'] | null>(null);
   const [amountModalMax, setAmountModalMax] = useState(1);
   const [amountModalInitial, setAmountModalInitial] = useState(1);
+  const [value, setValue] = useState(formatAmount(itemAmount));
+  const inputRef = useRef<HTMLInputElement>(null);
+  const cursorRef = useRef<number | null>(null);
 
   const closeAmountModal = () => {
     setAmountModalItem(null);
@@ -76,6 +84,47 @@ const InventoryControl: React.FC = () => {
   }));
   renameConnector(refRename);
 
+  const commitValue = (raw: string, cursorIndex: number) => {
+    const digitsBefore = countDigitsBefore(raw, cursorIndex);
+    const num = parseInt(digitsOnly(raw), 10) || 0;
+
+    setValue(formatAmount(num));
+    dispatch(setItemAmount(num));
+    cursorRef.current = digitsBefore;
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    commitValue(event.target.value, event.target.selectionStart ?? 0);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const el = event.currentTarget;
+    const pos = el.selectionStart ?? 0;
+
+    if (pos !== el.selectionEnd) return;
+
+    if (event.key === 'Backspace' && el.value[pos - 1] === ',') {
+      event.preventDefault();
+      commitValue(el.value.slice(0, pos - 2) + el.value.slice(pos), pos - 2);
+    } else if (event.key === 'Delete' && el.value[pos] === ',') {
+      event.preventDefault();
+      commitValue(el.value.slice(0, pos) + el.value.slice(pos + 2), pos);
+    }
+  };
+
+  useEffect(() => {
+    if (!inputRef.current || cursorRef.current === null) return;
+    let newPos = 0;
+    let count = 0;
+
+    for (let i = 0; i < value.length && count < cursorRef.current; i++) {
+      if (/\d/.test(value[i])) count++;
+      newPos++;
+    }
+
+    inputRef.current.setSelectionRange(newPos, newPos);
+    cursorRef.current = null;
+  }, [value]);
+
   return (
     <>
       <div className="hotinventory-grid-wrapper">
@@ -86,6 +135,15 @@ const InventoryControl: React.FC = () => {
         <div className="line-actions"></div>
         <div className="inventory-control">
           <div className="inventory-control-wrapper">
+            <input
+              className="inventory-control-input"
+              type="text"
+              ref={inputRef}
+              value={value}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              min={0}
+            />
             <button className="inventory-control-button" ref={refUse}>
               {Locale.ui_use || 'Use'}
             </button>
@@ -95,6 +153,9 @@ const InventoryControl: React.FC = () => {
             <button className="inventory-control-button" ref={refRename}>
               {Locale.ui_rename || 'Rename'}
             </button>
+          <button className="inventory-control-button" onClick={() => fetchNui('exit')}>
+            {Locale.ui_close || 'Close'}
+          </button>
           </div>
         </div>
       </div>

@@ -145,12 +145,12 @@ lib.callback.register('ox_inventory:openShop', function(source, data)
 			return
 		end
 
-		local shopType, shopId = shop.id:match('^(.-) (%d-)$')
+		local shopType, shopId = shop.id:match('^(.-) (%d+)$')
 
         local hookPayload = {
             source = source,
-            shopId = shopId,
-			shopType = shopType,
+            shopId = shopId or shop.id,
+			shopType = shopType or shop.id,
             label = shop.label,
             slots = shop.slots,
             items = shop.items,
@@ -159,7 +159,9 @@ lib.callback.register('ox_inventory:openShop', function(source, data)
             distance = shop.distance
         }
 
-        if not TriggerEventHooks('openShop', hookPayload) then return end
+        local hooks <close> = TriggerEventHooks('openShop', hookPayload)
+
+		if not hooks.success then return end
 
 		---@diagnostic disable-next-line: assign-type-mismatch
 		playerInv:openInventory(playerInv)
@@ -197,7 +199,7 @@ end
 
 lib.callback.register('ox_inventory:buyItem', function(source, data)
 	if data.toType == 'player' then
-		if data.count == nil then data.count = 1 end
+		data.count = math.max(1, math.floor(data.count or 1))
 
 		local playerInv = Inventory(source)
 
@@ -215,7 +217,7 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 
 		if fromData then
 			if fromData.count then
-				if fromData.count == 0 then
+				if fromData.count < 1 then
 					return false, false, { type = 'error', description = locale('shop_nostock') }
 				elseif data.count > fromData.count then
 					data.count = fromData.count
@@ -257,7 +259,11 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 					return false, false, canAfford
 				end
 
-				if not TriggerEventHooks('buyItem', {
+				if fromData.count then
+					fromData.count -= count
+				end
+
+				local hooks <close> = TriggerEventHooks('buyItem', {
 					source = source,
 					shopType = shopType,
 					shopId = shopId,
@@ -270,15 +276,18 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 					price = fromData.price,
 					totalPrice = price,
 					currency = currency,
-				}) then return false end
+				})
 
-				Inventory.SetSlot(playerInv, fromItem, count, metadata, data.toSlot)
+				if not hooks.success or not Inventory.SetSlot(playerInv, fromItem, count, metadata, data.toSlot) then
+					if fromData.count then
+						fromData.count += count
+					end
+
+					return false
+				end
+
 				playerInv.weight = newWeight
 				removeCurrency(playerInv, currency, price)
-
-				if fromData.count then
-					shop.items[data.fromSlot].count = fromData.count - count
-				end
 
 				if server.syncInventory then server.syncInventory(playerInv) end
 

@@ -2,10 +2,10 @@ $mainColor: #2e2e2e;
 $textColor: #ffffff;
 $mainFont: 'Comfortaa';
 
-$secondaryColor: rgba(83, 83, 83, 0.63);
+$secondaryColor: rgba(12, 12, 12, 0.4);
 $secondaryColorHighlight: #33343f;
-$secondaryColorLight: rgba(255, 255, 255, 0.5);
-$secondaryColorDark: rgba(214, 214, 214, 0.8);
+$secondaryColorLight: rgba(0, 0, 0, 0.5);
+$secondaryColorDark: rgba(12, 12, 12, 0.8);
 
 $gridCols: 5;
 $gridRows: 4;
@@ -25,7 +25,6 @@ $serverColour: #ff0000;
 html,
 body {
   margin: 0;
-  padding: 0;
   font-family: 'Comfortaa', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -67,34 +66,58 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .context-menu-list {
-  gap: 4px;
+  gap: 3px;
   outline: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  min-width: 190px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  background-color: rgba(20, 20, 20, 0.98);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 }
 
 .context-menu-item {
-  min-width: 80px;
-  height: 40px;
-  background-color: $secondaryColorDark;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: transparent;
   outline: none;
   border: none;
-  color: $mainColor;
+  color: $textColor;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 13px;
   text-transform: uppercase;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
 
   &:active {
-    transform: none;
+    transform: translateY(1px);
   }
 
-  &:hover {
-    background-color: $secondaryColorLight;
-    cursor: pointer;
+  &:hover,
+  &:focus-visible,
+  &[data-open] {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.14);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.8);
+    outline-offset: -2px;
+  }
+
+  &:disabled {
+    color: rgba(255, 255, 255, 0.35);
+    cursor: not-allowed;
   }
 }
 
@@ -122,6 +145,17 @@ button:active {
   background-position: center;
   background-size: 7vh;
   image-rendering: -webkit-optimize-contrast;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+body.inv-dragging {
+  cursor: grabbing;
+
+  // don't trigger the hover tooltip mid-drag; the slot itself stays a drop target
+  .item-slot-wrapper {
+    pointer-events: none;
+  }
 }
 
 .inventory-wrapper {
@@ -672,14 +706,14 @@ button:active {
 }
 
 .amount-modal {
-  width: min(28vw, 450px);
+  width: min(90vw, 450px);
   background-color: rgba(0, 0, 0, 0.35);
   border: 2px solid rgba(255, 0, 0, 0.5);
   border-radius: 6px;
-  padding: 1.5vw;
+  padding: clamp(18px, 1.5vw, 24px);
   display: flex;
   flex-direction: column;
-  gap: 1.2vw;
+  gap: clamp(14px, 1.2vw, 20px);
   animation: slideUp 200ms ease-out;
 }
 
@@ -698,7 +732,7 @@ button:active {
 .amount-modal-title {
   font-family: $mainFont;
   text-transform: uppercase;
-  font-size: 1.2vw;
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: bold;
   text-align: center;
   color: $textColor;
@@ -707,15 +741,15 @@ button:active {
   border-bottom: 2px solid rgba(255, 0, 0, 0.3);
 }
 
-.amount-modal-value {
+.amount-modal-stepper {
   width: 100%;
-  height: 3vw;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1vw;
+  gap: clamp(8px, 1vw, 14px);
   font-family: $mainFont;
-  font-size: 1.8vw;
+  font-size: clamp(18px, 1.8vw, 28px);
   font-weight: bold;
   color: $textColor;
   background-color: $secondaryColor;
@@ -724,12 +758,14 @@ button:active {
 }
 
 .amount-modal-input {
+  width: 4.5em;
+  min-width: 0;
   text-align: center;
   background-color: transparent;
   outline: none;
   color: $textColor;
   font-family: $mainFont;
-  font-size: 1.8vw;
+  font-size: clamp(22px, 1.8vw, 28px);
   font-weight: bold;
   border-radius: 4px;
   border: none;
@@ -740,64 +776,37 @@ button:active {
   }
 }
 
-.amount-modal-range {
-  width: 100%;
-  height: 1vw;
-  background: transparent;
-  outline: none;
-  cursor: pointer;
+.amount-modal-max {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: clamp(13px, 1vw, 16px);
+  white-space: nowrap;
 }
 
-.amount-modal-range::-webkit-slider-runnable-track {
-  height: 0.4vw;
-  background: linear-gradient(90deg, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.5) 100%);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  border-radius: 999px;
-  transition: all 150ms ease;
-}
-
-.amount-modal-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 1vw;
-  height: 1vw;
-  margin-top: -0.5vw;
-  border-radius: 999px;
-  background-color: $serverColour;
+.amount-modal-step-button {
+  flex: 0 0 clamp(42px, 3.2vw, 52px);
+  width: clamp(42px, 3.2vw, 52px);
+  height: clamp(42px, 3.2vw, 52px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  background-color: rgba(12, 12, 12, 0.7);
+  color: $textColor;
+  font-family: $mainFont;
+  font-size: clamp(22px, 1.8vw, 30px);
+  line-height: 1;
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: background-color 150ms ease, border-color 150ms ease;
 
-  &:hover {
-    transform: scale(1.1);
+  &:hover:not(:disabled) {
+    background-color: $secondaryColorHighlight;
+    border-color: rgba(255, 255, 255, 0.5);
   }
 
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
-.amount-modal-range::-moz-range-track {
-  height: 0.4vw;
-  background: linear-gradient(90deg, rgba(255, 0, 0, 0.2) 0%, rgba(255, 0, 0, 0.5) 100%);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  border-radius: 999px;
-  transition: all 150ms ease;
-}
-
-.amount-modal-range::-moz-range-thumb {
-  width: 1vw;
-  height: 1vw;
-  border-radius: 999px;
-  background-color: $serverColour;
-  cursor: pointer;
-  transition: all 150ms ease;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:active {
-    transform: scale(0.95);
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
   }
 }
 
@@ -805,28 +814,48 @@ button:active {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1vw;
+  gap: clamp(8px, 1vw, 14px);
   width: 100%;
-  padding-top: 0.5vw;
+  padding-top: clamp(8px, 0.5vw, 12px);
   border-top: 2px solid rgba(255, 0, 0, 0.2);
 }
 
 .amount-modal-button {
   flex: 1;
-  height: 2.5vw;
-  background-color: $secondaryColor;
+  min-height: 44px;
+  background-color: transparent;
   color: #fff;
   font-family: $mainFont;
-  font-size: 1vw;
+  font-size: clamp(12px, 1vw, 15px);
   font-weight: bold;
   text-transform: uppercase;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 4px;
-  transition: background-color 150ms ease;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
 
-  &:hover {
-    background-color: $secondaryColorDark;
-    cursor: pointer;
+  &:first-child {
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.75);
+    }
+  }
+
+  &:last-child {
+    background-color: $serverColour;
+    border-color: $serverColour;
+
+    &:hover {
+      background-color: #ff3333;
+      border-color: #ff3333;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
   }
 }
 

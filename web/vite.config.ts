@@ -10,11 +10,13 @@ export default defineConfig({
     emptyOutDir: true,
     outDir: '../build',
     target: 'esnext',
-  },
-  define: {
-    'process.env': {},
-  },
-  esbuild: {
-    logOverride: { 'this-is-undefined-in-esm': 'silent' },
+    emptyOutDir: true,
+    rolldownOptions: {
+      output: {
+        assetFileNames: 'assets/[name][extname]',
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name].js',
+      },
+    },
   },
 });

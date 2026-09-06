@@ -10,16 +10,16 @@ end
 -- Do not modify this file at all. This isn't a "config" file. You want to change
 -- resource settings? Use convars like you were told in the documentation.
 -- You did read the docs, right? Probably not, if you're here.
--- https://coxdocs.dev/ox_inventory#config
+-- https://overextended.dev/ox_inventory#config
 
 shared = {
     resource = GetCurrentResourceName(),
     framework = GetConvar('inventory:framework', 'esx'),
     playerslots = GetConvarInt('inventory:slots', 50),
     playerweight = GetConvarInt('inventory:weight', 30000),
-    target = GetConvarInt('inventory:target', 0) == 1,
+    target = GetConvarBool('inventory:target', false),
     police = json.decode(GetConvar('inventory:police', '["police", "sheriff"]')),
-    networkdumpsters = GetConvarInt('inventory:networkdumpsters', 0) == 1
+    networkdumpsters = GetConvarBool('inventory:networkdumpsters', false)
 }
 
 shared.dropslots = GetConvarInt('inventory:dropslots', shared.playerslots)
@@ -41,12 +41,13 @@ end
 
 if IsDuplicityVersion() then
     server = {
-        bulkstashsave = GetConvarInt('inventory:bulkstashsave', 1) == 1,
+        loghookrejection = GetConvarBool('inventory:loghookrejection', true),
+        bulkstashsave = GetConvarBool('inventory:bulkstashsave', true),
         loglevel = GetConvarInt('inventory:loglevel', 1),
-        randomprices = GetConvarInt('inventory:randomprices', 0) == 1,
-        randomloot = GetConvarInt('inventory:randomloot', 1) == 1,
+        randomprices = GetConvarBool('inventory:randomprices', false),
+        randomloot = GetConvarBool('inventory:randomloot', true),
         evidencegrade = GetConvarInt('inventory:evidencegrade', 2),
-        trimplate = GetConvarInt('inventory:trimplate', 1) == 1,
+        trimplate = GetConvarBool('inventory:trimplate', true),
         vehicleloot = json.decode(GetConvar('inventory:vehicleloot', [[
 			[
 				["sprunk", 1, 1],
@@ -66,6 +67,12 @@ if IsDuplicityVersion() then
 				["burger", 1, 1]
 			]
 		]])),
+        validhosts = json.decode(GetConvar('inventory:validhosts', [[
+			{
+                "r2.fivemanage.com": true,
+                "i.fmfile.com": true
+            }
+		]])),
     }
 
     local accounts = json.decode(GetConvar('inventory:accounts', '["money"]'))
@@ -77,25 +84,26 @@ if IsDuplicityVersion() then
 else
     PlayerData = {}
     client = {
-        autoreload = GetConvarInt('inventory:autoreload', 0) == 1,
-        screenblur = GetConvarInt('inventory:screenblur', 1) == 1,
+        player = lib.player:new(-1),
+        autoreload = GetConvarBool('inventory:autoreload', false),
+        screenblur = GetConvarBool('inventory:screenblur', true),
         keys = json.decode(GetConvar('inventory:keys', '')) or { 'F2', 'K', 'TAB' },
         enablekeys = json.decode(GetConvar('inventory:enablekeys', '[249]')),
-        aimedfiring = GetConvarInt('inventory:aimedfiring', 0) == 1,
-        giveplayerlist = GetConvarInt('inventory:giveplayerlist', 0) == 1,
-        weaponanims = GetConvarInt('inventory:weaponanims', 1) == 1,
-        itemnotify = GetConvarInt('inventory:itemnotify', 1) == 1,
-        weaponnotify = GetConvarInt('inventory:weaponnotify', 1) == 1,
+        aimedfiring = GetConvarBool('inventory:aimedfiring', false),
+        giveplayerlist = GetConvarBool('inventory:giveplayerlist', false),
+        weaponanims = GetConvarBool('inventory:weaponanims', true),
+        itemnotify = GetConvarBool('inventory:itemnotify', true),
+        weaponnotify = GetConvarBool('inventory:weaponnotify', true),
         imagepath = GetConvar('inventory:imagepath', 'nui://ox_inventory/web/images'),
         imageext = GetConvar('inventory:imageext', 'webp'),
-        dropprops = GetConvarInt('inventory:dropprops', 0) == 1,
+        dropprops = GetConvarBool('inventory:dropprops', false),
         dropmodel = joaat(GetConvar('inventory:dropmodel', 'prop_med_bag_01b')),
-        weaponmismatch = GetConvarInt('inventory:weaponmismatch', 1) == 1,
+        weaponmismatch = GetConvarBool('inventory:weaponmismatch', true),
         ignoreweapons = json.decode(GetConvar('inventory:ignoreweapons', '[]')),
-        suppresspickups = GetConvarInt('inventory:suppresspickups', 1) == 1,
-        disableweapons = GetConvarInt('inventory:disableweapons', 0) == 1,
-        disablesetupnotification = GetConvarInt('inventory:disablesetupnotification', 0) == 1,
-        enablestealcommand = GetConvarInt('inventory:enablestealcommand', 1) == 1,
+        suppresspickups = GetConvarBool('inventory:suppresspickups', true),
+        disableweapons = GetConvarBool('inventory:disableweapons', false),
+        disablesetupnotification = GetConvarBool('inventory:disablesetupnotification', false),
+        enablestealcommand = GetConvarBool('inventory:enablestealcommand', true)
     }
 
     local ignoreweapons = table.create(0, (client.ignoreweapons and #client.ignoreweapons or 0) + 3)
@@ -115,8 +123,8 @@ else
 
     local fallbackmarker = {
         type = 0,
-        colour = {150, 150, 150},
-        scale = {0.5, 0.5, 0.5}
+        colour = { 150, 150, 150 },
+        scale = { 0.5, 0.5, 0.5 }
     }
 
     client.shopmarker = json.decode(GetConvar('inventory:shopmarker', [[
@@ -216,7 +224,7 @@ end
 local success, msg = lib.checkDependency('oxmysql', '2.7.3')
 
 if success then
-    success, msg = lib.checkDependency('ox_lib', '3.27.0')
+    success, msg = lib.checkDependency('ox_lib', '3.36.4')
 end
 
 if not success then
@@ -225,7 +233,7 @@ end
 
 if not LoadResourceFile(shared.resource, 'build/index.html') then
     return spamError(
-        'UI has not been built, refer to the documentation or download a release build.\n	^3https://coxdocs.dev/ox_inventory^0')
+        'UI has not been built, refer to the documentation or download a release build.\n	^3https://overextended.dev/ox_inventory^0')
 end
 
 -- No we're not going to support qtarget any longer.
