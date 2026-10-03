@@ -247,7 +247,7 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
             else
                 left.containerSlot = nil
             end
-        else
+        elseif invType ~= 'glovebox' and invType ~= 'trunk' then
             right = Inventory(data)
         end
 
@@ -353,6 +353,7 @@ lib.callback.register('ox_inventory:openInventory', function(source, invType, da
 end)
 
 ---@param netId number
+---@deprecated GetVehicleType was made available on the client
 lib.callback.register('ox_inventory:isVehicleATrailer', function(source, netId)
     local entity = NetworkGetEntityFromNetworkId(netId)
     local retval = GetVehicleType(entity)
@@ -430,7 +431,7 @@ local GetLocks = require 'modules.locks'
 lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, metadata, noAnim)
     local inventory = Inventory(source)
 
-    if inventory and inventory.player then
+    if inventory and not inventory.usingItem and inventory.player then
         local item = Items(itemName)
         local data = item and
         (slot and inventory.items[slot] or Inventory.GetSlotWithItem(inventory, item.name, metadata, true))

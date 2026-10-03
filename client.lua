@@ -826,7 +826,8 @@ local function registerCommands()
 				return client.closeInventory()
 			end
 
-			if cache.vehicle then
+			local canOpenGlovebox = (not client.gloveboxseatrestriction and cache.vehicle) or (cache.vehicle and (cache.seat == -1 or cache.seat == 0))
+			if canOpenGlovebox then
 				return openGlovebox(cache.vehicle)
 			end
 
@@ -867,7 +868,8 @@ local function registerCommands()
 				return client.openInventory('stash', StashTarget)
 			end
 
-			if cache.vehicle then
+			local canOpenGlovebox = (not client.gloveboxseatrestriction and cache.vehicle) or (cache.vehicle and (cache.seat == -1 or cache.seat == 0))
+			if canOpenGlovebox then
 				return openGlovebox(cache.vehicle)
 			end
 
@@ -1728,7 +1730,9 @@ RegisterNUICallback('removeAmmo', function(slot, cb)
 	cb(1)
 	local slotData = PlayerData.inventory[slot]
 
-	if not slotData or not slotData.metadata.ammo or slotData.metadata.ammo == 0 then return end
+	if usingItem or not slotData or not slotData.metadata.ammo or slotData.metadata.ammo == 0 then
+		return
+	end
 
 	local success = lib.callback.await('ox_inventory:removeAmmoFromWeapon', false, slot)
 
